@@ -48,7 +48,7 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
-import com.inet.jortho.SpellChecker;
+import io.github.geniot.jortho.SpellChecker;
 
 import freemind.main.FreeMindCommon;
 import freemind.main.Resources;

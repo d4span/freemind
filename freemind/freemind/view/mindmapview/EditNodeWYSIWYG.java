@@ -40,7 +40,7 @@ import javax.swing.text.html.HTMLDocument;
 
 import accessories.plugins.NodeNoteRegistration.SimplyHtmlResources;
 
-import com.inet.jortho.SpellChecker;
+import io.github.geniot.jortho.SpellChecker;
 import com.lightdev.app.shtm.SHTMLPanel;
 
 import freemind.main.FreeMindMain;
