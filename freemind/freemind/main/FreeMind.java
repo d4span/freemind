@@ -81,7 +81,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
-import com.inet.jortho.SpellChecker;
+import io.github.geniot.jortho.SpellChecker;
 
 import freemind.controller.Controller;
 import freemind.controller.LastStateStorageManagement;

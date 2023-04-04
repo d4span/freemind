@@ -36,7 +36,17 @@
                                 <source>freemind/freemind</source>
                                 <source>freemind/tests/freemind</source>
                                 <source>freemind/binding/src/freemind</source>
-                                <source>freemind/plugins</source>
+                                <source>freemind/plugins/collaboration/database</source>
+                                <source>freemind/plugins/collaboration/socket</source>
+                                <source>freemind/plugins/help</source>
+                                <!-- <source>freemind/plugins/latex</source> -->
+                                <!-- <source>freemind/plugins/map</source> -->
+                                <source>freemind/plugins/script</source>
+                                <source>freemind/plugins/search</source>
+                                <source>freemind/plugins/svg</source>
+                                <source>freemind/lib/SimplyHTML</source>
+                                <source>freemind/accessories</source>
+                                <source>freemind/de/foltin</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -63,6 +73,14 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>josm</id>
+            <name>JOSM</name>
+            <url>https://josm.openstreetmap.de/nexus/content/repositories/releases</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>com.jgoodies</groupId>
@@ -88,6 +106,56 @@
             <groupId>io.github.geniot</groupId>
             <artifactId>jortho</artifactId>
             <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openstreetmap.jmapviewer</groupId>
+            <artifactId>jmapviewer</artifactId>
+            <version>1.14</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queryparser</artifactId>
+            <version>4.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>4.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-common</artifactId>
+            <version>4.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-svggen</artifactId>
+            <version>1.14</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>fop-transcoder</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.help</groupId>
+            <artifactId>javahelp</artifactId>
+            <version>2.0.05</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-astbuilder</artifactId>
+            <version>3.0.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freeplane.lightdev</groupId>
+            <artifactId>simplyhtml</artifactId>
+            <version>0.18.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.6.1</version>
         </dependency>
     </dependencies>
 </project>

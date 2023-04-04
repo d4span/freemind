@@ -12,8 +12,9 @@ local.properties
 .loadpath
 .recommenders
 
-# VS Code
+# IDEs
 .vscode/
+.idea/
 
 # Maven
 target/
