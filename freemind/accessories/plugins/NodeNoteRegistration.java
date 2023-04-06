@@ -88,10 +88,6 @@ public class NodeNoteRegistration implements HookRegistration,
 //			}
 			return resourceString;
 		}
-
-		public Icon getIcon(String pKey) {
-			throw new UnsupportedOperationException();
-		} 
 	}
 
 	private static class SouthPanel extends JPanel {
