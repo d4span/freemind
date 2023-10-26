@@ -1,39 +1,36 @@
 package ch.d4span.freemind.mindmap;
 
-import java.util.Enumeration;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreePath;
+import java.util.List;
+import java.util.Optional;
 
-public interface Tree<T extends Tree.TreeNode> {
-  T getRoot();
+public interface Tree<N> {
+  N getRoot();
 
-  T getChild(T var1, int var2);
+  N getChild(N node, int index);
 
-  int getChildCount(T var1);
+  int getChildCount(N node);
 
-  boolean isLeaf(T var1);
+  boolean isLeaf(N var1);
 
-  void valueForPathChanged(TreePath var1, T var2);
+  void valueForPathChanged(TreePath var1, N value);
 
-  int getIndexOfChild(T var1, T var2);
+  Optional<Integer> getIndexOfChild(N node, N child);
 
-  void addTreeModelListener(TreeModelListener var1);
+  void addTreeModelListener(TreeModelListener<N> listener);
 
-  void removeTreeModelListener(TreeModelListener var1);
+  void removeTreeModelListener(TreeModelListener<N> listener);
 
-  interface TreeNode {
-    TreeNode getChildAt(int var1);
+  interface TreePath {}
 
-    int getChildCount();
+  interface TreeModelListener<N> {
+    void treeNodesChanged(TreeModelEvent<N> e);
 
-    TreeNode getParent();
+    void treeNodesInserted(TreeModelEvent<N> e);
 
-    int getIndex(TreeNode var1);
+    void treeNodesRemoved(TreeModelEvent<N> e);
 
-    boolean getAllowsChildren();
+    void treeStructureChanged(TreeModelEvent<N> e);
 
-    boolean isLeaf();
-
-    Enumeration<? extends TreeNode> children();
+    record TreeModelEvent<D>(Tree<D> source, List<D> path, List<Integer> childIndices) {}
   }
 }
