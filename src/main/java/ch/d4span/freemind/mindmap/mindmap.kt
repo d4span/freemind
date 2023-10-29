@@ -17,6 +17,14 @@ interface TreeNode<V> {
     fun getChildAt(index: Int): TreeNode<V> {
         TODO("Not yet implemented")
     }
+
+    fun getUserObject(): V {
+        TODO("Not yet implemented")
+    }
+
+    fun getParent(): TreeNode<V> {
+        TODO("Not yet implemented")
+    }
 }
 
 interface MutableTreeNode<V> : TreeNode<V> {
@@ -35,15 +43,7 @@ interface MutableTreeNode<V> : TreeNode<V> {
         TODO("Not yet implemented")
     }
 
-    fun getUserObject(): V {
-        TODO("Not yet implemented")
-    }
-
     fun setUserObject(userObject: V) {
-        TODO("Not yet implemented")
-    }
-
-    fun getParent(): TreeNode<V> {
         TODO("Not yet implemented")
     }
 
@@ -57,7 +57,7 @@ interface EventListenerList {
 }
 
 interface TreeModel<V> {
-    val root: V
+    val root: TreeNode<V>
 
     fun removeNodeFromParent(node: TreeNode<V>) {
         TODO("Not yet implemented")
@@ -76,45 +76,45 @@ interface TreeModel<V> {
     fun getPathToRoot(node: TreeNode<V>): Array<TreeNode<V>>
 
     fun getIndexOfChild(
-        parent: V,
-        node: V,
+        parent: TreeNode<V>,
+        node: TreeNode<V>,
     ): Int {
         TODO("Not yet implemented")
     }
 
     fun getChild(
-        parent: Any?,
+        parent: TreeNode<V>,
         index: Int,
-    ): Any? {
+    ): TreeNode<V> {
         TODO("Not yet implemented")
     }
 
-    fun getChildCount(parent: V): Int {
+    fun getChildCount(parent: TreeNode<V>): Int {
         TODO("Not yet implemented")
     }
 
-    fun isLeaf(node: V): Boolean {
+    fun isLeaf(node: TreeNode<V>): Boolean {
         TODO("Not yet implemented")
     }
 
     fun valueForPathChanged(
         path: TreePath?,
-        newValue: V,
+        newValue: TreeNode<V>,
     ) {
         TODO("Not yet implemented")
     }
 
-    fun addTreeModelListener(l: TreeModelListener?) {
+    fun addTreeModelListener(l: TreeModelListener) {
         TODO("Not yet implemented")
     }
 
-    fun removeTreeModelListener(l: TreeModelListener?) {
+    fun removeTreeModelListener(l: TreeModelListener) {
         TODO("Not yet implemented")
     }
 }
 
 open class DefaultTreeModel<V>(
-    override var root: V,
+    override var root: TreeNode<V>,
 ) : TreeModel<V> {
     @JvmField
     protected val listenerList: EventListenerList = TODO("Not yet implemented")

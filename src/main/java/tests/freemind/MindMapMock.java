@@ -140,31 +140,31 @@ public class MindMapMock implements MindMap {
 	}
 
 	@Override
-	public Object getRoot() {
+	public TreeNode getRoot() {
 		return null;
 	}
 
 	@Override
-	public Object getChild(Object parent, int index) {
+	public TreeNode getChild(TreeNode parent, int index) {
 		return null;
 	}
 
 	@Override
-	public int getChildCount(Object parent) {
+	public int getChildCount(TreeNode parent) {
 		return 0;
 	}
 
 	@Override
-	public boolean isLeaf(Object node) {
+	public boolean isLeaf(TreeNode node) {
 		return false;
 	}
 
 	@Override
-	public void valueForPathChanged(TreePath path, Object newValue) {
+	public void valueForPathChanged(TreePath path, TreeNode newValue) {
 	}
 
 	@Override
-	public int getIndexOfChild(Object parent, Object child) {
+	public int getIndexOfChild(TreeNode parent, TreeNode child) {
 		return 0;
 	}
 
