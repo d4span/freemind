@@ -40,8 +40,8 @@ import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 
-import ch.d4span.freemind.mindmap.DefaultTreeModel;
-import ch.d4span.freemind.mindmap.TreeNode;
+import ch.d4span.freemind.treemodel.DefaultTreeModel;
+import ch.d4span.freemind.treemodel.TreeNode;
 import freemind.controller.filter.DefaultFilter;
 import freemind.controller.filter.Filter;
 import freemind.controller.filter.condition.NoFilteringCondition;

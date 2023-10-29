@@ -28,7 +28,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
-import ch.d4span.freemind.mindmap.MutableTreeNode;
+import ch.d4span.freemind.treemodel.MutableTreeNode;
 import freemind.main.HtmlTools;
 import freemind.main.Tools;
 import freemind.main.Tools.SingleDesEncrypter;

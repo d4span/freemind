@@ -1,4 +1,4 @@
-package ch.d4span.freemind.mindmap
+package ch.d4span.freemind.treemodel
 
 import javax.swing.event.TreeModelListener
 import javax.swing.tree.TreePath

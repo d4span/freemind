@@ -28,8 +28,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-import ch.d4span.freemind.mindmap.TreeModel;
-import ch.d4span.freemind.mindmap.TreeNode;
+import ch.d4span.freemind.treemodel.TreeModel;
+import ch.d4span.freemind.treemodel.TreeNode;
 import freemind.controller.filter.Filter;
 import freemind.controller.filter.util.SortedListModel;
 import freemind.main.Tools;

@@ -47,8 +47,8 @@ import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
-import ch.d4span.freemind.mindmap.MutableTreeNode;
-import ch.d4span.freemind.mindmap.TreeNode;
+import ch.d4span.freemind.treemodel.MutableTreeNode;
+import ch.d4span.freemind.treemodel.TreeNode;
 import freemind.controller.Controller;
 import freemind.controller.filter.Filter;
 import freemind.controller.filter.FilterInfo;
