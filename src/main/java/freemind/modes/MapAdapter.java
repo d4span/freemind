@@ -39,9 +39,9 @@ import java.util.logging.Logger;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 
+import ch.d4span.freemind.mindmap.DefaultTreeModel;
+import ch.d4span.freemind.mindmap.TreeNode;
 import freemind.controller.filter.DefaultFilter;
 import freemind.controller.filter.Filter;
 import freemind.controller.filter.condition.NoFilteringCondition;

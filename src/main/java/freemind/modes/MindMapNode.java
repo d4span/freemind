@@ -33,9 +33,9 @@ import java.util.SortedMap;
 import javax.swing.ImageIcon;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import ch.d4span.freemind.mindmap.MutableTreeNode;
 import freemind.controller.filter.FilterInfo;
 import freemind.extensions.NodeHook;
 import freemind.extensions.PermanentNodeHook;
