@@ -32,6 +32,8 @@ import java.util.List;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import ch.d4span.freemind.treemodel.TreeNode;
 import freemind.controller.filter.Filter;
 import freemind.controller.filter.util.SortedListModel;
@@ -44,9 +46,7 @@ import freemind.modes.CloudAdapter;
 import freemind.modes.EdgeAdapter;
 import freemind.modes.MapFeedback;
 import freemind.modes.MapFeedbackAdapter;
-import freemind.modes.MindMap;
 import freemind.modes.MindMapLinkRegistry;
-import freemind.modes.MindMapNode;
 import freemind.modes.NodeAdapter;
 
 /** */

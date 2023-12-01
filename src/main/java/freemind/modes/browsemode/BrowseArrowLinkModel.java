@@ -20,10 +20,10 @@
 
 package freemind.modes.browsemode;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.XMLElement;
 import freemind.modes.ArrowLinkAdapter;
 import freemind.modes.MapFeedback;
-import freemind.modes.MindMapNode;
 import freemind.view.mindmapview.MapView;
 
 public class BrowseArrowLinkModel extends ArrowLinkAdapter {

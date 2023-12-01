@@ -23,14 +23,14 @@ package freemind.modes.mindmapmode.actions.xml.actors;
 import java.awt.datatransfer.Transferable;
 import java.util.Iterator;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.DeleteNodeAction;
 import freemind.controller.actions.generated.instance.PasteNodeAction;
 import freemind.controller.actions.generated.instance.UndoPasteNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.extensions.PermanentNodeHook;
 import freemind.modes.ExtendedMapFeedback;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.ViewAbstraction;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 import freemind.modes.mindmapmode.actions.xml.actors.PasteActor.NodeCoordinate;

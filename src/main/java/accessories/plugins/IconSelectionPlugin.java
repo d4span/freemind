@@ -30,10 +30,10 @@ import java.util.Vector;
 
 import javax.swing.Action;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.FreeMind;
 import freemind.main.Tools;
 import freemind.modes.IconInformation;
-import freemind.modes.MindMapNode;
 import freemind.modes.common.dialogs.IconSelectionPopupDialog;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.actions.IconAction;

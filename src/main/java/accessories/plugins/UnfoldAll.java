@@ -27,10 +27,10 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.Iterator;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.extensions.HookRegistration;
 import freemind.main.Tools;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
@@ -60,15 +60,18 @@ public class UnfoldAll extends MindMapNodeHookAdapter {
 			hookInstance.setMap(mMap);
 		}
 
-		public void register() {
+		@Override
+        public void register() {
 			controller.registerMouseWheelEventHandler(this);
 		}
 
-		public void deRegister() {
+		@Override
+        public void deRegister() {
 			controller.deRegisterMouseWheelEventHandler(this);
 		}
 
-		public boolean handleMouseWheelEvent(MouseWheelEvent e) {
+		@Override
+        public boolean handleMouseWheelEvent(MouseWheelEvent e) {
 			if ((e.getModifiers() & InputEvent.ALT_MASK) != 0) {
 				logger.info("handleMouseWheelEvent entered.");
 				MindMapNode rootNode = mMap.getRootNode();
@@ -92,7 +95,8 @@ public class UnfoldAll extends MindMapNodeHookAdapter {
 		super();
 	}
 
-	public void invoke(MindMapNode node) {
+	@Override
+    public void invoke(MindMapNode node) {
 		super.invoke(node);
 		boolean foldState = Tools
 				.xmlToBoolean(getResourceString("foldingState"));
@@ -101,7 +105,7 @@ public class UnfoldAll extends MindMapNodeHookAdapter {
 		if ("root".equals(applyTo)) {
 			node = getMindMapController().getRootNode();
 		}
-		if (foldingType.equals("All")) {
+		if ("All".equals(foldingType)) {
 			if (foldState) {
 				foldAll(node);
 			} else {

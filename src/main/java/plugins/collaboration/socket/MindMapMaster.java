@@ -33,6 +33,7 @@ import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.common.NumberProperty;
 import freemind.common.PropertyControl;
 import freemind.common.StringProperty;
@@ -44,7 +45,6 @@ import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
 import freemind.modes.ExtendedMapFeedback;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.view.mindmapview.NodeView;
 import plugins.collaboration.socket.FormDialog.FormDialogValidator;

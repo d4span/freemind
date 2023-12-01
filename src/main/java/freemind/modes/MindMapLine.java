@@ -22,6 +22,8 @@ package freemind.modes;
 
 import java.awt.Color;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
+
 public interface MindMapLine extends Cloneable {
 
 	public Color getColor();

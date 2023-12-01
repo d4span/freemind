@@ -28,8 +28,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.Tools;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
 import freemind.view.mindmapview.MapView;
 

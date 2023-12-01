@@ -26,8 +26,9 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.PasteNodeAction;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 
 @SuppressWarnings("serial")

@@ -48,12 +48,12 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import io.github.geniot.jortho.SpellChecker;
 
 import freemind.main.FreeMindCommon;
 import freemind.main.Resources;
 import freemind.main.Tools;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 
 /**

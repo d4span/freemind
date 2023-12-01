@@ -45,6 +45,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
+import ch.d4span.freemind.mindmap.MindMap;
 import freemind.controller.MapModuleManager.MapModuleChangeObserver;
 import freemind.controller.MenuItemSelectedListener;
 import freemind.controller.StructuredMenuHolder;
@@ -54,7 +55,6 @@ import freemind.main.FreeMind;
 import freemind.main.LogFileLogHandler;
 import freemind.main.LogFileLogHandler.LogReceiver;
 import freemind.main.Tools;
-import freemind.modes.MindMap;
 import freemind.modes.Mode;
 import freemind.modes.ModeController;
 import freemind.modes.mindmapmode.MindMapController;

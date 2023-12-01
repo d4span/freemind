@@ -28,11 +28,11 @@ import java.util.Collection;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
+import ch.d4span.freemind.mindmap.MindMap;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.controller.MenuItemSelectedListener;
 import freemind.extensions.HookRegistration;
 import freemind.extensions.PermanentNodeHook;
-import freemind.modes.MindMap;
 import freemind.modes.ModeController;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.actions.NodeHookAction;
@@ -48,25 +48,27 @@ public class SocketRegistration implements HookRegistration,
 		logger = controller.getFrame().getLogger(this.getClass().getName());
 	}
 
-	public void register() {
+	@Override
+    public void register() {
 		logger.fine("Registration of database registration.");
 	}
 
-	public void deRegister() {
+	@Override
+    public void deRegister() {
 		logger.fine("Deregistration of database registration.");
 	}
 
-	public boolean isSelected(JMenuItem pCheckItem, Action pAction) {
+	@Override
+    public boolean isSelected(JMenuItem pCheckItem, Action pAction) {
 		logger.fine(this + " is asked for " + pAction + ".");
-		if (pAction instanceof NodeHookAction) {
-			NodeHookAction action = (NodeHookAction) pAction;
-			if (action.getHookName().equals(MindMapMaster.LABEL)) {
+		if (pAction instanceof NodeHookAction action) {
+			if (MindMapMaster.LABEL.equals(action.getHookName())) {
 				return isMaster();
 			}
-			if (action.getHookName().equals(MindMapClient.SLAVE_STARTER_LABEL)) {
+			if (MindMapClient.SLAVE_STARTER_LABEL.equals(action.getHookName())) {
 				return isSlave();
 			}
-			if (action.getHookName().equals(MindMapClient.SLAVE_PUBLISH_LABEL)) {
+			if (MindMapClient.SLAVE_PUBLISH_LABEL.equals(action.getHookName())) {
 				// the publish map item is not selected. It would be nice to get
 				// the information, though.
 				return false;
@@ -100,18 +102,18 @@ public class SocketRegistration implements HookRegistration,
 	/**
 	 * When one option is enabled, the other is impossible.
 	 * */
-	public boolean isEnabled(JMenuItem pItem, Action pAction) {
+	@Override
+    public boolean isEnabled(JMenuItem pItem, Action pAction) {
 		logger.fine(this + " is asked for " + pAction + ".");
-		if (pAction instanceof NodeHookAction) {
-			NodeHookAction action = (NodeHookAction) pAction;
-			if (action.getHookName().equals(MindMapMaster.LABEL)) {
+		if (pAction instanceof NodeHookAction action) {
+			if (MindMapMaster.LABEL.equals(action.getHookName())) {
 				return !isSlave();
 			}
 			// not available, if a master is active.
-			if (action.getHookName().equals(MindMapClient.SLAVE_STARTER_LABEL)) {
+			if (MindMapClient.SLAVE_STARTER_LABEL.equals(action.getHookName())) {
 				return !isMaster();
 			}
-			if (action.getHookName().equals(MindMapClient.SLAVE_PUBLISH_LABEL)) {
+			if (MindMapClient.SLAVE_PUBLISH_LABEL.equals(action.getHookName())) {
 				// this is for the publish map command. Only available, if
 				// neither nor.
 				return !isSlave() && !isMaster();

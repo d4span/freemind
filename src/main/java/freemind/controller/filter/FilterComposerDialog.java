@@ -57,6 +57,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.common.NamedObject;
 import freemind.controller.Controller;
 import freemind.controller.filter.condition.Condition;
@@ -70,8 +72,6 @@ import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.FreeMindFileDialog;
 import freemind.modes.MindIcon;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.attributes.Attribute;
 
 /**

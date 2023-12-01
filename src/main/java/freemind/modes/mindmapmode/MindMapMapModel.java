@@ -44,6 +44,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.FreeMind;
 import freemind.main.HtmlTools;
 import freemind.main.Resources;
@@ -54,9 +56,7 @@ import freemind.modes.CloudAdapter;
 import freemind.modes.EdgeAdapter;
 import freemind.modes.MapAdapter;
 import freemind.modes.MapFeedback;
-import freemind.modes.MindMap;
 import freemind.modes.MindMapLinkRegistry;
-import freemind.modes.MindMapNode;
 import freemind.modes.NodeAdapter;
 
 @SuppressWarnings("serial")

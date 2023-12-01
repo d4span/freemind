@@ -28,8 +28,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import ch.d4span.freemind.mindmap.MindMap;
 import freemind.main.HtmlTools;
-import freemind.modes.MindMap;
 import freemind.modes.NodeAdapter;
 
 /**
@@ -56,7 +56,8 @@ public class MindMapNodeModel extends NodeAdapter {
 	// The mandatory load and save methods
 	//
 
-	public String getPlainTextContent() {
+	@Override
+    public String getPlainTextContent() {
 		return HtmlTools.htmlToPlain(toString());
 	}
 
@@ -219,7 +220,8 @@ public class MindMapNodeModel extends NodeAdapter {
 		}
 	}
 
-	public boolean isWriteable() {
+	@Override
+    public boolean isWriteable() {
 		return true;
 	}
 

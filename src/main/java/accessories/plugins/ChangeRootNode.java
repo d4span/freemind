@@ -27,13 +27,13 @@ import java.util.Vector;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.controller.actions.generated.instance.ChangeRootNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.extensions.HookRegistration;
 import freemind.main.Tools;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;

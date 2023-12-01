@@ -28,12 +28,12 @@ import java.util.Vector;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.filter.FilterController;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
-import freemind.modes.MindMapNode;
 
 /**
  * @author dimitri 08.05.2005

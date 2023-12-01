@@ -24,6 +24,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.main.FreeMind;
 import freemind.main.Tools;

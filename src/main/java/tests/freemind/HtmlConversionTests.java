@@ -30,13 +30,13 @@ import tests.freemind.findreplace.TestMindMapNode;
 
 import com.lightdev.app.shtm.SHTMLPanel;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.HtmlTools;
 import freemind.main.HtmlTools.NodeCreator;
 import freemind.main.Tools;
 import freemind.main.Tools.IntHolder;
 import freemind.main.XMLElement;
 import freemind.modes.ExtendedMapFeedbackImpl;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapMapModel;
 import freemind.modes.mindmapmode.MindMapNodeModel;
 import freemind.modes.mindmapmode.actions.xml.actors.PasteActor;

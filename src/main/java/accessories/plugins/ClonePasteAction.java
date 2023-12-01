@@ -34,6 +34,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.common.OptionalDontShowMeAgainDialog;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.controller.actions.generated.instance.CompoundAction;
@@ -53,8 +55,6 @@ import freemind.main.FreeMind;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.main.Tools.MindMapNodePair;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import freemind.modes.ModeController.NodeSelectionListener;
 import freemind.modes.NodeAdapter;

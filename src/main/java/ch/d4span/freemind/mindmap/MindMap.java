@@ -17,7 +17,7 @@
  *Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package freemind.modes;
+package ch.d4span.freemind.mindmap;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +34,13 @@ import freemind.controller.filter.Filter;
 import freemind.controller.filter.util.SortedListModel;
 import freemind.main.Tools;
 import freemind.main.XMLParseException;
+import freemind.modes.ArrowLinkAdapter;
+import freemind.modes.ArrowLinkTarget;
+import freemind.modes.CloudAdapter;
+import freemind.modes.EdgeAdapter;
+import freemind.modes.MapFeedback;
+import freemind.modes.MindMapLinkRegistry;
+import freemind.modes.NodeAdapter;
 
 public interface MindMap extends TreeModel {
 
@@ -93,6 +100,7 @@ public interface MindMap extends TreeModel {
 	 */
 	String getRestorable();
 
+	@Override
 	TreeNode[] getPathToRoot(TreeNode node);
 
 	/**
@@ -121,6 +129,7 @@ public interface MindMap extends TreeModel {
      */
 	void setFilter(Filter inactiveFilter);
 
+	@Override
 	void nodeStructureChanged(TreeNode node);
 
 	/**

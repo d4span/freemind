@@ -20,11 +20,11 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.MoveNodeXmlAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 
@@ -41,7 +41,8 @@ public class MoveNodeActor extends NodeXmlActorAdapter {
 		super(pMapFeedback);
 	}
 	
-	public void act(XmlAction action) {
+	@Override
+    public void act(XmlAction action) {
 		MoveNodeXmlAction moveAction = (MoveNodeXmlAction) action;
 		NodeAdapter node = getNodeFromID(moveAction.getNode());
 		node.setHGap(moveAction.getHGap());
@@ -51,11 +52,13 @@ public class MoveNodeActor extends NodeXmlActorAdapter {
 		getExMapFeedback().nodeChanged(node);
 	}
 
-	public Class<MoveNodeXmlAction> getDoActionClass() {
+	@Override
+    public Class<MoveNodeXmlAction> getDoActionClass() {
 		return MoveNodeXmlAction.class;
 	}
 
-	public ActionPair apply(MindMap model, MindMapNode selected) {
+	@Override
+    public ActionPair apply(MindMap model, MindMapNode selected) {
 		// reset position
 		if (selected.isRoot())
 			return null;

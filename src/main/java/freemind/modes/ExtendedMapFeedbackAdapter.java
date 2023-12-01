@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Properties;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.Pattern;
 import freemind.extensions.HookFactory;
 import freemind.main.XMLParseException;

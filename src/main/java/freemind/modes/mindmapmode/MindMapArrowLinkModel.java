@@ -22,9 +22,9 @@ package freemind.modes.mindmapmode;
 
 import java.awt.Point;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.modes.ArrowLinkAdapter;
 import freemind.modes.MapFeedback;
-import freemind.modes.MindMapNode;
 import freemind.view.mindmapview.MapView;
 import freemind.view.mindmapview.NodeView;
 

@@ -26,8 +26,8 @@ import java.awt.LayoutManager;
 
 import javax.swing.JComponent;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.modes.EdgeAdapter;
-import freemind.modes.MindMapNode;
 
 class NodeViewFactory {
 

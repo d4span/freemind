@@ -69,6 +69,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.common.ScalableJTable;
 import freemind.controller.MapModuleManager.MapModuleChangeObserver;
 import freemind.controller.MenuItemSelectedListener;
@@ -80,7 +81,6 @@ import freemind.main.HtmlTools;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.MindIcon;
-import freemind.modes.MindMapNode;
 import freemind.modes.Mode;
 import freemind.modes.ModeController;
 import freemind.modes.common.plugins.ReminderHookBase;

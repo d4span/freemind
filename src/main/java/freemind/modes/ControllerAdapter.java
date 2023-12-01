@@ -67,6 +67,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileFilter;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.LastStateStorageManagement;
 import freemind.controller.MapModuleManager;

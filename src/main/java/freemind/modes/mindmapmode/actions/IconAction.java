@@ -29,11 +29,11 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.AddIconAction;
 import freemind.main.Tools;
 import freemind.modes.IconInformation;
 import freemind.modes.MindIcon;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.actions.xml.actors.AddIconActor;
 

@@ -26,12 +26,13 @@ package freemind.controller.filter.condition;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
 import freemind.modes.MindIcon;
-import freemind.modes.MindMapNode;
 
 public class IconContainedCondition implements Condition {
 	static final String ICON = "icon";

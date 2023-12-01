@@ -27,8 +27,8 @@ package accessories.plugins;
 
 import java.util.List;
 import accessories.plugins.dialogs.ChooseFormatPopupDialog;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.Pattern;
-import freemind.modes.MindMapNode;
 import freemind.modes.StylePatternFactory;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
 

@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Vector;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.Pattern;
 import freemind.main.FreeMind;
 import freemind.main.Tools;
@@ -37,7 +38,6 @@ import freemind.modes.MapAdapter;
 import freemind.modes.MindIcon;
 import freemind.modes.MindMapArrowLink;
 import freemind.modes.MindMapLink;
-import freemind.modes.MindMapNode;
 import freemind.modes.StylePatternFactory;
 import freemind.modes.attributes.Attribute;
 import freemind.modes.mindmapmode.MindMapMapModel;

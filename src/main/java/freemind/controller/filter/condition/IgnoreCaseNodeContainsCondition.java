@@ -23,9 +23,9 @@
  */
 package freemind.controller.filter.condition;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.main.XMLElement;
-import freemind.modes.MindMapNode;
 
 class IgnoreCaseNodeContainsCondition extends NodeCondition {
 

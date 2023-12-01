@@ -31,10 +31,10 @@ import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.extensions.PermanentNodeHookAdapter;
 import freemind.main.XMLElement;
 import freemind.modes.MindIcon;
-import freemind.modes.MindMapNode;
 
 /**
  * @author foltin

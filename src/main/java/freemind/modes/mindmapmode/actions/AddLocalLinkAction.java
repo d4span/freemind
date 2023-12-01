@@ -28,8 +28,8 @@ import java.util.Vector;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.Tools;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 
 /**

@@ -27,8 +27,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.Tools;
-import freemind.modes.MindMapNode;
 
 @SuppressWarnings("serial")
 class BubbleMainView extends MainView {

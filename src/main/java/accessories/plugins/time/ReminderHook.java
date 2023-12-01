@@ -22,7 +22,7 @@
 
 package accessories.plugins.time;
 
-import freemind.modes.MindMapNode;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.modes.common.plugins.ReminderHookBase;
 import freemind.modes.mindmapmode.MindMapController;
 

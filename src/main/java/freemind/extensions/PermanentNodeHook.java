@@ -28,8 +28,8 @@ package freemind.extensions;
 import java.io.IOException;
 import java.io.Writer;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.XMLElement;
-import freemind.modes.MindMapNode;
 import freemind.view.mindmapview.NodeView;
 
 /**

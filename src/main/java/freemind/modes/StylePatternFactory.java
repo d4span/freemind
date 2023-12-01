@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.common.TextTranslator;
 import freemind.common.XmlBindingTools;
 import freemind.controller.actions.generated.instance.Pattern;

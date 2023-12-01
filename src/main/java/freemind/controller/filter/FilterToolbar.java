@@ -41,14 +41,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.FreeMindToolBar;
 import freemind.controller.filter.condition.Condition;
 import freemind.controller.filter.condition.NoFilteringCondition;
 import freemind.controller.filter.condition.SelectedViewCondition;
 import freemind.main.Resources;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 
 @SuppressWarnings("serial")
 class FilterToolbar extends FreeMindToolBar {

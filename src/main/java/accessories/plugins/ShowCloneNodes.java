@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
-import freemind.modes.MindMapNode;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
 

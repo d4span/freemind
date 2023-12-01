@@ -28,8 +28,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.Tools;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
 
 /**

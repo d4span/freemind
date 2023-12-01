@@ -21,17 +21,16 @@
 package plugins.collaboration.socket;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
+import ch.d4span.freemind.mindmap.MindMap;
 import freemind.controller.actions.generated.instance.CollaborationUserInformation;
 import freemind.main.Tools;
 import freemind.main.XMLParseException;
 import freemind.modes.ExtendedMapFeedback;
-import freemind.modes.MindMap;
 import freemind.modes.mindmapmode.MindMapController;
 import tests.freemind.FreeMindMainMock;
 
@@ -61,25 +60,23 @@ public class StandaloneMindMapMaster extends SocketMaster {
 		public MasterThread() {
 			super("StandaloneMaster");
 			// save maps on exit!
-			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			    public void run() {
-			    	System.out.println("Automatic save on exit starts...");
-			    	for (String mapName : mFileMap.keySet()) {
-			    		ExtendedMapFeedback extendedMapFeedback = mFileMap.get(mapName);
-			    		MindMap map = extendedMapFeedback.getMap();
-			    		File file = map.getFile();
-			    		System.out.println("Looking for map " + file + " to be saved...");
-			    		if(!map.isSaved()) {
-			    			try {
-			    				// save map:
-								map.save(file);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-			    		}
-			    	}
-			    }
-			}));
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            	System.out.println("Automatic save on exit starts...");
+            	for (String mapName : mFileMap.keySet()) {
+            		ExtendedMapFeedback extendedMapFeedback = mFileMap.get(mapName);
+            		MindMap map = extendedMapFeedback.getMap();
+            		File file = map.getFile();
+            		System.out.println("Looking for map " + file + " to be saved...");
+            		if(!map.isSaved()) {
+            			try {
+            				// save map:
+            				map.save(file);
+            			} catch (IOException e) {
+            				e.printStackTrace();
+            			}
+            		}
+            	}
+            }));
 
 		}
 
@@ -88,7 +85,8 @@ public class StandaloneMindMapMaster extends SocketMaster {
 		 * 
 		 * @see plugins.collaboration.socket.TerminateableThread#processAction()
 		 */
-		public boolean processAction() throws Exception {
+		@Override
+        public boolean processAction() throws Exception {
 			try {
 				logger.finest("Waiting for message");
 				Socket client = mServer.accept();
@@ -189,12 +187,7 @@ public class StandaloneMindMapMaster extends SocketMaster {
 	public StandaloneMindMapMaster(FreeMindMainMock pFreeMindMain, File pFilePath,
 			String pPassword, int pPort) throws XMLParseException, IOException {
 		mBaseFilePath = pFilePath;
-		String[] fileList = pFilePath.list(new FilenameFilter() {
-
-			@Override
-			public boolean accept(File pDir, String pName) {
-				return pName.endsWith(".mm");
-			}});
+		String[] fileList = pFilePath.list((pDir, pName) -> pName.endsWith(".mm"));
 		for (int i = 0; i < fileList.length; i++) {
 			String fileName = fileList[i];
 			File file = new File(pFilePath, fileName);

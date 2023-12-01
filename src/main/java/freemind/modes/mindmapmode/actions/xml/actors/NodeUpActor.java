@@ -27,12 +27,12 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.Vector;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.MoveNodesAction;
 import freemind.controller.actions.generated.instance.NodeListMember;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 
 /**
@@ -60,11 +60,7 @@ public class NodeUpActor extends XmlActorAdapter {
 	}
 
 	private void _moveNodes(MindMapNode selected, List<MindMapNode> selecteds, int direction) {
-		Comparator<Integer> comparator = (direction == -1) ? null : new Comparator<Integer>() {
-			public int compare(Integer i1, Integer i2) {
-				return i2 - i1;
-			}
-		};
+		Comparator<Integer> comparator = (direction == -1) ? null : (i1, i2) -> i2 - i1;
 		if (!selected.isRoot()) {
 			MindMapNode parent = selected.getParentNode();
 			// multiple move:
@@ -135,21 +131,18 @@ public class NodeUpActor extends XmlActorAdapter {
 		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
 			nodes.add(i.next());
 		}
-		Collections.sort(nodes, new Comparator<MindMapNode>() {
-
-			public int compare(MindMapNode n1, MindMapNode n2) {
-				int b1 = n1.isLeft() ? 0 : 1;
-				int b2 = n2.isLeft() ? 0 : 1;
-				return b1 - b2;
-			}
-		});
+		Collections.sort(nodes, (n1, n2) -> {
+        	int b1 = n1.isLeft() ? 0 : 1;
+        	int b2 = n2.isLeft() ? 0 : 1;
+        	return b1 - b2;
+        });
 		// logger.finest("Sorted nodes "+ nodes);
 		return nodes;
 	}
 
-	public void act(XmlAction action) {
-		if (action instanceof MoveNodesAction) {
-			MoveNodesAction moveAction = (MoveNodesAction) action;
+	@Override
+    public void act(XmlAction action) {
+		if (action instanceof MoveNodesAction moveAction) {
 			MindMapNode selected = getNodeFromID(moveAction
 					.getNode());
 			Vector<MindMapNode> selecteds = new Vector<>();
@@ -161,7 +154,8 @@ public class NodeUpActor extends XmlActorAdapter {
 		}
 	}
 
-	public Class<MoveNodesAction> getDoActionClass() {
+	@Override
+    public Class<MoveNodesAction> getDoActionClass() {
 		return MoveNodesAction.class;
 	}
 

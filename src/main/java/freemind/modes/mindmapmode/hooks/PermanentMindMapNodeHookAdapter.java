@@ -20,9 +20,9 @@
 
 package freemind.modes.mindmapmode.hooks;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.extensions.PermanentNodeHook;
 import freemind.extensions.PermanentNodeHookAdapter;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 
 /**

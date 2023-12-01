@@ -32,11 +32,11 @@ import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.common.OptionalDontShowMeAgainDialog;
 import freemind.main.FreeMind;
 import freemind.main.HtmlTools;
 import freemind.main.Tools;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.view.mindmapview.EditNodeBase;
 import freemind.view.mindmapview.EditNodeDialog;

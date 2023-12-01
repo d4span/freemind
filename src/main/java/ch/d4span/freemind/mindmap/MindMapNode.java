@@ -18,7 +18,7 @@
  */
 
 
-package freemind.modes;
+package ch.d4span.freemind.mindmap;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -40,6 +40,13 @@ import freemind.controller.filter.FilterInfo;
 import freemind.extensions.NodeHook;
 import freemind.extensions.PermanentNodeHook;
 import freemind.main.XMLElement;
+import freemind.modes.HistoryInformation;
+import freemind.modes.MapFeedback;
+import freemind.modes.MindIcon;
+import freemind.modes.MindMapCloud;
+import freemind.modes.MindMapEdge;
+import freemind.modes.MindMapLinkRegistry;
+import freemind.modes.ModeController;
 import freemind.modes.attributes.Attribute;
 import freemind.modes.mindmapmode.actions.MindMapActions;
 
@@ -183,7 +190,8 @@ public interface MindMapNode extends MutableTreeNode {
 
 	String getFontFamilyName();
 
-	String toString();
+	@Override
+    String toString();
 
 	String getPlainTextContent();
 

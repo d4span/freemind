@@ -22,12 +22,12 @@ package freemind.modes.mindmapmode.actions.xml.actors;
 
 import java.awt.Color;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.EdgeColorFormatAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.main.Tools;
 import freemind.modes.EdgeAdapter;
 import freemind.modes.ExtendedMapFeedback;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapEdgeModel;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 

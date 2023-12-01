@@ -51,12 +51,12 @@ import javax.xml.transform.stream.StreamSource;
 
 import accessories.plugins.util.html.ClickableImageCreator;
 import accessories.plugins.util.xslt.ExportDialog;
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.extensions.ExportHook;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.MindIcon;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 
 /**

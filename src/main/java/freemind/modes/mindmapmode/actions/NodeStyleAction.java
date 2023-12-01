@@ -27,9 +27,9 @@ package freemind.modes.mindmapmode.actions;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.MenuItemSelectedListener;
 import freemind.main.Tools;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.MindMapNodeModel;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;

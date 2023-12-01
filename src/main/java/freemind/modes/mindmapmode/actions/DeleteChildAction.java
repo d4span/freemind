@@ -26,10 +26,10 @@ package freemind.modes.mindmapmode.actions;
 import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.common.OptionalDontShowMeAgainDialog;
 import freemind.controller.actions.generated.instance.DeleteNodeAction;
 import freemind.main.FreeMind;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 
 @SuppressWarnings("serial")

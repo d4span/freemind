@@ -27,12 +27,12 @@ import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.common.OptionalDontShowMeAgainDialog;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.extensions.HookRegistration;
 import freemind.main.FreeMind;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
@@ -46,7 +46,8 @@ public class RemoveNote extends MindMapNodeHookAdapter {
 		super();
 	}
 
-	public void invoke(MindMapNode rootNode) {
+	@Override
+    public void invoke(MindMapNode rootNode) {
 		super.invoke(rootNode);
 		int showResult = new OptionalDontShowMeAgainDialog(
 				getMindMapController().getFrame().getJFrame(),
@@ -88,7 +89,8 @@ public class RemoveNote extends MindMapNodeHookAdapter {
 			logger = controller.getFrame().getLogger(this.getClass().getName());
 		}
 
-		public boolean isEnabled(JMenuItem pItem, Action pAction) {
+		@Override
+        public boolean isEnabled(JMenuItem pItem, Action pAction) {
 			if (controller == null)
 				return false;
 			boolean foundNote = false;
@@ -101,10 +103,12 @@ public class RemoveNote extends MindMapNodeHookAdapter {
 			return foundNote;
 		}
 
-		public void deRegister() {
+		@Override
+        public void deRegister() {
 		}
 
-		public void register() {
+		@Override
+        public void register() {
 		}
 	}
 }

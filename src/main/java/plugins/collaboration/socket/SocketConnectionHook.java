@@ -26,12 +26,12 @@ package plugins.collaboration.socket;
 import java.io.IOException;
 import java.io.Writer;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.CollaborationUserInformation;
 import freemind.extensions.DontSaveMarker;
 import freemind.extensions.PermanentNodeHook;
 import freemind.main.XMLElement;
 import freemind.modes.ExtendedMapFeedback;
-import freemind.modes.MindMapNode;
 import freemind.view.mindmapview.NodeView;
 
 /**

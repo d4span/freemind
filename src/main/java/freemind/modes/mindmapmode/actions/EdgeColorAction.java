@@ -25,8 +25,9 @@ package freemind.modes.mindmapmode.actions;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 
 @SuppressWarnings("serial")

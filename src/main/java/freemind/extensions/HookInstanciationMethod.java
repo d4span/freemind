@@ -28,8 +28,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.modes.MapFeedback;
-import freemind.modes.MindMapNode;
 
 public class HookInstanciationMethod {
 	private static interface DestinationNodesGetter {

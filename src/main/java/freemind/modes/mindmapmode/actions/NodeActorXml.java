@@ -25,8 +25,8 @@
  */
 package freemind.modes.mindmapmode.actions;
 
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 import freemind.modes.mindmapmode.actions.xml.ActorXml;
 

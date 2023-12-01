@@ -30,11 +30,11 @@ import java.util.Vector;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.extensions.HookRegistration;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import freemind.modes.ModeController.NodeSelectionListener;
 import freemind.modes.mindmapmode.MindMapController;
@@ -128,18 +128,22 @@ public class NodeHistory extends MindMapNodeHookAdapter {
 			logger = controller.getFrame().getLogger(this.getClass().getName());
 		}
 
-		public void register() {
+		@Override
+        public void register() {
 			controller.registerNodeSelectionListener(this, false);
 		}
 
-		public void deRegister() {
+		@Override
+        public void deRegister() {
 			controller.deregisterNodeSelectionListener(this);
 		}
 
-		public void onLostFocusNode(NodeView pNode) {
+		@Override
+        public void onLostFocusNode(NodeView pNode) {
 		}
 
-		public void onFocusNode(NodeView pNode) {
+		@Override
+        public void onFocusNode(NodeView pNode) {
 			/*******************************************************************
 			 * don't denote positions, if somebody navigates through them. *
 			 */
@@ -172,13 +176,16 @@ public class NodeHistory extends MindMapNodeHookAdapter {
 			}
 		}
 
-		public void onSaveNode(MindMapNode pNode) {
+		@Override
+        public void onSaveNode(MindMapNode pNode) {
 		}
 
-		public void onUpdateNodeHook(MindMapNode pNode) {
+		@Override
+        public void onUpdateNodeHook(MindMapNode pNode) {
 		}
 
-		public boolean isEnabled(JMenuItem pItem, Action pAction) {
+		@Override
+        public boolean isEnabled(JMenuItem pItem, Action pAction) {
 			String hookName = ((NodeHookAction) pAction).getHookName();
 			if ("accessories/plugins/NodeHistoryBack.properties"
 					.equals(hookName)) {
@@ -193,7 +200,8 @@ public class NodeHistory extends MindMapNodeHookAdapter {
 		/* (non-Javadoc)
 		 * @see freemind.modes.ModeController.NodeSelectionListener#onSelectionChange(freemind.modes.MindMapNode, boolean)
 		 */
-		public void onSelectionChange(NodeView pNode, boolean pIsSelected) {
+		@Override
+        public void onSelectionChange(NodeView pNode, boolean pIsSelected) {
 		}
 
 	}
@@ -205,7 +213,8 @@ public class NodeHistory extends MindMapNodeHookAdapter {
 		super();
 	}
 
-	public void invoke(MindMapNode node) {
+	@Override
+    public void invoke(MindMapNode node) {
 		super.invoke(node);
 		final MindMapController modeController = getMindMapController();
 		String direction = getResourceString("direction");
@@ -251,30 +260,28 @@ public class NodeHistory extends MindMapNodeHookAdapter {
 		 * as the selection is restored after invoke, we make this trick to
 		 * change it.
 		 **********************************************************************/
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				ModeController c = modeController;
-				if (fChangeModule) {
-					boolean res = mainController.getMapModuleManager()
-							.changeToMapModule(fNewModule.toString());
-					if (!res) {
-						logger.warning("Can't change to map module "
-								+ fNewModule);
-						sPreventRegistration = false;
-						return;
-					}
-					c = fNewModule.getModeController();
-				}
-				if (!toBeSelected.isRoot()) {
-					c.setFolded(toBeSelected.getParentNode(), false);
-				}
-				NodeView nodeView = c.getNodeView(toBeSelected);
-				if (nodeView != null) {
-					c.select(nodeView);
-					sPreventRegistration = false;
-				}
-			}
-		});
+		EventQueue.invokeLater(() -> {
+        	ModeController c = modeController;
+        	if (fChangeModule) {
+        		boolean res = mainController.getMapModuleManager()
+        				.changeToMapModule(fNewModule.toString());
+        		if (!res) {
+        			logger.warning("Can't change to map module "
+        					+ fNewModule);
+        			sPreventRegistration = false;
+        			return;
+        		}
+        		c = fNewModule.getModeController();
+        	}
+        	if (!toBeSelected.isRoot()) {
+        		c.setFolded(toBeSelected.getParentNode(), false);
+        	}
+        	NodeView nodeView = c.getNodeView(toBeSelected);
+        	if (nodeView != null) {
+        		c.select(nodeView);
+        		sPreventRegistration = false;
+        	}
+        });
 	}
 
 	private void printVector() {

@@ -26,10 +26,10 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Iterator;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.Tools;
 import freemind.modes.EdgeAdapter;
 import freemind.modes.MindMapEdge;
-import freemind.modes.MindMapNode;
 
 @SuppressWarnings("serial")
 class ForkMainView extends MainView {

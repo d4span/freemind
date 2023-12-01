@@ -23,7 +23,7 @@
 
 package freemind.extensions;
 
-import freemind.modes.MindMap;
+import ch.d4span.freemind.mindmap.MindMap;
 import freemind.modes.mindmapmode.MindMapController;
 
 /**

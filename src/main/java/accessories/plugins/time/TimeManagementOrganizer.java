@@ -25,11 +25,11 @@ package accessories.plugins.time;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.extensions.HookRegistration;
 import freemind.extensions.PermanentNodeHook;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import freemind.modes.common.plugins.ReminderHookBase;
 import freemind.modes.mindmapmode.actions.NodeHookAction;
@@ -51,10 +51,12 @@ public class TimeManagementOrganizer implements HookRegistration,
 		logger = controller.getFrame().getLogger(this.getClass().getName());
 	}
 
-	public void register() {
+	@Override
+    public void register() {
 	}
 
-	public void deRegister() {
+	@Override
+    public void deRegister() {
 	}
 
 	/*
@@ -64,10 +66,11 @@ public class TimeManagementOrganizer implements HookRegistration,
 	 * freemind.controller.MenuItemEnabledListener#isEnabled(javax.swing.JMenuItem
 	 * , javax.swing.Action)
 	 */
-	public boolean isEnabled(JMenuItem item, Action action) {
+	@Override
+    public boolean isEnabled(JMenuItem item, Action action) {
 		if (action instanceof NodeHookAction) {
 			String hookName = ((NodeHookAction) action).getHookName();
-			if (hookName.equals("plugins/time/RemoveReminderHook.java")) {
+			if ("plugins/time/RemoveReminderHook.java".equals(hookName)) {
 				boolean visible = false;
 				for (MindMapNode node : controller.getSelecteds()) {
 					if (TimeManagementOrganizer.getHook(node) != null) {

@@ -22,10 +22,10 @@ package freemind.modes.browsemode;
 
 import java.awt.Color;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.XMLElement;
 import freemind.modes.EdgeAdapter;
 import freemind.modes.MapFeedback;
-import freemind.modes.MindMapNode;
 
 public class BrowseEdgeModel extends EdgeAdapter {
 

@@ -29,9 +29,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.Action;
 import javax.swing.JMenuItem;
+
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.MenuItemEnabledListener;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 
 @SuppressWarnings("serial")

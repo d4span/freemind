@@ -26,11 +26,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import ch.d4span.freemind.mindmap.MindMap;
 import freemind.controller.actions.generated.instance.RevertXmlAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.main.Resources;
 import freemind.modes.ExtendedMapFeedback;
-import freemind.modes.MindMap;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 
 /**
@@ -104,7 +104,8 @@ public class RevertActor extends XmlActorAdapter {
 	 * freemind.controller.actions.ActorXml#act(freemind.controller.actions.
 	 * generated.instance.XmlAction)
 	 */
-	public void act(XmlAction action) {
+	@Override
+    public void act(XmlAction action) {
 		if (action instanceof RevertXmlAction) {
 			try {
 				RevertXmlAction revertAction = (RevertXmlAction) action;
@@ -141,7 +142,8 @@ public class RevertActor extends XmlActorAdapter {
 	 * 
 	 * @see freemind.controller.actions.ActorXml#getDoActionClass()
 	 */
-	public Class<RevertXmlAction> getDoActionClass() {
+	@Override
+    public Class<RevertXmlAction> getDoActionClass() {
 		return RevertXmlAction.class;
 	}
 

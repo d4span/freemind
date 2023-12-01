@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.MapMouseMotionListener;
 import freemind.controller.MapMouseWheelListener;
 import freemind.controller.NodeDragListener;

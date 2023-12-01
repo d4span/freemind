@@ -25,10 +25,10 @@ package freemind.modes.viewmodes;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.extensions.NodeHook;
 import freemind.extensions.PermanentNodeHookSubstituteUnknown;
 import freemind.modes.ControllerAdapter;
-import freemind.modes.MindMapNode;
 import freemind.modes.Mode;
 import freemind.modes.common.CommonNodeKeyListener;
 import freemind.modes.common.CommonNodeKeyListener.EditHandler;

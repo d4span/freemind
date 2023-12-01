@@ -25,13 +25,13 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
 
+import ch.d4span.freemind.mindmap.MindMap;
 import freemind.modes.ArrowLinkAdapter;
 import freemind.modes.ArrowLinkTarget;
 import freemind.modes.CloudAdapter;
 import freemind.modes.EdgeAdapter;
 import freemind.modes.MapAdapter;
 import freemind.modes.MapFeedback;
-import freemind.modes.MindMap;
 import freemind.modes.MindMapLinkRegistry;
 import freemind.modes.ModeController;
 import freemind.modes.NodeAdapter;

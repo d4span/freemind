@@ -23,10 +23,10 @@
  */
 package freemind.controller.filter.condition;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.main.Resources;
 import freemind.main.XMLElement;
-import freemind.modes.MindMapNode;
 import freemind.modes.attributes.Attribute;
 
 /**

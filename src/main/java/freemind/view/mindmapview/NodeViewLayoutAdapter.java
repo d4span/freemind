@@ -26,8 +26,8 @@ import java.awt.Point;
 
 import javax.swing.JComponent;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.Tools;
-import freemind.modes.MindMapNode;
 
 /**
  * @author foltin

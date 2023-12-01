@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import plugins.script.ScriptEditorPanel.ScriptHolder;
 import plugins.script.ScriptEditorPanel.ScriptModel;
 import plugins.script.ScriptingEngine.ErrorHandler;
@@ -26,8 +28,6 @@ import freemind.main.FreeMindMain.StartupDoneListener;
 import freemind.main.HtmlTools;
 import freemind.main.Tools;
 import freemind.main.Tools.BooleanHolder;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.actions.ApplyPatternAction.ExternalPatternAction;
@@ -44,7 +44,8 @@ public class ScriptingRegistration implements HookRegistration,
 				MindMapController modeController) {
 		}
 
-		public List<PropertyControl> getControls(TextTranslator pTextTranslator) {
+		@Override
+        public List<PropertyControl> getControls(TextTranslator pTextTranslator) {
 			Vector<PropertyControl> controls = new Vector<>();
 			controls.add(new OptionPanel.NewTabProperty(
 					"plugins/scripting/tab_name"));
@@ -83,43 +84,51 @@ public class ScriptingRegistration implements HookRegistration,
 			mOriginalScript = pScript;
 		}
 
-		public ScriptEditorWindowConfigurationStorage decorateDialog(
+		@Override
+        public ScriptEditorWindowConfigurationStorage decorateDialog(
 				ScriptEditorPanel pPanel,
 				String pWindow_preference_storage_property) {
 			return (ScriptEditorWindowConfigurationStorage) controller
 					.decorateDialog(pPanel, pWindow_preference_storage_property);
 		}
 
-		public void endDialog(boolean pIsCanceled) {
+		@Override
+        public void endDialog(boolean pIsCanceled) {
 			if (pIsCanceled) {
 				mScript = mOriginalScript;
 			}
 		}
 
-		public boolean executeScript(int pIndex, PrintStream pOutStream,
+		@Override
+        public boolean executeScript(int pIndex, PrintStream pOutStream,
 				ErrorHandler pErrorHandler) {
 			return ScriptingEngine.executeScript(controller.getSelected(),
 					new BooleanHolder(true), mScript, controller,
 					pErrorHandler, pOutStream, getScriptCookies());
 		}
 
-		public int getAmountOfScripts() {
+		@Override
+        public int getAmountOfScripts() {
 			return 1;
 		}
 
-		public ScriptHolder getScript(int pIndex) {
+		@Override
+        public ScriptHolder getScript(int pIndex) {
 			return new ScriptHolder("Script", mScript);
 		}
 
-		public boolean isDirty() {
+		@Override
+        public boolean isDirty() {
 			return !Tools.safeEquals(mScript, mOriginalScript);
 		}
 
-		public void setScript(int pIndex, ScriptHolder pScript) {
+		@Override
+        public void setScript(int pIndex, ScriptHolder pScript) {
 			mScript = pScript.getScript();
 		}
 
-		public void storeDialogPositions(ScriptEditorPanel pPanel,
+		@Override
+        public void storeDialogPositions(ScriptEditorPanel pPanel,
 				ScriptEditorWindowConfigurationStorage pStorage,
 				String pWindow_preference_storage_property) {
 			controller.storeDialogPositions(pPanel, pStorage,
@@ -130,7 +139,8 @@ public class ScriptingRegistration implements HookRegistration,
 			return mScript;
 		}
 
-		public int addNewScript() {
+		@Override
+        public int addNewScript() {
 			return 0;
 		}
 	}
@@ -146,21 +156,19 @@ public class ScriptingRegistration implements HookRegistration,
 				this.getClass().getName());
 	}
 
-	public void register() {
+	@Override
+    public void register() {
 		controller.registerPlugin(this);
-		mScriptEditorStarter = new ScriptEditorProperty.ScriptEditorStarter() {
-
-			public String startEditor(String pScriptInput) {
-				ScriptingEngine.logger.info("Start to edit script..."
-						+ pScriptInput);
-				PatternScriptModel patternScriptModel = new PatternScriptModel(
-						pScriptInput);
-				ScriptEditorPanel scriptEditorPanel = new ScriptEditorPanel(
-						patternScriptModel, controller.getFrame(), false);
-				scriptEditorPanel.setVisible(true);
-				return patternScriptModel.getScript();
-			}
-		};
+		mScriptEditorStarter = pScriptInput -> {
+        	ScriptingEngine.logger.info("Start to edit script..."
+        			+ pScriptInput);
+        	PatternScriptModel patternScriptModel = new PatternScriptModel(
+        			pScriptInput);
+        	ScriptEditorPanel scriptEditorPanel = new ScriptEditorPanel(
+        			patternScriptModel, controller.getFrame(), false);
+        	scriptEditorPanel.setVisible(true);
+        	return patternScriptModel.getScript();
+        };
 		controller.registerPlugin(mScriptEditorStarter);
 		mScriptingPluginPropertyContributor = new ScriptingPluginPropertyContributor(
 				controller);
@@ -168,13 +176,15 @@ public class ScriptingRegistration implements HookRegistration,
 		controller.getFrame().registerStartupDoneListener(this);
 	}
 
-	public void deRegister() {
+	@Override
+    public void deRegister() {
 		controller.deregisterPlugin(this);
 		controller.deregisterPlugin(mScriptEditorStarter);
 		OptionPanel.removeContributor(mScriptingPluginPropertyContributor);
 	}
 
-	public void act(MindMapNode node, Pattern pattern) {
+	@Override
+    public void act(MindMapNode node, Pattern pattern) {
 		if (pattern.getPatternScript() != null
 				&& pattern.getPatternScript().getValue() != null) {
 			String scriptString = HtmlTools.toXMLUnescapedText(HtmlTools.unescapeHTMLUnicodeEntity(pattern
@@ -186,17 +196,16 @@ public class ScriptingRegistration implements HookRegistration,
 
 	private void executeScript(MindMapNode node, String scriptString) {
 		ScriptingEngine.executeScript(node, new BooleanHolder(false),
-				scriptString, controller, new ErrorHandler() {
-					public void gotoLine(int pLineNumber) {
-					}
-				}, System.out, getScriptCookies());
+				scriptString, controller, pLineNumber -> {
+                }, System.out, getScriptCookies());
 	}
 
 	public HashMap getScriptCookies() {
 		return mScriptCookies;
 	}
 
-	public void startupDone() {
+	@Override
+    public void startupDone() {
 		/* Is there a startup groovy script? */
 		String startupScriptFile = System.getProperty("startup_groovy_script");
 		if (startupScriptFile != null && !startupScriptFile.isEmpty()) {

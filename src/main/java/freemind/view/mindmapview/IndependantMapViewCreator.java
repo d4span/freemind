@@ -36,6 +36,8 @@ import java.net.URISyntaxException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import tests.freemind.FreeMindMainMock;
 import freemind.extensions.NodeHook;
 import freemind.extensions.PermanentNodeHookSubstituteUnknown;
@@ -43,8 +45,6 @@ import freemind.main.FreeMindMain;
 import freemind.main.Tools;
 import freemind.modes.MapAdapter;
 import freemind.modes.MapFeedbackAdapter;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapMapModel;
 
 /**

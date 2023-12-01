@@ -28,6 +28,8 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import ch.d4span.freemind.treemodel.MutableTreeNode;
 import freemind.main.HtmlTools;
 import freemind.main.Tools;
@@ -35,9 +37,7 @@ import freemind.main.Tools.SingleDesEncrypter;
 import freemind.main.XMLElement;
 import freemind.modes.MapAdapter;
 import freemind.modes.MindIcon;
-import freemind.modes.MindMap;
 import freemind.modes.MindMapLinkRegistry;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 
 public class EncryptedMindMapNode extends MindMapNodeModel {

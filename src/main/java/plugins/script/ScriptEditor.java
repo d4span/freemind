@@ -25,12 +25,12 @@ package plugins.script;
 import java.io.PrintStream;
 import java.util.Vector;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import plugins.script.ScriptEditorPanel.ScriptHolder;
 import plugins.script.ScriptEditorPanel.ScriptModel;
 import plugins.script.ScriptingEngine.ErrorHandler;
 import freemind.controller.actions.generated.instance.ScriptEditorWindowConfigurationStorage;
 import freemind.main.Tools.BooleanHolder;
-import freemind.modes.MindMapNode;
 import freemind.modes.attributes.Attribute;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.hooks.MindMapHookAdapter;

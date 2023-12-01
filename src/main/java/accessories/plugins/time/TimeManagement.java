@@ -51,6 +51,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.common.XmlBindingTools;
 import freemind.controller.MapModuleManager.MapModuleChangeObserver;
 import freemind.controller.StructuredMenuHolder;
@@ -60,7 +61,6 @@ import freemind.controller.actions.generated.instance.WindowConfigurationStorage
 import freemind.main.FreeMindCommon;
 import freemind.main.Resources;
 import freemind.main.Tools;
-import freemind.modes.MindMapNode;
 import freemind.modes.Mode;
 import freemind.modes.common.plugins.ReminderHookBase;
 import freemind.modes.mindmapmode.MindMapController;

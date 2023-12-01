@@ -31,6 +31,7 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Vector;
 
+import ch.d4span.freemind.mindmap.MindMap;
 import freemind.common.NumberProperty;
 import freemind.common.PropertyControl;
 import freemind.common.StringProperty;
@@ -40,7 +41,6 @@ import freemind.extensions.PermanentNodeHook;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.ExtendedMapFeedback;
-import freemind.modes.MindMap;
 import freemind.modes.mindmapmode.MindMapController;
 
 /**

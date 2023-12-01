@@ -34,6 +34,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileFilter;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.common.TextTranslator;
 import freemind.controller.Controller;
 import freemind.controller.MapModuleManager;
@@ -160,7 +162,8 @@ public interface ModeController extends TextTranslator, MapFeedback,
 	 * @param inPlaceList
 	 *            the given list is sorted by reference.
 	 */
-	public void sortNodesByDepth(List<MindMapNode> inPlaceList);
+	@Override
+    public void sortNodesByDepth(List<MindMapNode> inPlaceList);
 
 	/**
 	 * This extends the currently selected nodes.
@@ -173,7 +176,8 @@ public interface ModeController extends TextTranslator, MapFeedback,
 	 * Invoke this method after you've changed how a node is to be represented
 	 * in the tree.
 	 */
-	void nodeChanged(MindMapNode n);
+	@Override
+    void nodeChanged(MindMapNode n);
 
 	/**
 	 * @param pIsClean
@@ -185,16 +189,20 @@ public interface ModeController extends TextTranslator, MapFeedback,
 	/**
 	 * Is called when a node is deselected.
 	 */
-	void onLostFocusNode(NodeView node);
+	@Override
+    void onLostFocusNode(NodeView node);
 
 	/**
 	 * Is called when a node is selected.
 	 */
-	void onFocusNode(NodeView node);
+	@Override
+    void onFocusNode(NodeView node);
 
-	void onViewCreatedHook(NodeView newView);
+	@Override
+    void onViewCreatedHook(NodeView newView);
 
-	void onViewRemovedHook(NodeView newView);
+	@Override
+    void onViewRemovedHook(NodeView newView);
 
 	/** */
 	public interface NodeSelectionListener {
@@ -250,7 +258,8 @@ public interface ModeController extends TextTranslator, MapFeedback,
 	 * Is issued before a node is saved (eg. to save its notes, too, even if the
 	 * notes is currently edited). It is issued via NodeSelectionListener.
 	 */
-	void firePreSaveEvent(MindMapNode node);
+	@Override
+    void firePreSaveEvent(MindMapNode node);
 
 	/** */
 	public interface NodeLifetimeListener {
@@ -289,7 +298,8 @@ public interface ModeController extends TextTranslator, MapFeedback,
 	 * Is issued before a node is deleted. It is issued via
 	 * NodeLifetimeListener.
 	 */
-	void fireNodePreDeleteEvent(MindMapNode node);
+	@Override
+    void fireNodePreDeleteEvent(MindMapNode node);
 
 	/**
 	 * The position of this method is an exception. Normally, every method that
@@ -298,7 +308,8 @@ public interface ModeController extends TextTranslator, MapFeedback,
 	 * NodeView getNeighbour(int directionCode)), we make this exception here
 	 * (fc, 6.11.2005).
 	 */
-	void setFolded(MindMapNode node, boolean folded);
+	@Override
+    void setFolded(MindMapNode node, boolean folded);
 
 	/**
 	 * Unfolds a node if necessary.
@@ -334,7 +345,8 @@ public interface ModeController extends TextTranslator, MapFeedback,
 
 	MapView getView();
 
-	MindMap getMap();
+	@Override
+    MindMap getMap();
 
 	/**
 	 * This method must only be used by the model itself at creation time. Don't
@@ -355,11 +367,13 @@ public interface ModeController extends TextTranslator, MapFeedback,
 	/**
 	 * Get text from resource file
 	 */
-	String getText(String textId);
+	@Override
+    String getText(String textId);
 
 	URL getResource(String path);
 
-	void nodeRefresh(MindMapNode node);
+	@Override
+    void nodeRefresh(MindMapNode node);
 
 	NodeView getNodeView(MindMapNode node);
 
@@ -382,7 +396,8 @@ public interface ModeController extends TextTranslator, MapFeedback,
 	 * @param pNode
 	 * @param pIsSelected
 	 */
-	void changeSelection(NodeView pNode, boolean pIsSelected);
+	@Override
+    void changeSelection(NodeView pNode, boolean pIsSelected);
 
 	/**
 	 * @param key

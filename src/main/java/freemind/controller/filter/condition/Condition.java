@@ -25,9 +25,9 @@ package freemind.controller.filter.condition;
 
 import javax.swing.JComponent;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.main.XMLElement;
-import freemind.modes.MindMapNode;
 
 public interface Condition {
 	boolean checkNode(Controller c, MindMapNode node);

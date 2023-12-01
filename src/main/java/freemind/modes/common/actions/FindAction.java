@@ -41,13 +41,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.FreeMind;
 import freemind.main.HtmlTools;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.ControllerAdapter;
 import freemind.modes.FreemindAction;
-import freemind.modes.MindMapNode;
 
 @SuppressWarnings("serial")
 public class FindAction extends FreemindAction {

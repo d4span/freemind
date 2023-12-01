@@ -26,6 +26,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.common.NumberProperty;
 import freemind.controller.Controller;
 import freemind.controller.MapModuleManager.MapTitleContributor;
@@ -36,8 +38,6 @@ import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.ExtendedMapFeedback;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.actions.xml.ActionFilter.FirstActionFilter;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
@@ -107,7 +107,8 @@ public abstract class SocketBasics extends MindMapNodeHookAdapter implements
 	 */
 	public abstract Integer getRole();
 
-	public void startupMapHook() {
+	@Override
+    public void startupMapHook() {
 		super.startupMapHook();
 		if (logger == null) {
 			logger = freemind.main.Resources.getInstance().getLogger(
@@ -117,7 +118,8 @@ public abstract class SocketBasics extends MindMapNodeHookAdapter implements
 				.registerMapTitleContributor(this);
 	}
 
-	public void shutdownMapHook() {
+	@Override
+    public void shutdownMapHook() {
 		Controller controller = getMindMapController().getController();
 		controller.deregisterMapTitleContributor(this);
 		controller.setTitle();
@@ -148,7 +150,8 @@ public abstract class SocketBasics extends MindMapNodeHookAdapter implements
 
 	public abstract int getPort();
 
-	public String getMapTitle(String pOldTitle, MapModule pMapModule,
+	@Override
+    public String getMapTitle(String pOldTitle, MapModule pMapModule,
 			MindMap pModel) {
 		if (pMapModule.getModeController() != getMapFeedback()) {
 			return pOldTitle;
@@ -182,8 +185,7 @@ public abstract class SocketBasics extends MindMapNodeHookAdapter implements
 	 * @return
 	 */
 	private boolean visit(XmlAction pAction, String pSearchString) {
-		if (pAction instanceof CompoundAction) {
-			CompoundAction compound = (CompoundAction) pAction;
+		if (pAction instanceof CompoundAction compound) {
 			boolean result = false;
 			for (Iterator<XmlAction> it = compound.getListChoiceList().iterator(); it
 					.hasNext();) {
@@ -192,8 +194,7 @@ public abstract class SocketBasics extends MindMapNodeHookAdapter implements
 			}
 			return result;
 		}
-		if (pAction instanceof HookNodeAction) {
-			HookNodeAction hookNodeAction = (HookNodeAction) pAction;
+		if (pAction instanceof HookNodeAction hookNodeAction) {
 			if (Tools.safeEquals(hookNodeAction.getHookName(), pSearchString)) {
 				return true;
 			}
@@ -205,7 +206,8 @@ public abstract class SocketBasics extends MindMapNodeHookAdapter implements
 	 * Try to lock, send update package to master (perhaps, myself), execute
 	 * action and unlock
 	 */
-	public ActionPair filterAction(ActionPair pPair) {
+	@Override
+    public ActionPair filterAction(ActionPair pPair) {
 		if (pPair == null || !mFilterEnabled)
 			return pPair;
 		// Don't send any hook instantiations to others.

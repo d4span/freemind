@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.Tools;
 
 /**

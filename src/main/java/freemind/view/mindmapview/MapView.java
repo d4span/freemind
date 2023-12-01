@@ -63,6 +63,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.NodeKeyListener;
 import freemind.controller.NodeMotionListener;
@@ -72,10 +74,8 @@ import freemind.main.FreeMindCommon;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.main.Tools.Pair;
-import freemind.modes.MindMap;
 import freemind.modes.MindMapArrowLink;
 import freemind.modes.MindMapLink;
-import freemind.modes.MindMapNode;
 import freemind.modes.ViewAbstraction;
 import freemind.preferences.FreemindPropertyListener;
 

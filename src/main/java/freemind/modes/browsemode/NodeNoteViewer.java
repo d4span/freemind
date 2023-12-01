@@ -27,9 +27,9 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller.SplitComponentType;
 import freemind.modes.ControllerAdapter;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController.NodeSelectionListener;
 import freemind.modes.common.plugins.NodeNoteBase;
 import freemind.view.mindmapview.NodeView;

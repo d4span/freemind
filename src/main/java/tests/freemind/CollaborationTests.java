@@ -29,6 +29,7 @@ import java.io.StringWriter;
 import java.net.Socket;
 import java.util.Iterator;
 
+import ch.d4span.freemind.mindmap.MindMap;
 import freemind.controller.actions.generated.instance.CollaborationGetOffers;
 import freemind.controller.actions.generated.instance.CollaborationHello;
 import freemind.controller.actions.generated.instance.CollaborationMapOffer;
@@ -43,7 +44,6 @@ import freemind.controller.actions.generated.instance.EditNoteToNodeAction;
 import freemind.main.Tools;
 import freemind.modes.ExtendedMapFeedback;
 import freemind.modes.ExtendedMapFeedbackImpl;
-import freemind.modes.MindMap;
 import plugins.collaboration.socket.MindMapMaster;
 import plugins.collaboration.socket.StandaloneMindMapMaster;
 

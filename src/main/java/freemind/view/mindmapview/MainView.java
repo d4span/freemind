@@ -32,9 +32,9 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.HtmlTools;
 import freemind.main.Tools;
-import freemind.modes.MindMapNode;
 
 /**
  * Base class for all node views.

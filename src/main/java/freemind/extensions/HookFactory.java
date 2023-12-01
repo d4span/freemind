@@ -25,8 +25,8 @@ package freemind.extensions;
 import java.util.List;
 import java.util.Vector;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.Plugin;
-import freemind.modes.MindMapNode;
 
 public interface HookFactory {
 

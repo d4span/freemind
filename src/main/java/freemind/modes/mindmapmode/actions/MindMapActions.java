@@ -27,13 +27,13 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Properties;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.Pattern;
 import freemind.extensions.NodeHook;
 import freemind.modes.MindIcon;
-import freemind.modes.MindMap;
 import freemind.modes.MindMapArrowLink;
 import freemind.modes.MindMapLink;
-import freemind.modes.MindMapNode;
 import freemind.modes.attributes.Attribute;
 
 /**

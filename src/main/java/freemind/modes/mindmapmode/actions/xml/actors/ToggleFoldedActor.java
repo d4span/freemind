@@ -22,6 +22,7 @@ package freemind.modes.mindmapmode.actions.xml.actors;
 
 import java.util.ListIterator;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.CompoundAction;
 import freemind.controller.actions.generated.instance.FoldAction;
 import freemind.controller.actions.generated.instance.XmlAction;
@@ -29,7 +30,6 @@ import freemind.main.FreeMind;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.ExtendedMapFeedback;
-import freemind.modes.MindMapNode;
 import freemind.modes.common.CommonToggleFoldedAction;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 

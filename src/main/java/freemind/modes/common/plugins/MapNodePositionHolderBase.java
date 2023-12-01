@@ -24,12 +24,12 @@ import java.io.File;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.extensions.PermanentNodeHook;
 import freemind.extensions.PermanentNodeHookAdapter;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
-import freemind.modes.MindMapNode;
 
 /**
  * This base class is free of openstreetmap and similar classes.

@@ -24,7 +24,7 @@ package freemind.extensions;
 
 import java.util.HashMap;
 
-import freemind.modes.MindMapNode;
+import ch.d4span.freemind.mindmap.MindMapNode;
 
 /**
  * @author foltin

@@ -23,8 +23,8 @@
  */
 package freemind.controller.filter;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
-import freemind.modes.MindMapNode;
 
 /**
  * @author dimitri 07.05.2005

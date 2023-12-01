@@ -26,10 +26,10 @@ package plugins.collaboration.database;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.extensions.DontSaveMarker;
 import freemind.extensions.PermanentNodeHook;
 import freemind.main.XMLElement;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 import freemind.view.mindmapview.NodeView;
 

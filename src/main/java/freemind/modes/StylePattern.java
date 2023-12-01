@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
 

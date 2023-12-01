@@ -28,7 +28,7 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import freemind.modes.MindMap;
+import ch.d4span.freemind.mindmap.MindMap;
 import freemind.modes.mindmapmode.MindMapController;
 
 /**
@@ -64,7 +64,8 @@ public class RevertAction extends MindmapAction  {
 	 * @see
 	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
-	public void actionPerformed(ActionEvent arg0) {
+	@Override
+    public void actionPerformed(ActionEvent arg0) {
 		try {
 			MindMap map = mindMapController.getMap();
 			File file = map.getFile();

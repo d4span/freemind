@@ -24,8 +24,8 @@ import javax.swing.Action;
 import javax.swing.JMenuItem;
 
 import accessories.plugins.ClonePasteAction.Registration;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.MenuItemEnabledListener;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
 
 /**

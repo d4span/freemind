@@ -42,6 +42,7 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.MindMapNodesSelection;
 import freemind.controller.actions.generated.instance.PasteNodeAction;
 import freemind.controller.actions.generated.instance.TransferableContent;
@@ -59,7 +60,6 @@ import freemind.main.XMLParseException;
 import freemind.modes.ControllerAdapter;
 import freemind.modes.ExtendedMapFeedback;
 import freemind.modes.MapAdapter;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapNodeModel;

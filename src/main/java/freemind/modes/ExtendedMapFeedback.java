@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.extensions.HookFactory;
 import freemind.main.XMLParseException;
 import freemind.modes.mindmapmode.actions.MindMapActions;

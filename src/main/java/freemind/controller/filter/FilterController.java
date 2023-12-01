@@ -32,6 +32,7 @@ import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 
+import ch.d4span.freemind.mindmap.MindMap;
 import freemind.controller.Controller;
 import freemind.controller.MapModuleManager.MapModuleChangeObserver;
 import freemind.controller.filter.condition.Condition;
@@ -41,7 +42,6 @@ import freemind.controller.filter.condition.NoFilteringCondition;
 import freemind.main.Resources;
 import freemind.main.XMLElement;
 import freemind.modes.MindIcon;
-import freemind.modes.MindMap;
 import freemind.modes.Mode;
 import freemind.modes.common.plugins.NodeNoteBase;
 import freemind.view.MapModule;

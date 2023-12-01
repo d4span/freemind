@@ -27,9 +27,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.Tools;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.NodeAdapter;
 
 /**

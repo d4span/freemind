@@ -29,9 +29,9 @@ import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.Tools;
 import freemind.modes.ControllerAdapter;
-import freemind.modes.MindMapNode;
 
 /**
  * @author foltin

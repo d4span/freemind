@@ -26,7 +26,7 @@ package accessories.plugins;
 import java.text.MessageFormat;
 import java.util.Iterator;
 
-import freemind.modes.MindMapNode;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.modes.mindmapmode.hooks.PermanentMindMapNodeHookAdapter;
 
 /**

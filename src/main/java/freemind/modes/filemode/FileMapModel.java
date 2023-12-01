@@ -24,15 +24,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.FreeMindMain;
 import freemind.modes.ArrowLinkAdapter;
 import freemind.modes.ArrowLinkTarget;
 import freemind.modes.CloudAdapter;
 import freemind.modes.EdgeAdapter;
 import freemind.modes.MapAdapter;
-import freemind.modes.MindMap;
 import freemind.modes.MindMapLinkRegistry;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import freemind.modes.NodeAdapter;
 

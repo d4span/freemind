@@ -25,10 +25,10 @@ package freemind.controller.filter.condition;
 
 import javax.swing.JComponent;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.main.Resources;
 import freemind.main.XMLElement;
-import freemind.modes.MindMapNode;
 import freemind.view.mindmapview.NodeView;
 
 public class SelectedViewCondition implements Condition {

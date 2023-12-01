@@ -40,6 +40,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import accessories.plugins.dialogs.ChooseFormatPopupDialog;
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 
@@ -52,8 +54,6 @@ import freemind.controller.Controller;
 import freemind.controller.actions.generated.instance.Pattern;
 import freemind.controller.actions.generated.instance.Patterns;
 import freemind.extensions.HookRegistration;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import freemind.modes.StylePatternFactory;
 import freemind.modes.mindmapmode.MindMapController;

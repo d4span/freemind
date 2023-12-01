@@ -20,6 +20,7 @@
 
 package freemind.modes;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 
 public interface MindMapLink extends MindMapLine {
 

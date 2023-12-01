@@ -29,9 +29,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.NodeMotionListener.NodeMotionAdapter;
 import freemind.main.Tools;
-import freemind.modes.MindMapNode;
 import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.view.mindmapview.MapView;

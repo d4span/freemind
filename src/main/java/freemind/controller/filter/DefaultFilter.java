@@ -26,10 +26,10 @@ package freemind.controller.filter;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.filter.condition.Condition;
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
 import freemind.view.mindmapview.MapView;
 import freemind.view.mindmapview.NodeView;
 

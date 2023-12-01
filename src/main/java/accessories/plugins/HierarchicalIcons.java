@@ -24,9 +24,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.extensions.UndoEventReceiver;
 import freemind.modes.MindIcon;
-import freemind.modes.MindMapNode;
 import freemind.modes.mindmapmode.hooks.PermanentMindMapNodeHookAdapter;
 import freemind.view.mindmapview.MultipleImage;
 

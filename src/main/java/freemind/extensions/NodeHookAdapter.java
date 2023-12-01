@@ -19,8 +19,8 @@
 /*$Id: NodeHookAdapter.java,v 1.1.4.4.2.2 2007/04/21 15:11:20 dpolivaev Exp $*/
 package freemind.extensions;
 
-import freemind.modes.MindMap;
-import freemind.modes.MindMapNode;
+import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.mindmap.MindMapNode;
 
 /**
  * Straight forward implementation with some helpers.
@@ -46,7 +46,8 @@ public abstract class NodeHookAdapter extends HookAdapter implements NodeHook {
 	 * 
 	 * @see freemind.modes.NodeHook#invoke()
 	 */
-	public void invoke(MindMapNode node) {
+	@Override
+    public void invoke(MindMapNode node) {
 		logger.finest("invoke(node) called.");
 	}
 
@@ -58,7 +59,8 @@ public abstract class NodeHookAdapter extends HookAdapter implements NodeHook {
 
 	/**
 	 */
-	public void setNode(MindMapNode node) {
+	@Override
+    public void setNode(MindMapNode node) {
 		this.node = node;
 	}
 
@@ -76,7 +78,8 @@ public abstract class NodeHookAdapter extends HookAdapter implements NodeHook {
 
 	/**
 	 */
-	public void setMap(MindMap map) {
+	@Override
+    public void setMap(MindMap map) {
 		this.map = map;
 	}
 

@@ -27,8 +27,8 @@ import java.util.Vector;
 
 import javax.swing.JComponent;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.main.HtmlTools;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import freemind.view.mindmapview.MapView;
 import freemind.view.mindmapview.NodeView;

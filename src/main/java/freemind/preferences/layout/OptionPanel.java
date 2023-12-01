@@ -52,6 +52,7 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.common.BooleanProperty;
 import freemind.common.ColorProperty;
 import freemind.common.ComboProperty;
@@ -74,7 +75,6 @@ import freemind.main.FreeMindCommon;
 import freemind.main.Tools;
 import freemind.modes.IconInformation;
 import freemind.modes.MindIcon;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.actions.IconAction;

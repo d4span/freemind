@@ -31,10 +31,10 @@ import java.util.Vector;
 import accessories.plugins.ClonePasteAction.CloneProperties;
 import accessories.plugins.ClonePasteAction.ClonePropertiesObserver;
 import accessories.plugins.ClonePasteAction.Registration;
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.extensions.PermanentNodeHook;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
-import freemind.modes.MindMapNode;
 import freemind.modes.ModeController.NodeLifetimeListener;
 import freemind.modes.mindmapmode.hooks.PermanentMindMapNodeHookAdapter;
 

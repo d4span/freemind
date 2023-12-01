@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.CompoundAction;
 import freemind.controller.actions.generated.instance.HookNodeAction;
 import freemind.controller.actions.generated.instance.NodeChildParameter;
@@ -41,7 +42,6 @@ import freemind.extensions.PermanentNodeHookAdapter;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
 import freemind.modes.ExtendedMapFeedback;
-import freemind.modes.MindMapNode;
 import freemind.modes.ViewAbstraction;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 import freemind.view.mindmapview.NodeView;

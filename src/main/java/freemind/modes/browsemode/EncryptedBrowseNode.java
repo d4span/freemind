@@ -28,13 +28,13 @@ import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 
+import ch.d4span.freemind.mindmap.MindMap;
 import freemind.common.TextTranslator;
 import freemind.main.Resources;
 import freemind.main.Tools.SingleDesEncrypter;
 import freemind.main.XMLParseException;
 import freemind.modes.MapFeedback;
 import freemind.modes.MindIcon;
-import freemind.modes.MindMap;
 import freemind.modes.ModeController;
 import freemind.modes.NodeAdapter;
 import freemind.modes.common.dialogs.EnterPasswordDialog;

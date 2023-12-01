@@ -51,6 +51,7 @@ import javax.swing.ToolTipManager;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 
+import ch.d4span.freemind.mindmap.MindMapNode;
 import ch.d4span.freemind.treemodel.TreeNode;
 import freemind.controller.Controller;
 import freemind.main.FreeMind;
@@ -60,7 +61,6 @@ import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.MindIcon;
 import freemind.modes.MindMapCloud;
-import freemind.modes.MindMapNode;
 import freemind.modes.NodeAdapter;
 import freemind.preferences.FreemindPropertyListener;
 
