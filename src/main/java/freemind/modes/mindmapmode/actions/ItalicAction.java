@@ -28,6 +28,7 @@ import javax.swing.JMenuItem;
 
 import freemind.controller.MenuItemSelectedListener;
 import freemind.controller.actions.generated.instance.ItalicNodeAction;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 
 @SuppressWarnings("serial")
@@ -43,8 +44,9 @@ public class ItalicAction extends NodeGeneralAction implements
 		setDoActionClass(ItalicNodeAction.class);
 	}
 
+	@Override
 	public boolean isSelected(JMenuItem item, Action action) {
-		return modeController.getSelected().isItalic();
+		return ((NodeAdapter) modeController.getSelected()).isItalic();
 	}
 
 }

@@ -37,8 +37,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileFilter;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.MapModuleManager;
 import freemind.controller.StructuredMenuHolder;

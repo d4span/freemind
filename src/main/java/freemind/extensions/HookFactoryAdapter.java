@@ -24,7 +24,8 @@ package freemind.extensions;
 
 import java.util.HashMap;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import freemind.modes.NodeAdapter;
 
 /**
  * @author foltin
@@ -45,9 +46,10 @@ public abstract class HookFactoryAdapter implements HookFactory {
 	/**
 	 * @return null if not present, the hook otherwise.
 	 */
+	@Override
 	public PermanentNodeHook getHookInNode(MindMapNode node, String hookName) {
 		// search for already instanciated hooks of this type:
-		for (PermanentNodeHook otherHook : node.getActivatedHooks()) {
+		for (PermanentNodeHook otherHook : ((NodeAdapter) node).getActivatedHooks()) {
 			if (otherHook.getName().equals(hookName)) {
 				// there is already one instance.
 				return otherHook;
@@ -63,6 +65,7 @@ public abstract class HookFactoryAdapter implements HookFactory {
 	 * plugin.
 	 * 
 	 */
+	@Override
 	public void registerRegistrationContainer(
 			HookFactory.RegistrationContainer container,
 			HookRegistration instanciatedRegistrationObject) {
@@ -74,6 +77,7 @@ public abstract class HookFactoryAdapter implements HookFactory {
 		}
 	}
 
+	@Override
 	public void deregisterAllRegistrationContainer() {
 		allRegistrationInstances.clear();
 	}

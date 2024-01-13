@@ -26,8 +26,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.MindMapNodesSelection;
 import freemind.main.Tools;
 import freemind.modes.mindmapmode.MindMapNodeModel;

@@ -22,7 +22,7 @@ package freemind.modes.mindmapmode.actions.xml.actors;
 
 import java.awt.Font;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.FontNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.main.Tools;
@@ -44,6 +44,7 @@ public class FontFamilyActor extends XmlActorAdapter {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
 	public Class<FontNodeAction> getDoActionClass() {
 		return FontNodeAction.class;
 	}
@@ -58,7 +59,7 @@ public class FontFamilyActor extends XmlActorAdapter {
 		FontNodeAction fontFamilyAction = createFontNodeAction(node,
 				fontFamilyValue);
 		FontNodeAction undoFontFamilyAction = createFontNodeAction(node,
-				node.getFontFamilyName());
+				((NodeAdapter) node).getFontFamilyName());
 		return new ActionPair(fontFamilyAction, undoFontFamilyAction);
 	}
 
@@ -75,13 +76,13 @@ public class FontFamilyActor extends XmlActorAdapter {
      *
      */
 
+	@Override
 	public void act(XmlAction action) {
-		if (action instanceof FontNodeAction) {
-			FontNodeAction fontFamilyAction = (FontNodeAction) action;
-			MindMapNode node = getNodeFromID(fontFamilyAction.getNode());
+		if (action instanceof FontNodeAction fontFamilyAction) {
+			NodeAdapter node = getNodeFromID(fontFamilyAction.getNode());
 			String fontFamily = fontFamilyAction.getFont();
 			if (!Tools.safeEquals(node.getFontFamilyName(), fontFamily)) {
-				((NodeAdapter) node).establishOwnFont();
+				node.establishOwnFont();
 				node.setFont(getExMapFeedback().getFontThroughMap(
 						new Font(fontFamily, node.getFont().getStyle(), node
 								.getFont().getSize())));

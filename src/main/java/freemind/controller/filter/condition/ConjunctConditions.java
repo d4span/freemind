@@ -28,7 +28,7 @@ import java.util.Vector;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.filter.FilterController;
 import freemind.main.Resources;

@@ -110,7 +110,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.common.UnicodeReader;
 import freemind.common.XmlBindingTools;
 import freemind.controller.MindMapNodesSelection;

@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.CollaborationUserInformation;
 import freemind.main.Tools;
 import freemind.modes.ExtendedMapFeedback;
@@ -75,7 +75,8 @@ public abstract class SocketMaster extends SocketBasics {
 	 */
 	protected abstract File getBaseFile();
 
-	public Integer getRole() {
+	@Override
+    public Integer getRole() {
 		return ROLE_MASTER;
 	}
 
@@ -84,7 +85,8 @@ public abstract class SocketMaster extends SocketBasics {
 	 * 
 	 * @see plugins.collaboration.socket.SocketBasics#getPort()
 	 */
-	public int getPort() {
+	@Override
+    public int getPort() {
 		return mPort;
 	}
 
@@ -93,7 +95,8 @@ public abstract class SocketMaster extends SocketBasics {
 	 * 
 	 * @see plugins.collaboration.socket.SocketBasics#lock()
 	 */
-	protected String lock(String pUserName, ExtendedMapFeedback pController) throws UnableToGetLockException,
+	@Override
+    protected String lock(String pUserName, ExtendedMapFeedback pController) throws UnableToGetLockException,
 			InterruptedException {
 		SessionData sessionData = getSessionData(pController);
 		synchronized (sessionData.mLockMutex) {
@@ -127,7 +130,8 @@ public abstract class SocketMaster extends SocketBasics {
 	 * plugins.collaboration.socket.SocketBasics#sendCommand(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
-	protected void broadcastCommand(String pDoAction, String pUndoAction,
+	@Override
+    protected void broadcastCommand(String pDoAction, String pUndoAction,
 			String pLockId, ExtendedMapFeedback pController) throws Exception {
 		SessionData sessionData = getSessionData(pController);
 		synchronized (sessionData.mConnections) {
@@ -143,7 +147,8 @@ public abstract class SocketMaster extends SocketBasics {
 	 * 
 	 * @see plugins.collaboration.socket.SocketBasics#unlock()
 	 */
-	protected void unlock(ExtendedMapFeedback pController) {
+	@Override
+    protected void unlock(ExtendedMapFeedback pController) {
 		SessionData sessionData = getSessionData(pController);
 		synchronized (sessionData.mLockMutex) {
 			if (!sessionData.mLockEnabled) {
@@ -189,7 +194,8 @@ public abstract class SocketMaster extends SocketBasics {
 		return users.toString();
 	}
 	
-	protected void executeTransaction(final ActionPair pair, ExtendedMapFeedback pController) {
+	@Override
+    protected void executeTransaction(final ActionPair pair, ExtendedMapFeedback pController) {
 		getSessionData(pController);
 		mFilterEnabled = false;
 		try {
@@ -199,7 +205,8 @@ public abstract class SocketMaster extends SocketBasics {
 		}
 	}
 	
-	public CollaborationUserInformation getMasterInformation(ExtendedMapFeedback pController) {
+	@Override
+    public CollaborationUserInformation getMasterInformation(ExtendedMapFeedback pController) {
 		CollaborationUserInformation userInfo = new CollaborationUserInformation();
 		userInfo.setUserIds(getUsers(pController));
 		userInfo.setMasterHostname(Tools.getHostName());

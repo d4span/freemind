@@ -20,7 +20,7 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.EditNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
@@ -48,12 +48,13 @@ public class EditActor extends XmlActorAdapter {
 	 * freemind.controller.actions.ActorXml#act(freemind.controller.actions.
 	 * generated.instance.XmlAction)
 	 */
+	@Override
 	public void act(XmlAction action) {
 		EditNodeAction editAction = (EditNodeAction) action;
 		NodeAdapter node = this.getNodeFromID(editAction
 				.getNode());
 		if (!node.toString().equals(editAction.getText())) {
-			node.setUserObject(editAction.getText());
+			node.setText(editAction.getText());
 			getExMapFeedback().nodeChanged(node);
 		}
 	}
@@ -63,6 +64,7 @@ public class EditActor extends XmlActorAdapter {
 	 * 
 	 * @see freemind.controller.actions.ActorXml#getDoActionClass()
 	 */
+	@Override
 	public Class<EditNodeAction> getDoActionClass() {
 		return EditNodeAction.class;
 	}

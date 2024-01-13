@@ -23,7 +23,7 @@
  */
 package freemind.modes;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 
 /**
  * @author Dimitri Polivaev 31.10.2005

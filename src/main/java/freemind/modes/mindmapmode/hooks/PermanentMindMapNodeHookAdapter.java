@@ -20,9 +20,10 @@
 
 package freemind.modes.mindmapmode.hooks;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.extensions.PermanentNodeHook;
 import freemind.extensions.PermanentNodeHookAdapter;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 
 /**
@@ -55,7 +56,7 @@ public class PermanentMindMapNodeHookAdapter extends PermanentNodeHookAdapter {
 		PermanentNodeHook hook = (PermanentNodeHook) getMindMapController()
 				.createNodeHook(getName(), child);
 		// invocation:
-		child.invokeHook(hook);
+		((NodeAdapter) child).invokeHook(hook);
 		return hook;
 	}
 

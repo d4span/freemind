@@ -27,12 +27,13 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.MoveNodesAction;
 import freemind.controller.actions.generated.instance.NodeListMember;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 
 /**
@@ -62,7 +63,7 @@ public class NodeUpActor extends XmlActorAdapter {
 	private void _moveNodes(MindMapNode selected, List<MindMapNode> selecteds, int direction) {
 		Comparator<Integer> comparator = (direction == -1) ? null : (i1, i2) -> i2 - i1;
 		if (!selected.isRoot()) {
-			MindMapNode parent = selected.getParentNode();
+			NodeAdapter parent = (NodeAdapter) selected.getParentNode();
 			// multiple move:
 			Vector<MindMapNode> sortedChildren = getSortedSiblings(parent);
 			TreeSet<Integer> range = new TreeSet<Integer>(comparator);
@@ -99,7 +100,7 @@ public class NodeUpActor extends XmlActorAdapter {
 	 * 
 	 * @return returns the new index.
 	 */
-	private int moveNodeTo(MindMapNode newChild, MindMapNode parent,
+	private int moveNodeTo(MindMapNode newChild, NodeAdapter parent,
 			int direction) {
 		MindMap model = getExMapFeedback().getMap();
 		int index = model.getIndexOfChild(parent, newChild);
@@ -126,14 +127,14 @@ public class NodeUpActor extends XmlActorAdapter {
 	/**
 	 * Sorts nodes by their left/right status. The left are first.
 	 */
-	private Vector<MindMapNode> getSortedSiblings(MindMapNode node) {
+	private Vector<MindMapNode> getSortedSiblings(NodeAdapter node) {
 		Vector<MindMapNode> nodes = new Vector<>();
 		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
 			nodes.add(i.next());
 		}
 		Collections.sort(nodes, (n1, n2) -> {
-        	int b1 = n1.isLeft() ? 0 : 1;
-        	int b2 = n2.isLeft() ? 0 : 1;
+        	int b1 = ((NodeAdapter) n1).isLeft() ? 0 : 1;
+        	int b2 = ((NodeAdapter) n2).isLeft() ? 0 : 1;
         	return b1 - b2;
         });
 		// logger.finest("Sorted nodes "+ nodes);

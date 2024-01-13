@@ -33,6 +33,7 @@ import freemind.common.NumberProperty;
 import freemind.common.PropertyControl;
 import freemind.common.StringProperty;
 import freemind.extensions.PermanentNodeHook;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 
 /**
@@ -47,6 +48,7 @@ public class DatabaseConnector extends DatabaseBasics {
      *
      */
 
+	@Override
 	public void startupMapHook() {
 		super.startupMapHook();
 		MindMapController controller = getMindMapController();
@@ -103,7 +105,7 @@ public class DatabaseConnector extends DatabaseBasics {
 	}
 
 	private DatabaseConnectionHook isConnected() {
-		Collection<PermanentNodeHook> activatedHooks = getMindMapController().getRootNode()
+		Collection<PermanentNodeHook> activatedHooks = ((NodeAdapter) getMindMapController().getRootNode())
 				.getActivatedHooks();
 		for (PermanentNodeHook hook : activatedHooks) {
 			if (hook instanceof DatabaseConnectionHook) {
@@ -113,6 +115,7 @@ public class DatabaseConnector extends DatabaseBasics {
 		return null;
 	}
 
+	@Override
 	public Integer getRole() {
 		return ROLE_SLAVE;
 	}

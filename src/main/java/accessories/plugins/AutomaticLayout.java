@@ -40,8 +40,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import accessories.plugins.dialogs.ChooseFormatPopupDialog;
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 
@@ -55,6 +55,7 @@ import freemind.controller.actions.generated.instance.Pattern;
 import freemind.controller.actions.generated.instance.Patterns;
 import freemind.extensions.HookRegistration;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 import freemind.modes.StylePatternFactory;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.hooks.PermanentMindMapNodeHookAdapter;
@@ -89,6 +90,7 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 
 		static class MyFreemindPropertyListener implements
 				FreemindPropertyListener {
+			@Override
 			public void propertyChanged(String propertyName, String newValue,
 					String oldValue) {
 				if (propertyName.startsWith(AUTOMATIC_FORMAT_LEVEL)) {
@@ -97,6 +99,7 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 			}
 		};
 
+		@Override
 		public void register() {
 			// add listener:
 			if (listener == null) {
@@ -109,6 +112,7 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 			OptionPanel.addContributor(mAutomaticLayoutPropertyContributor);
 		}
 
+		@Override
 		public void deRegister() {
 			OptionPanel.removeContributor(mAutomaticLayoutPropertyContributor);
 			Controller.removePropertyChangeListener(listener);
@@ -127,6 +131,7 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 			this.controller = controller;
 		}
 
+		@Override
 		public String getText(String pKey) {
 			return controller.getText(pKey);
 		}
@@ -160,14 +165,17 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 			pattern = null;
 		}
 
+		@Override
 		public String getDescription() {
 			return description;
 		}
 
+		@Override
 		public String getLabel() {
 			return label;
 		}
 
+		@Override
 		public void setValue(String value) {
 			pattern = value;
 			Pattern resultPattern = getPatternFromString();
@@ -177,10 +185,12 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 			mButton.setToolTipText(patternString);
 		}
 
+		@Override
 		public String getValue() {
 			return pattern;
 		}
 
+		@Override
 		public void layout(DefaultFormBuilder builder,
 				TextTranslator pTranslator) {
 			JLabel label = builder.append(pTranslator.getText(getLabel()),
@@ -190,6 +200,7 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// construct pattern:
 			Pattern pat = getPatternFromString();
@@ -214,6 +225,7 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 			return StylePatternFactory.getPatternFromString(pattern);
 		}
 
+		@Override
 		public void setEnabled(boolean pEnabled) {
 			mButton.setEnabled(pEnabled);
 		}
@@ -254,14 +266,17 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 			patterns = null;
 		}
 
+		@Override
 		public String getDescription() {
 			return description;
 		}
 
+		@Override
 		public String getLabel() {
 			return label;
 		}
 
+		@Override
 		public void setValue(String value) {
 			patterns = value;
 			Patterns resultPatterns = getPatternsFromString();
@@ -278,10 +293,12 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 			}
 		}
 
+		@Override
 		public String getValue() {
 			return patterns;
 		}
 
+		@Override
 		public void layout(DefaultFormBuilder builder,
 				TextTranslator pTranslator) {
 			JLabel label = builder.append(pTranslator.getText(getLabel()));
@@ -296,10 +313,12 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 			return StylePatternFactory.getPatternsFromString(patterns);
 		}
 
+		@Override
 		public void setEnabled(boolean pEnabled) {
 			mList.setEnabled(pEnabled);
 		}
 
+		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			// construct pattern:
 			final Patterns pat = getPatternsFromString();
@@ -314,28 +333,25 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 					"accessories/plugins/AutomaticLayout.properties_StyleDialogTitle",
 					choice, null);
 			// FIXME: What's that? (fc, 8,4,2008).
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					if (mDialogIsShown)
-						return;
-					mDialogIsShown = true;
-					try {
-						formatDialog.setModal(true);
-						formatDialog.setVisible(true);
-						// process result:
-						if (formatDialog.getResult() == ChooseFormatPopupDialog.OK) {
-							formatDialog.getPattern(choice);
-							patterns = XmlBindingTools.getInstance().marshall(
-									pat);
-							setValue(patterns);
-							firePropertyChangeEvent();
-						}
-					} finally {
-						mDialogIsShown = false;
-					}
-				}
-
-			});
+			EventQueue.invokeLater(() -> {
+            	if (mDialogIsShown)
+            		return;
+            	mDialogIsShown = true;
+            	try {
+            		formatDialog.setModal(true);
+            		formatDialog.setVisible(true);
+            		// process result:
+            		if (formatDialog.getResult() == ChooseFormatPopupDialog.OK) {
+            			formatDialog.getPattern(choice);
+            			patterns = XmlBindingTools.getInstance().marshall(
+            					pat);
+            			setValue(patterns);
+            			firePropertyChangeEvent();
+            		}
+            	} finally {
+            		mDialogIsShown = false;
+            	}
+            });
 		}
 
 	}
@@ -350,6 +366,7 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 			this.modeController = modeController;
 		}
 
+		@Override
 		public List<PropertyControl> getControls(TextTranslator pTextTranslator) {
 			Vector<PropertyControl> controls = new Vector<>();
 			controls.add(new OptionPanel.NewTabProperty(
@@ -374,7 +391,7 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 
 	private void setStyle(MindMapNode node) {
 		logger.finest("updating node id="
-				+ node.getObjectId(getMindMapController()) + " and text:"
+				+ getMindMapController().getNodeID(node) + " and text:"
 				+ node);
 		int depth = depth(node);
 		logger.finest("COLOR, depth=" + (depth));
@@ -399,10 +416,11 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 	 * freemind.extensions.PermanentNodeHook#onAddChild(freemind.modes.MindMapNode
 	 * )
 	 */
+	@Override
 	public void onAddChildren(MindMapNode newChildNode) {
 		logger.finest("onAddChildren " + newChildNode);
 		super.onAddChild(newChildNode);
-		setStyleRecursive(newChildNode);
+		setStyleRecursive((NodeAdapter) newChildNode);
 	}
 
 	/*
@@ -412,9 +430,10 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 	 * freemind.extensions.PermanentNodeHook#onUpdateChildrenHook(freemind.modes
 	 * .MindMapNode)
 	 */
+	@Override
 	public void onUpdateChildrenHook(MindMapNode updatedNode) {
 		super.onUpdateChildrenHook(updatedNode);
-		setStyleRecursive(updatedNode);
+		setStyleRecursive((NodeAdapter) updatedNode);
 	}
 
 	/*
@@ -422,6 +441,7 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 	 * 
 	 * @see freemind.extensions.PermanentNodeHook#onUpdateNodeHook()
 	 */
+	@Override
 	public void onUpdateNodeHook() {
 		super.onUpdateNodeHook();
 		setStyle(getNode());
@@ -432,9 +452,10 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 	 * 
 	 * @see freemind.extensions.NodeHook#invoke(freemind.modes.MindMapNode)
 	 */
+	@Override
 	public void invoke(MindMapNode node) {
 		super.invoke(node);
-		setStyleRecursive(node);
+		setStyleRecursive((NodeAdapter) node);
 	}
 
 	/** get styles from preferences: */
@@ -448,11 +469,11 @@ public class AutomaticLayout extends PermanentMindMapNodeHookAdapter {
 
 	/**
      */
-	private void setStyleRecursive(MindMapNode node) {
+	private void setStyleRecursive(NodeAdapter node) {
 		logger.finest("setStyle " + node);
 		setStyle(node);
 		// recurse:
-		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
+		for (Iterator<NodeAdapter> i = node.childrenUnfolded(); i.hasNext();) {
 			MindMapNode child = i.next();
 			invoke(child);
 		}

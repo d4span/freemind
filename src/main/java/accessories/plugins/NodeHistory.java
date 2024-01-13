@@ -30,8 +30,8 @@ import java.util.Vector;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.extensions.HookRegistration;
@@ -63,7 +63,7 @@ public class NodeHistory extends MindMapNodeHookAdapter {
 
 		public NodeHolder(MindMapNode pNode,
 				MindMapController pMindMapController) {
-			mNodeId = pNode.getObjectId(pMindMapController);
+			mNodeId = pMindMapController.getNodeID(pNode);
 			MapModule mapModule = pMindMapController.getMapModule();
 			if (mapModule == null) {
 				throw new IllegalArgumentException(
@@ -106,7 +106,7 @@ public class NodeHistory extends MindMapNodeHookAdapter {
 
 		public boolean isIdentical(MindMapNode pNode,
 				MindMapController pMindMapController) {
-			String id = pNode.getObjectId(pMindMapController);
+			String id = pMindMapController.getNodeID(pNode);
 			MapModule mapModule = pMindMapController.getMapModule();
 			if (mapModule != null) {
 				return id.equals(mNodeId);

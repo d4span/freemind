@@ -33,8 +33,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.MenuBar;
 import freemind.controller.StructuredMenuHolder;
 import freemind.extensions.HookFactory;
@@ -42,6 +42,7 @@ import freemind.main.XMLParseException;
 import freemind.modes.MapAdapter;
 import freemind.modes.Mode;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 import freemind.modes.common.actions.NewMapAction;
 import freemind.modes.viewmodes.ViewControllerAdapter;
 import freemind.view.mindmapview.MainView;
@@ -59,20 +60,24 @@ public class FileController extends ViewControllerAdapter {
 		super(mode);
 	}
 
+	@Override
 	public JToolBar getModeToolBar() {
 		return ((FileMode) getMode()).getToolbar();
 	}
 
+	@Override
 	public MapAdapter newModel(ModeController modeController) {
 		FileMapModel model = new FileMapModel(getFrame(), modeController);
 		modeController.setModel(model);
 		return model;
 	}
 
+	@Override
 	public MindMapNode newNode(Object userObject, MindMap map) {
 		return new FileNodeModel((File) userObject, map);
 	}
 
+	@Override
 	public JPopupMenu getPopupMenu() {
 		return this.popupmenu;
 	}
@@ -87,6 +92,7 @@ public class FileController extends ViewControllerAdapter {
 			super(getController().getResourceString("center"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (getSelected() != null) {
 				MindMap map = new FileMapModel(
@@ -106,6 +112,7 @@ public class FileController extends ViewControllerAdapter {
 			super(getController().getResourceString("open"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			String inputValue = JOptionPane.showInputDialog(getController()
 					.getView().getSelected(), getText("open"), "");
@@ -130,6 +137,7 @@ public class FileController extends ViewControllerAdapter {
 	 * @see freemind.modes.ModeController#updateMenus(freemind.controller.
 	 * StructuredMenuHolder)
 	 */
+	@Override
 	public void updateMenus(StructuredMenuHolder holder) {
 		add(holder, MenuBar.EDIT_MENU + "/find", find, "keystroke_find");
 		add(holder, MenuBar.EDIT_MENU + "/findNext", findNext,
@@ -137,10 +145,12 @@ public class FileController extends ViewControllerAdapter {
 		add(holder, MenuBar.EDIT_MENU + "/openPath", openPath, null);
 	}
 
+	@Override
 	public HookFactory getHookFactory() {
 		throw new IllegalArgumentException("Not implemented yet.");
 	}
 
+	@Override
 	public void plainClick(MouseEvent e) {
 		/* perform action only if one selected node. */
 		if (getSelecteds().size() != 1)
@@ -156,7 +166,7 @@ public class FileController extends ViewControllerAdapter {
 
 	private void toggleFolded(MindMapNode node) {
 		if (node.hasChildren() && !node.isRoot()) {
-			setFolded(node, !node.isFolded());
+			setFolded(node, !((NodeAdapter) node).isFolded());
 		}
 	}
 

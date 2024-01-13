@@ -26,7 +26,7 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.logging.Logger;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 
 @SuppressWarnings("serial")

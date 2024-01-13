@@ -30,6 +30,7 @@ import javax.swing.JComponent;
 
 import freemind.main.Resources;
 import freemind.main.Tools;
+import freemind.modes.NodeAdapter;
 
 /**
  * 
@@ -65,6 +66,7 @@ public class NodeMotionListenerView extends JComponent {
 		return movedView;
 	}
 
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (isMouseEntered()) {
@@ -74,7 +76,7 @@ public class NodeMotionListenerView extends JComponent {
 			Color color = g2.getColor();
 			Stroke oldStroke = g2.getStroke();
 			g2.setStroke(new BasicStroke());
-			if (movedView.getModel().getHGap() <= 0) {
+			if (((NodeAdapter) movedView.getModel()).getHGap() <= 0) {
 				g2.setColor(Color.RED);
 				g.fillOval(0, 0, getWidth() - 1, getHeight() - 1);
 			} else {

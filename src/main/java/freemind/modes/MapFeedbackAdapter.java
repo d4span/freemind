@@ -27,8 +27,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.MapMouseMotionListener;
 import freemind.controller.MapMouseWheelListener;
 import freemind.controller.NodeDragListener;
@@ -207,7 +207,7 @@ public abstract class MapFeedbackAdapter implements MapFeedback, ViewFeedback {
 	public NodeHook createNodeHook(String pLoadName, MindMapNode pNode) {
 		PermanentNodeHookSubstituteUnknown hook = new PermanentNodeHookSubstituteUnknown(pLoadName);
 		hook.setMap(getMap());
-		pNode.addHook(hook);
+		((NodeAdapter)pNode).addHook(hook);
 		return hook;
 	}
 
@@ -220,14 +220,14 @@ public abstract class MapFeedbackAdapter implements MapFeedback, ViewFeedback {
 	 */
 	@Override
 	public void invokeHooksRecursively(MindMapNode pNode, MindMap pModel) {
-		for (Iterator i = pNode.childrenUnfolded(); i.hasNext();) {
+		for (Iterator i = ((NodeAdapter) pNode).childrenUnfolded(); i.hasNext();) {
 			NodeAdapter child = (NodeAdapter) i.next();
 			invokeHooksRecursively(child, getMap());
 		}
-		for (PermanentNodeHook hook : pNode.getHooks()) {
+		for (PermanentNodeHook hook : ((NodeAdapter)pNode).getHooks()) {
 			hook.setController(this);
 			hook.setMap(getMap());
-			pNode.invokeHook(hook);
+			((NodeAdapter)pNode).invokeHook(hook);
 		}
 
 	}
@@ -351,6 +351,7 @@ public abstract class MapFeedbackAdapter implements MapFeedback, ViewFeedback {
 		}
 
 		/* the < relation. */
+		@Override
 		public int compare(MindMapNode n1, MindMapNode n2) {
 			Object[] path1 = getMap().getPathToRoot(n1);
 			Object[] path2 = getMap().getPathToRoot(n2);
@@ -361,11 +362,12 @@ public abstract class MapFeedbackAdapter implements MapFeedback, ViewFeedback {
 				return 1;
 			if (n1.isRoot()) // if n1 is root, n2 is root, too ;)
 				return 0;
-			return n1.getParentNode().getChildPosition(n1)
-					- n2.getParentNode().getChildPosition(n2);
+			return n1.getParentNode().getChildPosition(n1).get()
+					- n2.getParentNode().getChildPosition(n2).get();
 		}
 	}
 
+	@Override
 	public void sortNodesByDepth(List<MindMapNode> inPlaceList) {
 		Collections.sort(inPlaceList, new NodesDepthComparator());
 		logger.finest("Sort result: " + inPlaceList);

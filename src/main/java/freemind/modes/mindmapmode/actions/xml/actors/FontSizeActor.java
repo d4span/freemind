@@ -20,11 +20,12 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.FontSizeNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.main.Tools;
 import freemind.modes.ExtendedMapFeedback;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 
 /**
@@ -40,6 +41,7 @@ public class FontSizeActor extends XmlActorAdapter {
 		super(pMapFeedback);
 	}
 
+	@Override
 	public Class<FontSizeNodeAction> getDoActionClass() {
 		return FontSizeNodeAction.class;
 	}
@@ -47,7 +49,7 @@ public class FontSizeActor extends XmlActorAdapter {
 	/**
      */
 	public void setFontSize(MindMapNode node, String fontSizeValue) {
-		if (Tools.safeEquals(fontSizeValue, node.getFontSize())) {
+		if (Tools.safeEquals(fontSizeValue, ((NodeAdapter) node).getFontSize())) {
 			return;
 		}
 		execute(getActionPair(node, fontSizeValue));
@@ -56,17 +58,17 @@ public class FontSizeActor extends XmlActorAdapter {
 
 	public ActionPair getActionPair(MindMapNode node, String fontSizeValue) {
 		FontSizeNodeAction fontSizeAction = createFontSizeNodeAction(node,
-				fontSizeValue);
+				Integer.parseInt(fontSizeValue));
 		FontSizeNodeAction undoFontSizeAction = createFontSizeNodeAction(node,
-				node.getFontSize());
+				((NodeAdapter) node).getFontSize());
 		return new ActionPair(fontSizeAction, undoFontSizeAction);
 	}
 
 	private FontSizeNodeAction createFontSizeNodeAction(MindMapNode node,
-			String fontSizeValue) {
+			Integer fontSizeValue) {
 		FontSizeNodeAction fontSizeAction = new FontSizeNodeAction();
 		fontSizeAction.setNode(getNodeID(node));
-		fontSizeAction.setSize(fontSizeValue);
+		fontSizeAction.setSize(fontSizeValue.toString());
 		return fontSizeAction;
 
 	}
@@ -75,10 +77,10 @@ public class FontSizeActor extends XmlActorAdapter {
      *
      */
 
+	@Override
 	public void act(XmlAction action) {
-		if (action instanceof FontSizeNodeAction) {
-			FontSizeNodeAction fontSizeAction = (FontSizeNodeAction) action;
-			MindMapNode node = getNodeFromID(fontSizeAction.getNode());
+		if (action instanceof FontSizeNodeAction fontSizeAction) {
+			NodeAdapter node = getNodeFromID(fontSizeAction.getNode());
 			try {
 				int size = Integer.valueOf(fontSizeAction.getSize()).intValue();
 				if (!node.getFontSize().equals(fontSizeAction.getSize())) {

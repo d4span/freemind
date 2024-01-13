@@ -20,8 +20,8 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.MoveNodeXmlAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
@@ -48,7 +48,7 @@ public class MoveNodeActor extends NodeXmlActorAdapter {
 		node.setHGap(moveAction.getHGap());
 		node.setShiftY(moveAction.getShiftY());
 		if (!node.isRoot())
-			node.getParentNode().setVGap(moveAction.getVGap());
+		((NodeAdapter) node.getParentNode()).setVGap(moveAction.getVGap());
 		getExMapFeedback().nodeChanged(node);
 	}
 
@@ -62,15 +62,15 @@ public class MoveNodeActor extends NodeXmlActorAdapter {
 		// reset position
 		if (selected.isRoot())
 			return null;
-		return getActionPair(selected, NodeAdapter.VGAP, NodeAdapter.HGAP, 0);
+		return getActionPair((NodeAdapter) selected, NodeAdapter.VGAP, NodeAdapter.HGAP, 0);
 	}
 
-	private ActionPair getActionPair(MindMapNode selected, int parentVGap,
+	private ActionPair getActionPair(NodeAdapter selected, int parentVGap,
 			int hGap, int shiftY) {
 		MoveNodeXmlAction moveAction = moveNode(selected, parentVGap, hGap,
 				shiftY);
-		MoveNodeXmlAction undoAction = moveNode(selected, selected
-				.getParentNode().getVGap(), selected.getHGap(),
+		MoveNodeXmlAction undoAction = moveNode(selected, ((NodeAdapter) selected
+				.getParentNode()).getVGap(), selected.getHGap(),
 				selected.getShiftY());
 		return new ActionPair(moveAction, undoAction);
 	}
@@ -87,11 +87,11 @@ public class MoveNodeActor extends NodeXmlActorAdapter {
 
 	public void moveNodeTo(MindMapNode node, int parentVGap, int hGap,
 			int shiftY) {
-		if (parentVGap == node.getParentNode().getVGap()
-				&& hGap == node.getHGap() && shiftY == node.getShiftY()) {
+		if (parentVGap == ((NodeAdapter) node.getParentNode()).getVGap()
+				&& hGap == ((NodeAdapter) node).getHGap() && shiftY == ((NodeAdapter) node).getShiftY()) {
 			return;
 		}
-		execute(getActionPair(node, parentVGap, hGap, shiftY));
+		execute(getActionPair((NodeAdapter) node, parentVGap, hGap, shiftY));
 	}
 
 

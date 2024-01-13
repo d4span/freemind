@@ -20,8 +20,8 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.StrikethroughNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
@@ -59,11 +59,11 @@ public class StrikethroughNodeActor extends NodeXmlActorAdapter {
 	@Override
     public ActionPair apply(MindMap model, MindMapNode selected) {
 		// every node is set to the inverse of the focussed node.
-		boolean Strikethrough = getSelected().isStrikethrough();
-		return getActionPair(selected, !Strikethrough);
+		boolean Strikethrough = ((NodeAdapter) getSelected()).isStrikethrough();
+		return getActionPair((NodeAdapter) selected, !Strikethrough);
 	}
 
-	private ActionPair getActionPair(MindMapNode selected, boolean Strikethrough) {
+	private ActionPair getActionPair(NodeAdapter selected, boolean Strikethrough) {
 		StrikethroughNodeAction StrikethroughAction = toggleStrikethrough(selected, Strikethrough);
 		StrikethroughNodeAction undoStrikethroughAction = toggleStrikethrough(selected, selected.isStrikethrough());
 		return new ActionPair(StrikethroughAction, undoStrikethroughAction);
@@ -77,6 +77,6 @@ public class StrikethroughNodeActor extends NodeXmlActorAdapter {
 	}
 
 	public void setStrikethrough(MindMapNode node, boolean Strikethrough) {
-		execute(getActionPair(node, Strikethrough));
+		execute(getActionPair((NodeAdapter) node, Strikethrough));
 	}
 }

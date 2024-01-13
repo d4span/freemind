@@ -28,7 +28,7 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMap;
 import freemind.modes.mindmapmode.MindMapController;
 
 /**

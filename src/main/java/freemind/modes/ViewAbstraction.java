@@ -23,7 +23,7 @@ package freemind.modes;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.view.mindmapview.NodeView;
 
 /**

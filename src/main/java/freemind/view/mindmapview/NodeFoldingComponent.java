@@ -28,7 +28,6 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -43,10 +42,11 @@ import javax.swing.Timer;
 import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.FreeMind;
 import freemind.main.Resources;
 import freemind.main.Tools;
+import freemind.modes.NodeAdapter;
 
 /**
  * @author Foltin
@@ -85,48 +85,52 @@ public class NodeFoldingComponent extends JButton {
 		if (mIsEnabled) {
 			addMouseListener(new MouseListener() {
 	
+				@Override
 				public void mouseReleased(MouseEvent pE) {
 				}
 	
+				@Override
 				public void mousePressed(MouseEvent pE) {
 				}
 	
+				@Override
 				public void mouseExited(MouseEvent pE) {
 					mIsEntered = false;
 					mColorCounter = COLOR_COUNTER_MAX;
 					repaint();
 				}
 	
+				@Override
 				public void mouseEntered(MouseEvent pE) {
 					mIsEntered = true;
 					startTimer();
 					repaint();
 				}
 	
+				@Override
 				public void mouseClicked(MouseEvent pE) {
 				}
 			});
 			int delay = TIMER_DELAY;
-			ActionListener taskPerformer = new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					if (mIsEntered && mColorCounter < COLOR_COUNTER_MAX) {
-						mColorCounter++;
-						repaint();
-					}
-					if (!mIsEntered && mColorCounter > 0) {
-						mColorCounter--;
-						if(mColorCounter == 0) {
-							stopTimer();
-						}
-						repaint();
-					}
-	
-				}
-			};
+			ActionListener taskPerformer = evt -> {
+            	if (mIsEntered && mColorCounter < COLOR_COUNTER_MAX) {
+            		mColorCounter++;
+            		repaint();
+            	}
+            	if (!mIsEntered && mColorCounter > 0) {
+            		mColorCounter--;
+            		if(mColorCounter == 0) {
+            			stopTimer();
+            		}
+            		repaint();
+            	}
+
+            };
 			mTimer = new Timer(delay, taskPerformer);
 		}
 	}
 
+	@Override
 	public Dimension getPreferredSize() {
 		return getUI().getPreferredSize(this);
 	}
@@ -141,6 +145,7 @@ public class NodeFoldingComponent extends JButton {
 	class RoundImageButtonUI extends BasicButtonUI {
 		protected Shape shape, base;
 
+		@Override
 		protected void installDefaults(AbstractButton b) {
 			super.installDefaults(b);
 			clearTextShiftOffset();
@@ -155,9 +160,11 @@ public class NodeFoldingComponent extends JButton {
 		}
 
 		/* Is called by a button class automatically.*/
+		@Override
 		protected void installListeners(AbstractButton b) {
 			BasicButtonListener listener = new BasicButtonListener(b) {
 
+				@Override
 				public void mousePressed(MouseEvent e) {
 					AbstractButton b = (AbstractButton) e.getSource();
 					initShape(b);
@@ -166,6 +173,7 @@ public class NodeFoldingComponent extends JButton {
 					}
 				}
 
+				@Override
 				public void mouseEntered(MouseEvent e) {
 					AbstractButton b = (AbstractButton) e.getSource();
 					initShape(b);
@@ -174,6 +182,7 @@ public class NodeFoldingComponent extends JButton {
 					}
 				}
 
+				@Override
 				public void mouseMoved(MouseEvent e) {
 					AbstractButton b = (AbstractButton) e.getSource();
 					initShape(b);
@@ -191,6 +200,7 @@ public class NodeFoldingComponent extends JButton {
 			b.addChangeListener(listener);
 		}
 
+		@Override
 		public void paint(Graphics g, JComponent c) {
 			super.paint(g, c);
 			Graphics2D g2 = (Graphics2D) g;
@@ -272,6 +282,7 @@ public class NodeFoldingComponent extends JButton {
 					(int) (color.getBlue()), col);
 		}
 
+		@Override
 		public Dimension getPreferredSize(JComponent c) {
 			JButton b = (JButton) c;
 			Insets i = b.getInsets();
@@ -294,7 +305,7 @@ public class NodeFoldingComponent extends JButton {
 
 	public void setCorrectedLocation(Point p) {
 		int zoomedCircleRadius = getZoomedCircleRadius();
-		boolean left = nodeView.getModel().isLeft();
+		boolean left = ((NodeAdapter) nodeView.getModel()).isLeft();
 		int xCorrection = (int) (zoomedCircleRadius * (SIZE_FACTOR_ON_MOUSE_OVER + ((left) ? +1f
 				: -1f)));
 		setLocation(p.x - xCorrection, (int) (p.y - zoomedCircleRadius
@@ -309,7 +320,7 @@ public class NodeFoldingComponent extends JButton {
 	}
 
 	protected boolean isFolded() {
-		MindMapNode model = nodeView.getModel();
+		NodeAdapter model = (NodeAdapter) nodeView.getModel();
 		return model.isFolded() && model.isVisible();
 	}
 

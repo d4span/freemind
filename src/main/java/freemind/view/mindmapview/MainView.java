@@ -32,9 +32,10 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.HtmlTools;
 import freemind.main.Tools;
+import freemind.modes.NodeAdapter;
 
 /**
  * Base class for all node views.
@@ -62,10 +63,12 @@ public abstract class MainView extends JLabel {
 		setVerticalAlignment(CENTER);
 	}
 
+	@Override
 	public Dimension getMinimumSize() {
 		return minimumSize;
 	}
 
+	@Override
 	public Dimension getMaximumSize() {
 		return maximumSize;
 	}
@@ -82,6 +85,7 @@ public abstract class MainView extends JLabel {
 	 * 
 	 * @see javax.swing.JComponent#getPreferredSize()
 	 */
+	@Override
 	public Dimension getPreferredSize() {
 		final String text = getText();
 		boolean isEmpty = text.length() == 0
@@ -115,6 +119,7 @@ public abstract class MainView extends JLabel {
 		return prefSize;
 	}
 
+	@Override
 	public void paint(Graphics g) {
 		float zoom = getZoom();
 		if (zoom != 1F) {
@@ -142,6 +147,7 @@ public abstract class MainView extends JLabel {
 		return zoom;
 	}
 
+	@Override
 	protected void printComponent(Graphics g) {
 		super.paintComponent(g);
 	}
@@ -150,7 +156,8 @@ public abstract class MainView extends JLabel {
 		if (getNodeView().useSelectionColors()) {
 			paintBackground(graphics, getNodeView().getSelectedColor());
 		} else {
-			final Color backgroundColor = getNodeView().getModel()
+			NodeAdapter model = (NodeAdapter) getNodeView().getModel();
+			final Color backgroundColor = model
 					.getBackgroundColor();
 			if (backgroundColor != null) {
 				paintBackground(graphics, backgroundColor);
@@ -192,6 +199,7 @@ public abstract class MainView extends JLabel {
 	 * 
 	 * @see javax.swing.JComponent#getHeight()
 	 */
+	@Override
 	public int getHeight() {
 		if (isPainting) {
 			final float zoom = getZoom();
@@ -207,6 +215,7 @@ public abstract class MainView extends JLabel {
 	 * 
 	 * @see javax.swing.JComponent#getWidth()
 	 */
+	@Override
 	public int getWidth() {
 		if (isPainting) {
 			final float zoom = getZoom();

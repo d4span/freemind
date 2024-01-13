@@ -31,7 +31,7 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMap;
 import freemind.common.NumberProperty;
 import freemind.common.PropertyControl;
 import freemind.common.StringProperty;
@@ -41,6 +41,7 @@ import freemind.extensions.PermanentNodeHook;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.ExtendedMapFeedback;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 
 /**
@@ -51,6 +52,7 @@ public class MindMapClient extends SocketBasics {
 
 	private static final String HOST_PROPERTY = "plugins.collaboration.database.host";
 
+	@Override
 	public void startupMapHook() {
 		super.startupMapHook();
 		String callType = getProperties().getProperty("callType");
@@ -102,6 +104,7 @@ public class MindMapClient extends SocketBasics {
 				clientCommunication = new ClientCommunication(
 						"Client Communication (publish)", serverConnection,
 						getMindMapController(), mPassword) {
+					@Override
 					protected void reactOnWhoAreYou() {
 						// send publish command
 						CollaborationPublishNewMap publishCommand = new CollaborationPublishNewMap();
@@ -158,7 +161,7 @@ public class MindMapClient extends SocketBasics {
 	}
 
 	private SocketConnectionHook isConnected() {
-		Collection<PermanentNodeHook> activatedHooks = getMindMapController().getRootNode()
+		Collection<PermanentNodeHook> activatedHooks = ((NodeAdapter) getMindMapController().getRootNode())
 				.getActivatedHooks();
 		for (PermanentNodeHook hook : activatedHooks) {
 			if (hook instanceof SocketConnectionHook) {
@@ -168,6 +171,7 @@ public class MindMapClient extends SocketBasics {
 		return null;
 	}
 
+	@Override
 	public Integer getRole() {
 		return ROLE_SLAVE;
 	}
@@ -177,6 +181,7 @@ public class MindMapClient extends SocketBasics {
 	 * 
 	 * @see plugins.collaboration.socket.SocketBasics#getPort()
 	 */
+	@Override
 	public int getPort() {
 		return 0;
 	}
@@ -186,6 +191,7 @@ public class MindMapClient extends SocketBasics {
 	 * 
 	 * @see plugins.collaboration.socket.SocketBasics#lock()
 	 */
+	@Override
 	protected String lock(String pUserName, ExtendedMapFeedback pController) throws UnableToGetLockException,
 			InterruptedException {
 		return null;
@@ -198,6 +204,7 @@ public class MindMapClient extends SocketBasics {
 	 * plugins.collaboration.socket.SocketBasics#sendCommand(java.lang.String,
 	 * java.lang.String)
 	 */
+	@Override
 	protected void broadcastCommand(String pDoAction, String pUndoAction,
 			String pLockId, ExtendedMapFeedback pController) throws Exception {
 	}
@@ -207,6 +214,7 @@ public class MindMapClient extends SocketBasics {
 	 * 
 	 * @see plugins.collaboration.socket.SocketBasics#unlock()
 	 */
+	@Override
 	protected void unlock(ExtendedMapFeedback pController) {
 	}
 
@@ -223,6 +231,7 @@ public class MindMapClient extends SocketBasics {
 	 * 
 	 * @see plugins.collaboration.socket.SocketBasics#getMasterInformation()
 	 */
+	@Override
 	public CollaborationUserInformation getMasterInformation(ExtendedMapFeedback pController) {
 		return null;
 	}

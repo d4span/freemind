@@ -35,8 +35,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Properties;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.Pattern;
 import freemind.extensions.HookFactory;
 import freemind.main.XMLParseException;
@@ -139,9 +139,9 @@ public abstract class ExtendedMapFeedbackAdapter extends MapFeedbackAdapter
 	@Override
 	public void nodeStyleChanged(MindMapNode node) {
 		nodeChanged(node);
-		final ListIterator<MindMapNode> childrenFolded = node.childrenFolded();
+		final ListIterator<MindMapNode> childrenFolded = ((NodeAdapter) node).childrenFolded();
 		while (childrenFolded.hasNext()) {
-			MindMapNode child = (MindMapNode) childrenFolded.next();
+			NodeAdapter child = (NodeAdapter) childrenFolded.next();
 			if (!(child.hasStyle() && child.getEdge().hasStyle())) {
 				nodeStyleChanged(child);
 			}
@@ -168,6 +168,7 @@ public abstract class ExtendedMapFeedbackAdapter extends MapFeedbackAdapter
 		return mActorFactory;
 	}
 
+	@Override
 	public Transferable copy(MindMapNode node, boolean saveInvisible) {
 		return new DummyTransferable();
 	}

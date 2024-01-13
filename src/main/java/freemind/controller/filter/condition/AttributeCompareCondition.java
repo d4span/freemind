@@ -23,10 +23,11 @@
  */
 package freemind.controller.filter.condition;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
+import freemind.modes.NodeAdapter;
 import freemind.modes.attributes.Attribute;
 
 /**
@@ -58,10 +59,12 @@ public class AttributeCompareCondition extends CompareConditionAdapter {
 	 * freemind.controller.filter.condition.Condition#checkNode(freemind.modes
 	 * .MindMapNode)
 	 */
+	@Override
 	public boolean checkNode(Controller c, MindMapNode node) {
-		for (int i = 0; i < node.getAttributeTableLength(); i++) {
+		NodeAdapter nodeAdapter = (NodeAdapter) node;
+		for (int i = 0; i < nodeAdapter.getAttributeTableLength(); i++) {
 			try {
-				Attribute attribute2 = node.getAttribute(i);
+				Attribute attribute2 = nodeAdapter.getAttribute(i);
 				if (attribute2.getName().equals(attribute)
 						&& succeed == (compareTo(attribute2.getValue()
 								.toString()) == comparationResult))
@@ -72,6 +75,7 @@ public class AttributeCompareCondition extends CompareConditionAdapter {
 		return false;
 	}
 
+	@Override
 	public void save(XMLElement element) {
 		XMLElement child = new XMLElement();
 		child.setName(NAME);
@@ -93,6 +97,7 @@ public class AttributeCompareCondition extends CompareConditionAdapter {
 						.xmlToBoolean(element.getStringAttribute(SUCCEED)));
 	}
 
+	@Override
 	protected String createDesctiption() {
 		return super.createDescription(attribute, comparationResult, succeed);
 	}

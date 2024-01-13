@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.HtmlTools;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.view.mindmapview.MapView;

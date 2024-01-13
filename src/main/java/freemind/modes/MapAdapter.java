@@ -40,10 +40,10 @@ import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
-import ch.d4span.freemind.treemodel.DefaultTreeModel;
-import ch.d4span.freemind.treemodel.TreeNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.treemodel.DefaultTreeModel;
+import ch.d4span.freemind.domain.treemodel.TreeNode;
 import freemind.controller.filter.DefaultFilter;
 import freemind.controller.filter.Filter;
 import freemind.controller.filter.condition.NoFilteringCondition;
@@ -97,7 +97,8 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 
 	protected class FileChangeInspectorTimerTask extends TimerTask {
 
-		public void run() {
+		@Override
+        public void run() {
 			boolean shouldFire = false;
 			long lastModified = 0;
 			// minimal synchronized block:
@@ -160,12 +161,13 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 		return null;
 	}
 
-	public void destroy() {
+	@Override
+    public void destroy() {
 		cancelFileChangeObservationTimer();
 		// Do all the necessary destructions in your model,
 		// e.g. remove file locks.
 		// and remove all hooks:
-		removeNodes(getRootNode());
+		removeNodes((NodeAdapter) getRootNode());
 	}
 
 	protected void cancelFileChangeObservationTimer() {
@@ -178,13 +180,13 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 
 	/**
 	 */
-	private void removeNodes(MindMapNode node) {
+	private void removeNodes(NodeAdapter node) {
 		node.removeAllHooks();
 		mMapFeedback.fireNodePreDeleteEvent(node);
 		// and all children:
 		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
 			MindMapNode child = i.next();
-			removeNodes(child);
+			removeNodes((NodeAdapter) child);
 		}
 	}
 	
@@ -200,15 +202,18 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 	// Attributes
 	//
 
-	public boolean isSaved() {
+	@Override
+    public boolean isSaved() {
 		return (changesPerformedSinceLastSave == 0);
 	}
 
-	public boolean isReadOnly() {
+	@Override
+    public boolean isReadOnly() {
 		return readOnly;
 	}
 	
-	public void setReadOnly(boolean pIsReadOnly) {
+	@Override
+    public void setReadOnly(boolean pIsReadOnly) {
 		readOnly = pIsReadOnly;
 	}
 
@@ -218,7 +223,8 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 	 * @param saved
 	 *            true if the file was saved recently. False otherwise.
 	 */
-	public boolean setSaved(boolean saved) {
+	@Override
+    public boolean setSaved(boolean saved) {
 		boolean setTitle = false;
 		if (saved) {
 			changesPerformedSinceLastSave = 0;
@@ -236,7 +242,8 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 		return changesPerformedSinceLastSave;
 	}
 
-	public MindMapNode getRootNode() {
+	@Override
+    public MindMapNode getRootNode() {
 		return (MindMapNode) getRoot();
 	}
 
@@ -249,11 +256,12 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 	 *            one of the nodes, that is now root. The others are grouped
 	 *            around.
 	 */
-	public void changeRoot(MindMapNode newRoot) {
+	@Override
+    public void changeRoot(MindMapNode newRoot) {
 		if (newRoot == getRootNode()) {
 			return;
 		}
-		boolean left = newRoot.isLeft();
+		boolean left = ((NodeAdapter) newRoot).isLeft();
 		MindMapNode node = newRoot;
 		// collect parents (as we remove them from their parents...)
 		Vector<MindMapNode> parents = new Vector<>();
@@ -265,13 +273,13 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 		// bind all parents to a new chain:
 		for (Iterator<MindMapNode> it = parents.iterator(); it.hasNext();) {
 			node = it.next();
-			MindMapNode parent = node.getParentNode();
+			NodeAdapter parent = (NodeAdapter) node.getParentNode();
 			// remove parent
 			node.removeFromParent();
 			// special treatment for left/right
 			if (node == newRoot) {
 				for (MindMapNode child : node.getChildren()) {
-					child.setLeft(left);
+					((NodeAdapter) child).setLeft(left);
 				}
 				parent.setLeft(!left);
 			}
@@ -285,14 +293,16 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 	/**
 	 * Change this to always return null if your model doesn't support files.
 	 */
-	public File getFile() {
+	@Override
+    public File getFile() {
 		return file;
 	}
 
 	/**
 	 * Return URL of the map (whether as local file or a web location)
 	 */
-	public URL getURL() throws MalformedURLException {
+	@Override
+    public URL getURL() throws MalformedURLException {
 		return getFile() != null ? Tools.fileToUrl(getFile()) : null;
 	}
 
@@ -308,23 +318,28 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 	// Node editing
 	//
 
-	public String getAsPlainText(List<MindMapNode> mindMapNodes) {
+	@Override
+    public String getAsPlainText(List<MindMapNode> mindMapNodes) {
 		return "";
 	}
 
-	public String getAsRTF(List<MindMapNode> mindMapNodes) {
+	@Override
+    public String getAsRTF(List<MindMapNode> mindMapNodes) {
 		return "";
 	}
 
-	public String getAsHTML(List<MindMapNode> mindMapNodes) {
+	@Override
+    public String getAsHTML(List<MindMapNode> mindMapNodes) {
 		return null;
 	}
 
-	public String getRestorable() {
+	@Override
+    public String getRestorable() {
 		return null;
 	}
 
-	public MindMapLinkRegistry getLinkRegistry() {
+	@Override
+    public MindMapLinkRegistry getLinkRegistry() {
 		return null;
 	}
 	
@@ -343,11 +358,13 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 	/**
 	 * This method should not be called directly!
 	 */
-	public void nodeChanged(TreeNode node) {
+	@Override
+    public void nodeChanged(TreeNode node) {
 		mMapFeedback.nodeChanged((MindMapNode) node);
 	}
 
-	public void nodeRefresh(TreeNode node) {
+	@Override
+    public void nodeRefresh(TreeNode node) {
 		mMapFeedback.nodeRefresh((MindMapNode) node);
 	}
 
@@ -488,15 +505,18 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 		return e;
 	}
 
-	public Filter getFilter() {
+	@Override
+    public Filter getFilter() {
 		return filter;
 	}
 
-	public void setFilter(Filter filter) {
+	@Override
+    public void setFilter(Filter filter) {
 		this.filter = filter;
 	}
 
-	public void registerMapSourceChangedObserver(
+	@Override
+    public void registerMapSourceChangedObserver(
 			MapSourceChangedObserver pMapSourceChangedObserver,
 			long pGetEventIfChangedAfterThisTimeInMillies) {
 		if (pGetEventIfChangedAfterThisTimeInMillies != 0
@@ -511,22 +531,25 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 		mMapSourceChangedObserverSet.add(pMapSourceChangedObserver);
 	}
 
-	public long deregisterMapSourceChangedObserver(
+	@Override
+    public long deregisterMapSourceChangedObserver(
 			MapSourceChangedObserver pMapSourceChangedObserver) {
 		mMapSourceChangedObserverSet.remove(pMapSourceChangedObserver);
 		return mFileTime;
 	}
 
-	public MapFeedback getMapFeedback() {
+	@Override
+    public MapFeedback getMapFeedback() {
 		return mMapFeedback;
 	}
 
 	/**
      */
-	public SortedMapListModel getIcons() {
+	@Override
+    public SortedMapListModel getIcons() {
 		SortedMapListModel mapIcons;
 		mapIcons = new SortedMapListModel();
-		addIcons(mapIcons, getRootNode());
+		addIcons(mapIcons, (NodeAdapter) getRootNode());
 		return mapIcons;
 	}
 
@@ -534,12 +557,12 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 	 * @param pMapIcons
 	 * @param pRootNode
 	 */
-	private void addIcons(SortedMapListModel pMapIcons, MindMapNode pNode) {
+	private void addIcons(SortedMapListModel pMapIcons, NodeAdapter pNode) {
 		pMapIcons.addAll(pNode.getIcons());
 		ListIterator<MindMapNode> iterator = pNode.childrenUnfolded();
 		while (iterator.hasNext()) {
 			MindMapNode node = (MindMapNode) iterator.next();
-			addIcons(pMapIcons, node);
+			addIcons(pMapIcons, (NodeAdapter) node);
 		}
 	}
 

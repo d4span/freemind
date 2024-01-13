@@ -41,13 +41,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.FreeMind;
 import freemind.main.HtmlTools;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.ControllerAdapter;
 import freemind.modes.FreemindAction;
+import freemind.modes.NodeAdapter;
 
 @SuppressWarnings("serial")
 public class FindAction extends FreemindAction {
@@ -99,13 +100,14 @@ public class FindAction extends FreemindAction {
 		this.controller = controller;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		displayDialog();
 		if (mResult != JOptionPane.OK_OPTION) {
 			return;
 		}
 		String what = mSearchField.getText();
-		if (what == null || what.equals("")) {
+		if (what == null || "".equals(what)) {
 			return;
 		}
 		Collection<String> subterms = breakSearchTermIntoSubterms(what);
@@ -147,18 +149,21 @@ public class FindAction extends FreemindAction {
 		mDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		AbstractAction cancelAction = new AbstractAction() {
 
+			@Override
 			public void actionPerformed(ActionEvent pE) {
 				close(JOptionPane.CANCEL_OPTION);
 			}
 		};
 		AbstractAction okAction = new AbstractAction() {
 
+			@Override
 			public void actionPerformed(ActionEvent pE) {
 				close(JOptionPane.OK_OPTION);
 			}
 		};
 		Tools.addEscapeActionToDialog(mDialog, cancelAction);
 		mDialog.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent pE) {
 				close(JOptionPane.CANCEL_OPTION);
 			}
@@ -232,6 +237,7 @@ public class FindAction extends FreemindAction {
 			this.find = find;
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Collection<String> subterms = find.getSubterms();
 			if (subterms == null) {
@@ -294,7 +300,7 @@ public class FindAction extends FreemindAction {
 
 		// We implement width-first search.
 		while (!nodes.isEmpty()) {
-			MindMapNode node = (MindMapNode) nodes.removeFirst();
+			NodeAdapter node = (NodeAdapter) nodes.removeFirst();
 			// Add children to the queue
 			for (ListIterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
 				nodes.addLast(i.next());
@@ -408,7 +414,7 @@ public class FindAction extends FreemindAction {
 		for (int i = 0; i < path.length - 1; i++) {
 			MindMapNode nodeOnPath = (MindMapNode) path[i];
 			// System.out.println(nodeOnPath);
-			if (nodeOnPath.isFolded()) {
+			if (((NodeAdapter) nodeOnPath).isFolded()) {
 				if (nodesUnfoldedByDisplay != null)
 					nodesUnfoldedByDisplay.add(nodeOnPath);
 				controller.setFolded(nodeOnPath, false);

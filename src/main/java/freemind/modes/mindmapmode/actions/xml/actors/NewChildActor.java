@@ -20,7 +20,7 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.DeleteNodeAction;
 import freemind.controller.actions.generated.instance.NewNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
@@ -50,12 +50,13 @@ public class NewChildActor extends XmlActorAdapter {
 	 * freemind.controller.actions.ActorXml#act(freemind.controller.actions.
 	 * generated.instance.XmlAction)
 	 */
+	@Override
 	public void act(XmlAction action) {
 		NewNodeAction addNodeAction = (NewNodeAction) action;
 		NodeAdapter parent = getNodeFromID(addNodeAction.getNode());
 		int index = addNodeAction.getIndex();
-		MindMapNode newNode = getExMapFeedback().newNode("", parent.getMap());
-		newNode.setLeft(addNodeAction.getPosition().equals("left"));
+		NodeAdapter newNode = (NodeAdapter) getExMapFeedback().newNode("", parent.getMap());
+		newNode.setLeft("left".equals(addNodeAction.getPosition()));
 		String newId = addNodeAction.getNewId();
 		String givenId = getLinkRegistry()
 				.registerLinkTarget(newNode, newId);
@@ -72,6 +73,7 @@ public class NewChildActor extends XmlActorAdapter {
 		// done.
 	}
 
+	@Override
 	protected MindMapLinkRegistry getLinkRegistry() {
 		return getExMapFeedback().getMap().getLinkRegistry();
 	}
@@ -81,6 +83,7 @@ public class NewChildActor extends XmlActorAdapter {
 	 * 
 	 * @see freemind.controller.actions.ActorXml#getDoActionClass()
 	 */
+	@Override
 	public Class<NewNodeAction> getDoActionClass() {
 		return NewNodeAction.class;
 	}

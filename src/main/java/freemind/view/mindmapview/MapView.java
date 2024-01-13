@@ -47,7 +47,6 @@ import java.awt.print.Printable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -63,8 +62,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.NodeKeyListener;
 import freemind.controller.NodeMotionListener;
@@ -76,6 +75,7 @@ import freemind.main.Tools;
 import freemind.main.Tools.Pair;
 import freemind.modes.MindMapArrowLink;
 import freemind.modes.MindMapLink;
+import freemind.modes.NodeAdapter;
 import freemind.modes.ViewAbstraction;
 import freemind.preferences.FreemindPropertyListener;
 
@@ -98,6 +98,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 			mSize = getSize();
 		}
 
+		@Override
 		public void componentResized(ComponentEvent pE) {
 			logger.fine("Component resized " + pE + " old size " + mSize
 					+ " new size " + getSize());
@@ -132,6 +133,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 			// }
 		}
 
+		@Override
 		protected boolean processKeyBinding(KeyStroke pKs, KeyEvent pE,
 				int pCondition, boolean pPressed) {
 			/*
@@ -145,6 +147,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 			return super.processKeyBinding(pKs, pE, pCondition, pPressed);
 		}
 
+		@Override
 		protected void validateTree() {
 			final Component view = getViewport().getView();
 			if (view != null) {
@@ -383,25 +386,30 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 		// current node is selected.
 		setFocusTraversalPolicy(new FocusTraversalPolicy() {
 
+			@Override
 			public Component getLastComponent(Container pAContainer) {
 				return getDefaultComponent(pAContainer);
 			}
 
+			@Override
 			public Component getFirstComponent(Container pAContainer) {
 				return getDefaultComponent(pAContainer);
 			}
 
+			@Override
 			public Component getDefaultComponent(Container pAContainer) {
 				Component defaultComponent = getSelected();
 				logger.fine("Focus traversal to: " + defaultComponent);
 				return defaultComponent;
 			}
 
+			@Override
 			public Component getComponentBefore(Container pAContainer,
 					Component pAComponent) {
 				return getDefaultComponent(pAContainer);
 			}
 
+			@Override
 			public Component getComponentAfter(Container pAContainer,
 					Component pAComponent) {
 				return getDefaultComponent(pAContainer);
@@ -426,51 +434,47 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 
 	
 	private void createPropertyChangeListener() {
-		propertyChangeListener = new FreemindPropertyListener() {
+		propertyChangeListener = (propertyName, newValue, oldValue) -> {
+if (FreeMind.RESOURCES_NODE_TEXT_COLOR.equals(propertyName)) {
+        standardNodeTextColor = Tools.xmlToColor(newValue);
+        MapView.this.getRoot().updateAll();
+} else if (FreeMind.RESOURCES_BACKGROUND_COLOR
+        	.equals(propertyName)) {
+        standardMapBackgroundColor = Tools.xmlToColor(newValue);
+        MapView.this
+        		.setBackground(standardMapBackgroundColor);
+} else if (FreeMind.RESOURCES_SELECTED_NODE_COLOR
+        	.equals(propertyName)) {
+        standardSelectColor = Tools.xmlToColor(newValue);
+        MapView.this.repaintSelecteds();
+} else if (FreeMind.RESOURCES_SELECTED_NODE_RECTANGLE_COLOR
+        	.equals(propertyName)) {
+        standardSelectRectangleColor = Tools.xmlToColor(newValue);
+        MapView.this.repaintSelecteds();
+} else if (FreeMind.RESOURCE_DRAW_RECTANGLE_FOR_SELECTION
+        	.equals(propertyName)) {
+        standardDrawRectangleForSelection = Tools
+        		.xmlToBoolean(newValue);
+        MapView.this.repaintSelecteds();
+} else if (FreeMind.RESOURCE_PRINT_ON_WHITE_BACKGROUND
+        	.equals(propertyName)) {
+        printOnWhiteBackground = Tools.xmlToBoolean(newValue);
+} else if (FreeMindCommon.RESOURCE_ANTIALIAS.equals(propertyName)) {
+        if ("antialias_none".equals(newValue)) {
+        	setAntialiasEdges(false);
+        	setAntialiasAll(false);
+        }
+        if ("antialias_edges".equals(newValue)) {
+        	setAntialiasEdges(true);
+        	setAntialiasAll(false);
+        }
+        if ("antialias_all".equals(newValue)) {
+        	setAntialiasEdges(true);
+        	setAntialiasAll(true);
+        }
+}
 
-			public void propertyChanged(String propertyName, String newValue,
-					String oldValue) {
-				if (propertyName.equals(FreeMind.RESOURCES_NODE_TEXT_COLOR)) {
-					standardNodeTextColor = Tools.xmlToColor(newValue);
-					MapView.this.getRoot().updateAll();
-				} else if (propertyName
-						.equals(FreeMind.RESOURCES_BACKGROUND_COLOR)) {
-					standardMapBackgroundColor = Tools.xmlToColor(newValue);
-					MapView.this
-							.setBackground(standardMapBackgroundColor);
-				} else if (propertyName
-						.equals(FreeMind.RESOURCES_SELECTED_NODE_COLOR)) {
-					standardSelectColor = Tools.xmlToColor(newValue);
-					MapView.this.repaintSelecteds();
-				} else if (propertyName
-						.equals(FreeMind.RESOURCES_SELECTED_NODE_RECTANGLE_COLOR)) {
-					standardSelectRectangleColor = Tools.xmlToColor(newValue);
-					MapView.this.repaintSelecteds();
-				} else if (propertyName
-						.equals(FreeMind.RESOURCE_DRAW_RECTANGLE_FOR_SELECTION)) {
-					standardDrawRectangleForSelection = Tools
-							.xmlToBoolean(newValue);
-					MapView.this.repaintSelecteds();
-				} else if (propertyName
-						.equals(FreeMind.RESOURCE_PRINT_ON_WHITE_BACKGROUND)) {
-					printOnWhiteBackground = Tools.xmlToBoolean(newValue);
-				} else if (propertyName.equals(FreeMindCommon.RESOURCE_ANTIALIAS)) {
-					if ("antialias_none".equals(newValue)) {
-						setAntialiasEdges(false);
-						setAntialiasAll(false);
-					}
-					if ("antialias_edges".equals(newValue)) {
-						setAntialiasEdges(true);
-						setAntialiasAll(false);
-					}
-					if ("antialias_all".equals(newValue)) {
-						setAntialiasEdges(true);
-						setAntialiasAll(true);
-					}
-				}
-
-			}
-		};
+};
 		Controller.addPropertyChangeListener(propertyChangeListener);
 	}
 	
@@ -545,6 +549,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 			mNode = pNode;
 		}
 
+		@Override
 		public void run() {
 			centerNode(mNode);
 		}
@@ -672,7 +677,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 			newSelected = oldSelected.getVisibleParentView();
 		} else {
 			// If folded in the direction, unfold
-			if (oldSelected.getModel().isFolded()) {
+			if (((NodeAdapter) oldSelected.getModel()).isFolded()) {
 				getViewFeedback().setFolded(oldSelected.getModel(),
 						false);
 				return oldSelected;
@@ -694,7 +699,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 			newSelected = oldSelected.getVisibleParentView();
 		} else {
 			// If folded in the direction, unfold
-			if (oldSelected.getModel().isFolded()) {
+			if (((NodeAdapter) oldSelected.getModel()).isFolded()) {
 				getViewFeedback().setFolded(oldSelected.getModel(),
 						false);
 				return oldSelected;
@@ -848,6 +853,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 	}
 
 	
+	@Override
 	public void select(NodeView node) {
 		if (node == null) {
 			logger.warning("Select with null NodeView called!");
@@ -920,6 +926,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 		getSelected().repaintSelected();
 	}
 
+	@Override
 	public void deselect(NodeView newSelected) {
 		if (isSelected(newSelected)) {
 			selected.remove(newSelected);
@@ -1101,6 +1108,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 	 * @return an ArrayList of MindMapNode objects. If both ancestor and
 	 *         descendant node are selected, only the ancestor is returned
 	 */
+	@Override
 	public ArrayList<MindMapNode> getSelectedNodesSortedByY() {
 		final HashSet<MindMapNode> selectedNodesSet = new HashSet<>();
 		for (int i = 0; i < selected.size(); i++) {
@@ -1123,14 +1131,12 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 			pointNodePairs.add(new Pair(Integer.valueOf(point.y), node));
 		}
 		// do the sorting:
-		Collections.sort(pointNodePairs, new Comparator<Pair>() {
-			public int compare(Pair pair0, Pair pair1) {
-				Integer int0 = (Integer) pair0.getFirst();
-				Integer int1 = (Integer) pair1.getFirst();
-				return int0.compareTo(int1);
+		Collections.sort(pointNodePairs, (pair0, pair1) -> {
+        	Integer int0 = (Integer) pair0.getFirst();
+        	Integer int1 = (Integer) pair1.getFirst();
+        	return int0.compareTo(int1);
 
-			}
-		});
+        });
 
 		ArrayList<MindMapNode> selectedNodes = new ArrayList<>();
 		for (Iterator<Pair> it = pointNodePairs.iterator(); it.hasNext();) {
@@ -1185,6 +1191,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 	 * 
 	 * @see java.awt.Container#validateTree()
 	 */
+	@Override
 	protected void validateTree() {
 		validateSelecteds();
 		super.validateTree();
@@ -1234,6 +1241,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 	 * 
 	 * @see javax.swing.JComponent#paint(java.awt.Graphics)
 	 */
+	@Override
 	public void paint(Graphics g) {
 		long startMilli = System.currentTimeMillis();
 		if (isValid()) {
@@ -1281,6 +1289,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 				+ (mPaintingTime / mPaintingAmount));
 	}
 
+	@Override
 	public void paintChildren(Graphics graphics) {
 		HashMap<String, NodeView> labels = new HashMap<>();
 		mArrowLinkViews = new Vector<>();
@@ -1448,6 +1457,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 		}
 	}
 
+	@Override
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) {
 		// TODO:
 		// ask user for :
@@ -1590,6 +1600,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 	 * 
 	 * @see java.awt.dnd.Autoscroll#getAutoscrollInsets()
 	 */
+	@Override
 	public Insets getAutoscrollInsets() {
 		Rectangle outer = getBounds();
 		Rectangle inner = getParent().getBounds();
@@ -1604,6 +1615,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 	 * 
 	 * @see java.awt.dnd.Autoscroll#autoscroll(java.awt.Point)
 	 */
+	@Override
 	public void autoscroll(Point cursorLocn) {
 		Rectangle r = new Rectangle((int) cursorLocn.getX() - margin,
 				(int) cursorLocn.getY() - margin, 1 + 2 * margin,
@@ -1611,6 +1623,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 		scrollRectToVisible(r);
 	}
 
+	@Override
 	public NodeView getNodeView(MindMapNode node) {
 		if (node == null) {
 			return null;
@@ -1631,6 +1644,7 @@ public class MapView extends JPanel implements ViewAbstraction, Printable, Autos
 	 * 
 	 * @see javax.swing.JComponent#getPreferredSize()
 	 */
+	@Override
 	public Dimension getPreferredSize() {
 		if (!getParent().isValid()) {
 			final Dimension preferredLayoutSize = getLayout()

@@ -32,7 +32,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.presentation.NodeStyle;
 import freemind.common.TextTranslator;
 import freemind.common.XmlBindingTools;
 import freemind.controller.actions.generated.instance.Pattern;
@@ -55,6 +56,7 @@ import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.mindmapmode.MindMapController.MindMapControllerPlugin;
 import freemind.modes.mindmapmode.actions.ApplyPatternAction.ExternalPatternAction;
+import groovy.util.Node;
 
 /**
  * This class constructs patterns from files or from nodes and saves them back.
@@ -143,40 +145,41 @@ public class StylePatternFactory {
 
 	public static Pattern createPatternFromNode(MindMapNode node) {
 		Pattern pattern = new Pattern();
+		NodeAdapter nodeAdapter = (NodeAdapter) node;
 
-		if (node.getColor() != null) {
+		if (nodeAdapter.getColor() != null) {
 			PatternNodeColor subPattern = new PatternNodeColor();
-			subPattern.setValue(Tools.colorToXml(node.getColor()));
+			subPattern.setValue(Tools.colorToXml(nodeAdapter.getColor()));
 			pattern.setPatternNodeColor(subPattern);
 		}
-		if (node.getBackgroundColor() != null) {
+		if (nodeAdapter.getBackgroundColor() != null) {
 			PatternNodeBackgroundColor subPattern = new PatternNodeBackgroundColor();
-			subPattern.setValue(Tools.colorToXml(node.getBackgroundColor()));
+			subPattern.setValue(Tools.colorToXml(nodeAdapter.getBackgroundColor()));
 			pattern.setPatternNodeBackgroundColor(subPattern);
 		}
-		if (node.getStyle() != null) {
+		if (nodeAdapter.getStyle() != null) {
 			PatternNodeStyle subPattern = new PatternNodeStyle();
-			subPattern.setValue(node.getStyle());
+			subPattern.setValue(nodeAdapter.getStyle().getStyle());
 			pattern.setPatternNodeStyle(subPattern);
 		}
 
 		PatternNodeFontBold nodeFontBold = new PatternNodeFontBold();
-		nodeFontBold.setValue(node.isBold() ? TRUE_VALUE : FALSE_VALUE);
+		nodeFontBold.setValue(nodeAdapter.isBold() ? TRUE_VALUE : FALSE_VALUE);
 		pattern.setPatternNodeFontBold(nodeFontBold);
 		PatternNodeFontStrikethrough nodeFontStrikethrough = new PatternNodeFontStrikethrough();
-		nodeFontStrikethrough.setValue(node.isStrikethrough() ? TRUE_VALUE : FALSE_VALUE);
+		nodeFontStrikethrough.setValue(nodeAdapter.isStrikethrough() ? TRUE_VALUE : FALSE_VALUE);
 		pattern.setPatternNodeFontStrikethrough(nodeFontStrikethrough);
 		PatternNodeFontItalic nodeFontItalic = new PatternNodeFontItalic();
-		nodeFontItalic.setValue(node.isItalic() ? TRUE_VALUE : FALSE_VALUE);
+		nodeFontItalic.setValue(nodeAdapter.isItalic() ? TRUE_VALUE : FALSE_VALUE);
 		pattern.setPatternNodeFontItalic(nodeFontItalic);
-		if (node.getFontSize() != null) {
+		if (nodeAdapter.getFontSize() != null) {
 			PatternNodeFontSize nodeFontSize = new PatternNodeFontSize();
-			nodeFontSize.setValue(node.getFontSize());
+			nodeFontSize.setValue(nodeAdapter.getFontSize().toString());
 			pattern.setPatternNodeFontSize(nodeFontSize);
 		}
-		if (node.getFontFamilyName() != null) {
+		if (nodeAdapter.getFontFamilyName() != null) {
 			PatternNodeFontName subPattern = new PatternNodeFontName();
-			subPattern.setValue(node.getFontFamilyName());
+			subPattern.setValue(nodeAdapter.getFontFamilyName());
 			pattern.setPatternNodeFontName(subPattern);
 		}
 
@@ -386,19 +389,20 @@ public class StylePatternFactory {
 	
 	@Deprecated 
 	public static void applyPattern(Pattern pattern, MindMapNode pNode, MapFeedback pFeedback) {
+		NodeAdapter nodeAdapter = (NodeAdapter) pNode;
 		if (pattern.getPatternNodeColor() != null) {
-			pNode.setColor(Tools.xmlToColor(pattern
+			nodeAdapter.setColor(Tools.xmlToColor(pattern
 					.getPatternNodeColor().getValue()));
 		}
 		if (pattern.getPatternNodeBackgroundColor() != null) {
-			pNode.setBackgroundColor(Tools
+			nodeAdapter.setBackgroundColor(Tools
 					.xmlToColor(pattern
 							.getPatternNodeBackgroundColor()
 							.getValue()));
 		}
 		if (pattern.getPatternNodeStyle() != null) {
-			pNode.setStyle(pattern.getPatternNodeStyle()
-					.getValue());
+			nodeAdapter.setStyle(NodeStyle.valueOf(pattern.getPatternNodeStyle()
+					.getValue()));
 		}
 		if (pattern.getPatternEdgeColor() != null) {
 			((EdgeAdapter) pNode.getEdge()).setColor(
@@ -438,21 +442,21 @@ public class StylePatternFactory {
 		if (pattern.getPatternNodeFontName() != null) {
 			String nodeFontFamily = pattern.getPatternNodeFontName().getValue();
 			if (nodeFontFamily == null) {
-				pNode.setFont(pFeedback.getDefaultFont());
+				nodeAdapter.setFont(pFeedback.getDefaultFont());
 			} else {
 				((NodeAdapter) pNode).establishOwnFont();
-				pNode.setFont(pFeedback.getFontThroughMap(
-						new Font(nodeFontFamily, pNode.getFont().getStyle(), pNode
+				nodeAdapter.setFont(pFeedback.getFontThroughMap(
+						new Font(nodeFontFamily, nodeAdapter.getFont().getStyle(), nodeAdapter
 								.getFont().getSize())));
 			}
 		}
 		if (pattern.getPatternNodeFontSize() != null) {
 			String nodeFontSize = pattern.getPatternNodeFontSize().getValue();
 			if (nodeFontSize == null) {
-				pNode.setFontSize(pFeedback.getDefaultFont().getSize());
+				nodeAdapter.setFontSize(pFeedback.getDefaultFont().getSize());
 			} else {
 				try {
-					pNode.setFontSize(Integer
+					nodeAdapter.setFontSize(Integer
 							.parseInt(nodeFontSize));
 				} catch (Exception e) {
 					freemind.main.Resources.getInstance()
@@ -588,7 +592,7 @@ public class StylePatternFactory {
 			String searchedPatternName = pattern.getPatternChild().getValue();
 			for (Pattern otherPattern : pPatternList) {
 				if (otherPattern.getName().equals(searchedPatternName)) {
-					for (ListIterator j = node.childrenUnfolded(); j.hasNext();) {
+					for (ListIterator j = ((NodeAdapter) node).childrenUnfolded(); j.hasNext();) {
 						NodeAdapter child = (NodeAdapter) j.next();
 						applyPattern(child, otherPattern, pPatternList, pPlugins, pMapFeedback);
 					}
@@ -597,8 +601,7 @@ public class StylePatternFactory {
 			}
 		}
 		for (MindMapControllerPlugin plugin : pPlugins) {
-			if (plugin instanceof ExternalPatternAction) {
-				ExternalPatternAction externalAction = (ExternalPatternAction) plugin;
+			if (plugin instanceof ExternalPatternAction externalAction) {
 				externalAction.act(node, pattern);
 			}
 		}

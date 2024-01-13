@@ -17,7 +17,7 @@
  *Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ch.d4span.freemind.mindmap;
+package ch.d4span.freemind.domain.mindmap;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +28,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-import ch.d4span.freemind.treemodel.TreeModel;
-import ch.d4span.freemind.treemodel.TreeNode;
+import ch.d4span.freemind.domain.treemodel.TreeModel;
+import ch.d4span.freemind.domain.treemodel.TreeNode;
 import freemind.controller.filter.Filter;
 import freemind.controller.filter.util.SortedListModel;
 import freemind.main.Tools;

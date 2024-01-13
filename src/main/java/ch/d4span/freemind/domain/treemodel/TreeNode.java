@@ -1,4 +1,4 @@
-package ch.d4span.freemind.treemodel;
+package ch.d4span.freemind.domain.treemodel;
 
 public interface TreeNode<V> {
   int getChildCount();
@@ -15,11 +15,9 @@ public interface TreeNode<V> {
     throw new UnsupportedOperationException("Not yet implemented");
   }
 
-  default V getUserObject() {
-    throw new UnsupportedOperationException("Not yet implemented");
-  }
-
   default TreeNode<V> getParent() {
     throw new UnsupportedOperationException("Not yet implemented");
   }
+
+  EventListenerList getListeners();
 }

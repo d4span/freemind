@@ -67,8 +67,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileFilter;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.LastStateStorageManagement;
 import freemind.controller.MapModuleManager;
@@ -133,6 +133,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		// new FileOpener());
 	}
 
+	@Override
 	public void setModel(MapAdapter model) {
 		mModel = model;
 	}
@@ -166,11 +167,13 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 * Currently, this method is called by the mapAdapter. This is buggy, and is
 	 * to be changed.
 	 */
+	@Override
 	public void nodeChanged(MindMapNode node) {
 		setSaved(false);
 		nodeRefresh(node, true);
 	}
 
+	@Override
 	public void setSaved(boolean pIsClean) {
 		boolean stateChanged = getMap().setSaved(pIsClean);
 		if (stateChanged) {
@@ -179,6 +182,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	}
 
 
+	@Override
 	public void nodeRefresh(MindMapNode node) {
 		nodeRefresh(node, false);
 	}
@@ -199,6 +203,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		((MapAdapter) getMap()).nodeChangedInternal(node);
 	}
 
+	@Override
 	public void refreshMap() {
 		final MindMapNode root = getMap().getRootNode();
 		refreshMapFrom(root);
@@ -227,6 +232,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		}
 	}
 
+	@Override
 	public void onLostFocusNode(NodeView node) {
 		try {
 			// deselect the old node:
@@ -236,7 +242,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 			for (NodeSelectionListener listener : copy) {
 				listener.onLostFocusNode(node);
 			}
-			for (PermanentNodeHook hook : node.getModel().getActivatedHooks()) {
+			for (PermanentNodeHook hook : ((NodeAdapter) node.getModel()).getActivatedHooks()) {
 				hook.onLostFocusNode(node);
 			}
 		} catch (RuntimeException e) {
@@ -245,6 +251,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 
 	}
 
+	@Override
 	public void onFocusNode(NodeView node) {
 		try {
 			// select the new node:
@@ -254,7 +261,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 			for (NodeSelectionListener listener : copy) {
 				listener.onFocusNode(node);
 			}
-			for (PermanentNodeHook hook : node.getModel().getActivatedHooks()) {
+			for (PermanentNodeHook hook : ((NodeAdapter) node.getModel()).getActivatedHooks()) {
 				hook.onFocusNode(node);
 			}
 		} catch (RuntimeException e) {
@@ -263,6 +270,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 
 	}
 
+	@Override
 	public void changeSelection(NodeView pNode, boolean pIsSelected) {
 		try {
 			HashSet<NodeSelectionListener> copy = new HashSet<>(mNodeSelectionListeners);
@@ -275,18 +283,21 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 
 	}
 
+	@Override
 	public void onViewCreatedHook(NodeView node) {
-		for (PermanentNodeHook hook : node.getModel().getActivatedHooks()) {
+		for (PermanentNodeHook hook : ((NodeAdapter) node.getModel()).getActivatedHooks()) {
 			hook.onViewCreatedHook(node);
 		}
 	}
 
+	@Override
 	public void onViewRemovedHook(NodeView node) {
-		for (PermanentNodeHook hook : node.getModel().getActivatedHooks()) {
+		for (PermanentNodeHook hook : ((NodeAdapter) node.getModel()).getActivatedHooks()) {
 			hook.onViewRemovedHook(node);
 		}
 	}
 
+	@Override
 	public void registerNodeSelectionListener(NodeSelectionListener listener,
 			boolean pCallWithCurrentSelection) {
 		mNodeSelectionListeners.add(listener);
@@ -306,10 +317,12 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		}
 	}
 
+	@Override
 	public void deregisterNodeSelectionListener(NodeSelectionListener listener) {
 		mNodeSelectionListeners.remove(listener);
 	}
 
+	@Override
 	public void registerNodeLifetimeListener(NodeLifetimeListener listener, boolean pFireCreateEvent) {
 		mNodeLifetimeListeners.add(listener);
 		if (pFireCreateEvent) {
@@ -320,6 +333,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		}
 	}
 
+	@Override
 	public void deregisterNodeLifetimeListener(NodeLifetimeListener listener) {
 		mNodeLifetimeListeners.remove(listener);
 	}
@@ -328,6 +342,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		return mNodeLifetimeListeners;
 	}
 
+	@Override
 	public void fireNodePreDeleteEvent(MindMapNode node) {
 		// call lifetime listeners:
 		for (NodeLifetimeListener listener : mNodeLifetimeListeners) {
@@ -335,6 +350,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		}
 	}
 
+	@Override
 	public void fireNodePostDeleteEvent(MindMapNode node, MindMapNode parent) {
 		// call lifetime listeners:
 		for (NodeLifetimeListener listener : mNodeLifetimeListeners) {
@@ -342,8 +358,9 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		}
 	}
 
+	@Override
 	public void fireRecursiveNodeCreateEvent(MindMapNode node) {
-		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
+		for (Iterator<MindMapNode> i = ((NodeAdapter) node).childrenUnfolded(); i.hasNext();) {
 			MindMapNode child = i.next();
 			fireRecursiveNodeCreateEvent(child);
 		}
@@ -353,6 +370,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		}
 	}
 
+	@Override
 	public void firePreSaveEvent(MindMapNode node) {
 		// copy to prevent concurrent modification.
 		HashSet<NodeSelectionListener> listenerCopy = new HashSet<>(mNodeSelectionListeners);
@@ -365,10 +383,12 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	// Map Management
 	//
 
+	@Override
 	public String getText(String textId) {
 		return getController().getResourceString(textId);
 	}
 
+	@Override
 	public ModeController newMap() {
 		ModeController newModeController = getMode().createModeController();
 		MapAdapter newModel = newModel(newModeController);
@@ -387,6 +407,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 * You may decide to overload this or take the default and implement the
 	 * functionality in your MapModel (implements MindMap)
 	 */
+	@Override
 	public MapFeedback load(URL file) throws FileNotFoundException,
 			IOException, XMLParseException, URISyntaxException {
 		String mapDisplayName = getController().getMapModuleManager()
@@ -419,6 +440,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 * You may decide to overload this or take the default and implement the
 	 * functionality in your MapModel (implements MindMap)
 	 */
+	@Override
 	public MapFeedback load(File file) throws FileNotFoundException,
 			IOException {
 		try {
@@ -466,6 +488,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		}
 	}
 
+	@Override
 	public boolean save() {
 		if (getModel().isSaved())
 			return true;
@@ -476,6 +499,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		}
 	}
 
+	@Override
 	public void loadURL(String relative) {
 		try {
 			logger.info("Trying to open " + relative);
@@ -532,8 +556,8 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 			}
 			String extension = Tools.getExtension(absolute.toString());
 			if ((extension != null)
-					&& extension
-							.equals(freemind.main.FreeMindCommon.FREEMIND_FILE_EXTENSION_WITHOUT_DOT)) { // ----
+					&& freemind.main.FreeMindCommon.FREEMIND_FILE_EXTENSION_WITHOUT_DOT
+							.equals(extension)) { // ----
 																											// Open
 																											// Mind
 																											// Map
@@ -598,6 +622,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 * 
 	 * @return returns a list of MindMapNode s.
 	 */
+	@Override
 	public List<MindMapNode> getSelecteds() {
 		LinkedList<MindMapNode> selecteds = new LinkedList<>();
 		ListIterator<NodeView> it = getView().getSelecteds().listIterator();
@@ -615,6 +640,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		getView().select(node);
 	}
 
+	@Override
 	public void select(MindMapNode primarySelected, List<MindMapNode> selecteds) {
 		// are they visible?
 		for (MindMapNode node : selecteds) {
@@ -635,11 +661,13 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		getController().obtainFocusForSelected();
 	}
 
+	@Override
 	public void selectBranch(NodeView selected, boolean extend) {
 		displayNode(selected.getModel());
 		getView().selectBranch(selected, extend);
 	}
 
+	@Override
 	public List<MindMapNode> getSelectedsByDepth() {
 		// return an ArrayList of MindMapNodes.
 		List<MindMapNode> result = getSelecteds();
@@ -651,6 +679,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 * Return false is the action was cancelled, e.g. when it has to lead to
 	 * saving as.
 	 */
+	@Override
 	public boolean save(File file) {
 		boolean result = false;
 		try {
@@ -746,6 +775,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	// Dialogs with user
 	//
 
+	@Override
 	public void open() {
 		FreeMindFileDialog chooser = getFileChooser();
 		// fc, 24.4.2008: multi selection has problems as setTitle in Controller
@@ -780,6 +810,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 * freemind.modes.FreeMindFileDialog.DirectoryResultListener#setChosenDirectory
 	 * (java.io.File)
 	 */
+	@Override
 	public void setChosenDirectory(File pDir) {
 		lastCurrentDir = pDir;
 	}
@@ -787,6 +818,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	/**
 	 * Creates a file chooser with the last selected directory as default.
 	 */
+	@Override
 	public FreeMindFileDialog getFileChooser(FileFilter filter) {
 		FreeMindFileDialog chooser = Resources.getInstance().getStandardFileChooser(filter);
 		chooser.registerDirectoryResultListener(this);
@@ -815,14 +847,14 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 
 	public void handleLoadingException(Exception ex) {
 		String exceptionType = ex.getClass().getName();
-		if (exceptionType.equals("freemind.main.XMLParseException")) {
+		if ("freemind.main.XMLParseException".equals(exceptionType)) {
 			int showDetail = JOptionPane.showConfirmDialog(getView(),
 					getText("map_corrupted"), "FreeMind",
 					JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
 			if (showDetail == JOptionPane.YES_OPTION) {
 				getController().errorMessage(ex);
 			}
-		} else if (exceptionType.equals("java.io.FileNotFoundException")) {
+		} else if ("java.io.FileNotFoundException".equals(exceptionType)) {
 			getController().errorMessage(ex.getMessage());
 		} else {
 			freemind.main.Resources.getInstance().logException(ex);
@@ -833,6 +865,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	/**
 	 * Save as; return false is the action was cancelled
 	 */
+	@Override
 	public boolean saveAs() {
 		File f;
 		FreeMindFileDialog chooser = getFileChooser();
@@ -854,7 +887,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 			lastCurrentDir = f.getParentFile();
 			// Force the extension to be .mm
 			String ext = Tools.getExtension(f.getName());
-			if (!ext.equals(freemind.main.FreeMindCommon.FREEMIND_FILE_EXTENSION_WITHOUT_DOT)) {
+			if (!freemind.main.FreeMindCommon.FREEMIND_FILE_EXTENSION_WITHOUT_DOT.equals(ext)) {
 				f = new File(f.getParent(), f.getName()
 						+ freemind.main.FreeMindCommon.FREEMIND_FILE_EXTENSION);
 			}
@@ -914,6 +947,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	/**
 	 * Return false if user has canceled.
 	 */
+	@Override
 	public boolean close(boolean force, MapModuleManager mapModuleManager) {
 		// remove old messages.
 		getFrame().out("");
@@ -975,6 +1009,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 * 
 	 * @see freemind.modes.ModeController#setVisible(boolean)
 	 */
+	@Override
 	public void setVisible(boolean visible) {
 		NodeView node = getSelectedView();
 		if (visible) {
@@ -1008,14 +1043,17 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 * This listener is also used for modelpopups (as for graphical links).
 	 */
 	private class ControllerPopupMenuListener implements PopupMenuListener {
+		@Override
 		public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 			setBlocked(true); // block controller
 		}
 
+		@Override
 		public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
 			setBlocked(false); // unblock controller
 		}
 
+		@Override
 		public void popupMenuCanceled(PopupMenuEvent e) {
 			setBlocked(false); // unblock controller
 		}
@@ -1028,6 +1066,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 */
 	protected final ControllerPopupMenuListener popupListenerSingleton = new ControllerPopupMenuListener();
 
+	@Override
 	public void showPopupMenu(MouseEvent e) {
 		if (e.isPopupTrigger()) {
 			JPopupMenu popupmenu = getPopupMenu();
@@ -1041,6 +1080,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	}
 
 	/** Default implementation: no context menu. */
+	@Override
 	public JPopupMenu getPopupForModel(java.lang.Object obj) {
 		return null;
 	}
@@ -1048,6 +1088,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	/**
 	 * Overwrite this, if you have one.
 	 */
+	@Override
 	public Component getLeftToolBar() {
 		return null;
 	}
@@ -1055,6 +1096,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	/**
 	 * Overwrite this, if you have one.
 	 */
+	@Override
 	public JToolBar getModeToolBar() {
 		return null;
 	}
@@ -1065,6 +1107,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 
 	private MapView mView;
 
+	@Override
 	public boolean isBlocked() {
 		return this.isBlocked;
 	}
@@ -1077,6 +1120,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	// Convenience methods
 	//
 
+	@Override
 	public Mode getMode() {
 		return mode;
 	}
@@ -1085,6 +1129,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		this.mode = mode;
 	}
 
+	@Override
 	public MindMap getMap() {
 		return mModel;
 	}
@@ -1093,6 +1138,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		return (MindMapNode) getMap().getRoot();
 	}
 
+	@Override
 	public URL getResource(String name) {
 		return getFrame().getResource(name);
 	}
@@ -1105,10 +1151,12 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		return getFrame().getResourceString(pTextId);
 	}
 
+	@Override
 	public Controller getController() {
 		return getMode().getController();
 	}
 
+	@Override
 	public FreeMindMain getFrame() {
 		return getController().getFrame();
 	}
@@ -1128,6 +1176,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		return mModel;
 	}
 
+	@Override
 	public MapView getView() {
 		return mView;
 	}
@@ -1148,6 +1197,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		return this;
 	}
 
+	@Override
 	public void setView(MapView pView) {
 		mView = pView;
 	}
@@ -1156,6 +1206,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		getController().getMapModuleManager().updateMapModuleName();
 	}
 
+	@Override
 	public MindMapNode getSelected() {
 		final NodeView selectedView = getSelectedView();
 		if (selectedView != null)
@@ -1163,6 +1214,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		return null;
 	}
 
+	@Override
 	public NodeView getSelectedView() {
 		if (getView() != null)
 			return getView().getSelected();
@@ -1179,6 +1231,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 			mc = modeController;
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			mc.open();
 			getController().setTitle(); // Possible update of read-only
@@ -1192,6 +1245,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 					getResource("images/filesave.png")), ControllerAdapter.this);
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			boolean success = save();
 			if (success) {
@@ -1213,6 +1267,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 					getResource("images/filesaveas.png")), ControllerAdapter.this);
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			saveAs();
 			getController().setTitle(); // Possible update of read-only
@@ -1244,6 +1299,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 			return false;
 		}
 
+		@Override
 		public void drop(DropTargetDropEvent dtde) {
 			if (!isDropAcceptable(dtde)) {
 				dtde.rejectDrop();
@@ -1277,6 +1333,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 			dtde.dropComplete(true);
 		}
 
+		@Override
 		public void dragEnter(DropTargetDragEvent dtde) {
 			if (!isDragAcceptable(dtde)) {
 				dtde.rejectDrag();
@@ -1284,33 +1341,40 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 			}
 		}
 
+		@Override
 		public void dragOver(DropTargetDragEvent e) {
 		}
 
+		@Override
 		public void dragExit(DropTargetEvent e) {
 		}
 
 		public void dragScroll(DropTargetDragEvent e) {
 		}
 
+		@Override
 		public void dropActionChanged(DropTargetDragEvent e) {
 		}
 	}
 
+	@Override
 	public Transferable copy(MindMapNode node, boolean saveInvisible) {
 		throw new IllegalArgumentException("No copy so far.");
 	}
 
+	@Override
 	public Transferable copy() {
 		return copy(getView().getSelectedNodesSortedByY(), false);
 	}
 
+	@Override
 	public Transferable copySingle() {
 
 		final ArrayList<MindMapNode> selectedNodes = getView().getSingleSelectedNodes();
 		return copy(selectedNodes, false);
 	}
 
+	@Override
 	public Transferable copy(List<MindMapNode> selectedNodes, boolean copyInvisible) {
 		try {
 			String forNodesFlavor = createForNodesFlavor(selectedNodes,
@@ -1361,6 +1425,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 
 	/**
      */
+	@Override
 	public Color getSelectionColor() {
 		return selectionColor;
 	}
@@ -1371,6 +1436,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 * @see freemind.modes.ModeController#updatePopupMenu(freemind.controller.
 	 * StructuredMenuHolder)
 	 */
+	@Override
 	public void updatePopupMenu(StructuredMenuHolder holder) {
 
 	}
@@ -1379,6 +1445,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
      *
      */
 
+	@Override
 	public void shutdownController() {
 		setAllActions(false);
 		getMapMouseWheelListener().deregister();
@@ -1389,6 +1456,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 * to perform the actions that cannot be performed at creation time.
 	 * 
 	 */
+	@Override
 	public void startupController() {
 		setAllActions(true);
 		if (getFrame().getView() != null) {
@@ -1399,6 +1467,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 				new MindMapMouseWheelEventHandler(this));
 	}
 
+	@Override
 	public String getLinkShortText(MindMapNode node) {
 		String adaptedText = node.getLink();
 		if (adaptedText == null)
@@ -1414,6 +1483,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		return adaptedText;
 	}
 
+	@Override
 	public void displayNode(MindMapNode node) {
 		displayNode(node, null);
 	}
@@ -1429,7 +1499,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		for (int i = 0; i < path.length - 1; i++) {
 			MindMapNode nodeOnPath = (MindMapNode) path[i];
 			// System.out.println(nodeOnPath);
-			if (nodeOnPath.isFolded()) {
+			if (((NodeAdapter) nodeOnPath).isFolded()) {
 				if (nodesUnfoldedByDisplay != null)
 					nodesUnfoldedByDisplay.add(nodeOnPath);
 				setFolded(nodeOnPath, false);
@@ -1444,6 +1514,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		getView().selectAsTheOnlyOneSelected(node);
 	}
 
+	@Override
 	public void centerNode(MindMapNode node) {
 		NodeView view = null;
 		if (node != null) {
@@ -1474,11 +1545,13 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 		return Collections.emptySet();
 	}
 
+	@Override
 	public MapModule getMapModule() {
 		return getController().getMapModuleManager()
 				.getModuleGivenModeController(this);
 	}
 
+	@Override
 	public void setToolTip(MindMapNode node, String key, String value) {
 		node.setToolTip(key, value);
 		nodeRefresh(node);

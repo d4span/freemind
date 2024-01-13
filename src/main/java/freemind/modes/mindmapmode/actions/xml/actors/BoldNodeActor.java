@@ -20,8 +20,8 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.BoldNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
@@ -41,9 +41,9 @@ public class BoldNodeActor extends NodeXmlActorAdapter {
 		super(pMapFeedback);
 	}
 
+	@Override
 	public void act(XmlAction action) {
-		if (action instanceof BoldNodeAction) {
-			BoldNodeAction boldact = (BoldNodeAction) action;
+		if (action instanceof BoldNodeAction boldact) {
 			NodeAdapter node = getNodeFromID(boldact.getNode());
 			if (node.isBold() != boldact.getBold()) {
 				node.setBold(boldact.getBold());
@@ -52,17 +52,19 @@ public class BoldNodeActor extends NodeXmlActorAdapter {
 		}
 	}
 
+	@Override
 	public Class<BoldNodeAction> getDoActionClass() {
 		return BoldNodeAction.class;
 	}
 
+	@Override
 	public ActionPair apply(MindMap model, MindMapNode selected) {
 		// every node is set to the inverse of the focussed node.
-		boolean bold = getSelected().isBold();
-		return getActionPair(selected, !bold);
+		boolean bold = ((NodeAdapter) getSelected()).isBold();
+		return getActionPair((NodeAdapter) selected, !bold);
 	}
 
-	private ActionPair getActionPair(MindMapNode selected, boolean bold) {
+	private ActionPair getActionPair(NodeAdapter selected, boolean bold) {
 		BoldNodeAction boldAction = toggleBold(selected, bold);
 		BoldNodeAction undoBoldAction = toggleBold(selected, selected.isBold());
 		return new ActionPair(boldAction, undoBoldAction);
@@ -76,6 +78,6 @@ public class BoldNodeActor extends NodeXmlActorAdapter {
 	}
 
 	public void setBold(MindMapNode node, boolean bold) {
-		execute(getActionPair(node, bold));
+		execute(getActionPair((NodeAdapter) node, bold));
 	}
 }

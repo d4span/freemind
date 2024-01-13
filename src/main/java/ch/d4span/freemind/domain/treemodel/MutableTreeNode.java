@@ -1,4 +1,4 @@
-package ch.d4span.freemind.treemodel;
+package ch.d4span.freemind.domain.treemodel;
 
 public interface MutableTreeNode<V> extends TreeNode<V> {
   default void remove(MutableTreeNode<V> child) {
@@ -13,11 +13,15 @@ public interface MutableTreeNode<V> extends TreeNode<V> {
     throw new UnsupportedOperationException("Not yet implemented");
   }
 
-  default void setUserObject(V userObject) {
+  default void setParent(MutableTreeNode<V> node) {
     throw new UnsupportedOperationException("Not yet implemented");
   }
 
-  default void setParent(MutableTreeNode<V> node) {
+  default void addTreeModelListener(TreeModelListener l) {
+    throw new UnsupportedOperationException("Not yet implemented");
+  }
+
+  default void removeTreeModelListener(TreeModelListener l) {
     throw new UnsupportedOperationException("Not yet implemented");
   }
 }

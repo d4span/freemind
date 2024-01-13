@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.Tools;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
 
@@ -40,7 +40,8 @@ public class SortNodes extends MindMapNodeHookAdapter {
 	private final class NodeTextComparator implements Comparator<MindMapNode> {
 		private boolean mNegative = false;
 
-		public int compare(MindMapNode node1, MindMapNode node2) {
+		@Override
+        public int compare(MindMapNode node1, MindMapNode node2) {
 
 			String nodeText1 = node1.getPlainTextContent();
 			String nodeText2 = node2.getPlainTextContent();
@@ -70,7 +71,8 @@ public class SortNodes extends MindMapNodeHookAdapter {
 	 * @see freemind.extensions.NodeHook#invoke(freemind.modes.MindMapNode,
 	 * java.util.List)
 	 */
-	public void invoke(MindMapNode node) {
+	@Override
+    public void invoke(MindMapNode node) {
 		// we want to sort the children of the node:
 		Vector<MindMapNode> sortVector = new Vector<>();
 		// put in all children of the node

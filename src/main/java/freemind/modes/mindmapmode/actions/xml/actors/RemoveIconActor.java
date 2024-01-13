@@ -22,8 +22,8 @@ package freemind.modes.mindmapmode.actions.xml.actors;
 
 import java.util.List;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.AddIconAction;
 import freemind.controller.actions.generated.instance.RemoveIconXmlAction;
 import freemind.controller.actions.generated.instance.XmlAction;

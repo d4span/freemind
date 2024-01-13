@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.MindMapNodesSelection;
 import freemind.controller.actions.generated.instance.PasteNodeAction;
 import freemind.controller.actions.generated.instance.TransferableContent;
@@ -91,6 +91,7 @@ public class PasteActor extends XmlActorAdapter {
 	 * freemind.controller.actions.ActorXml#act(freemind.controller.actions.
 	 * generated.instance.XmlAction)
 	 */
+	@Override
 	public void act(XmlAction action) {
 		PasteNodeAction pasteAction = (PasteNodeAction) action;
 		_paste(getTransferable(pasteAction.getTransferableContent()),
@@ -103,6 +104,7 @@ public class PasteActor extends XmlActorAdapter {
 	 * 
 	 * @see freemind.controller.actions.ActorXml#getDoActionClass()
 	 */
+	@Override
 	public Class<PasteNodeAction> getDoActionClass() {
 		return PasteNodeAction.class;
 	}
@@ -193,7 +195,7 @@ public class PasteActor extends XmlActorAdapter {
 			if (asSibling) {
 				MindMapNode parentNode = target.getParentNode();
 				return (MindMapNode) parentNode.getChildAt(parentNode
-						.getChildPosition(target) - 1);
+						.getChildPosition(target).get() - 1);
 			} else {
 				logger.finest("getChildCount = " + target.getChildCount()
 						+ ", target = " + target);
@@ -205,7 +207,7 @@ public class PasteActor extends XmlActorAdapter {
 		public NodeCoordinate(MindMapNode node, boolean isLeft) {
 			this.isLeft = isLeft;
 			MindMapNode parentNode = node.getParentNode();
-			int childPosition = parentNode.getChildPosition(node);
+			int childPosition = parentNode.getChildPosition(node).get();
 			if (childPosition == parentNode.getChildCount() - 1) {
 				target = parentNode;
 				asSibling = false;
@@ -227,12 +229,13 @@ public class PasteActor extends XmlActorAdapter {
 
 	private class FileListFlavorHandler implements DataFlavorHandler {
 
+		@Override
 		public void paste(Object TransferData, MindMapNode target,
 				boolean asSibling, boolean isLeft, Transferable t) {
 			// TODO: Does not correctly interpret asSibling.
 			List<File> fileList = (List<File>) TransferData;
 			for (File file : fileList) {
-				MindMapNode node = getExMapFeedback().newNode(file.getName(),
+				NodeAdapter node = (NodeAdapter) getExMapFeedback().newNode(file.getName(),
 						target.getMap());
 				node.setLeft(isLeft);
 				node.setLink(Tools.fileToRelativeUrlString(file,
@@ -243,6 +246,7 @@ public class PasteActor extends XmlActorAdapter {
 			}
 		}
 
+		@Override
 		public DataFlavor getDataFlavor() {
 			return MindMapNodesSelection.fileListFlavor;
 		}
@@ -250,6 +254,7 @@ public class PasteActor extends XmlActorAdapter {
 
 	private class MindMapNodesFlavorHandler implements DataFlavorHandler {
 
+		@Override
 		public void paste(Object TransferData, MindMapNode target,
 				boolean asSibling, boolean isLeft, Transferable t) {
 			String textFromClipboard = (String) TransferData;
@@ -268,7 +273,7 @@ public class PasteActor extends XmlActorAdapter {
 				mapContent += "</node></map>";
 				// logger.info("Pasting " + mapContent);
 				try {
-					MindMapNode node = getExMapFeedback().getMap().loadTree(
+					NodeAdapter node = (NodeAdapter) getExMapFeedback().getMap().loadTree(
 									new Tools.StringReaderCreator(
 											mapContent), MapAdapter.sDontAskInstance);
 					for (ListIterator i = node.childrenUnfolded(); i.hasNext();) {
@@ -295,6 +300,7 @@ public class PasteActor extends XmlActorAdapter {
 			}
 		}
 
+		@Override
 		public DataFlavor getDataFlavor() {
 			return MindMapNodesSelection.mindMapNodesFlavor;
 		}
@@ -343,6 +349,7 @@ public class PasteActor extends XmlActorAdapter {
 					}};
 		}
 
+		@Override
 		public void paste(Object transferData, MindMapNode target,
 				boolean asSibling, boolean isLeft, Transferable t)
 				throws UnsupportedFlavorException, IOException {
@@ -414,6 +421,7 @@ public class PasteActor extends XmlActorAdapter {
 			setWaitingCursor(false);
 		}
 
+		@Override
 		public DataFlavor getDataFlavor() {
 			return MindMapNodesSelection.htmlFlavor;
 		}
@@ -421,12 +429,14 @@ public class PasteActor extends XmlActorAdapter {
 
 	private class StringFlavorHandler implements DataFlavorHandler {
 
+		@Override
 		public void paste(Object TransferData, MindMapNode target,
 				boolean asSibling, boolean isLeft, Transferable t)
 				throws UnsupportedFlavorException, IOException {
 			pasteStringWithoutRedisplay(t, target, asSibling, isLeft);
 		}
 
+		@Override
 		public DataFlavor getDataFlavor() {
 			return DataFlavor.stringFlavor;
 		}
@@ -434,6 +444,7 @@ public class PasteActor extends XmlActorAdapter {
 
 	private class ImageFlavorHandler implements DataFlavorHandler {
 
+		@Override
 		public void paste(Object transferData, MindMapNode target,
 				boolean asSibling, boolean isLeft, Transferable t)
 				throws UnsupportedFlavorException, IOException {
@@ -481,6 +492,7 @@ public class PasteActor extends XmlActorAdapter {
 
 		}
 
+		@Override
 		public DataFlavor getDataFlavor() {
 			return DataFlavor.imageFlavor;
 		}
@@ -564,7 +576,7 @@ public class PasteActor extends XmlActorAdapter {
 		// now, the import is finished. We can inform others about the new
 		// nodes:
 		if (asSibling) {
-			insertNodeInto(node, parent, parent.getChildPosition(target));
+			insertNodeInto(node, parent, parent.getChildPosition(target).get());
 		} else {
 			insertNodeInto(node, target);
 		}
@@ -655,7 +667,7 @@ public class PasteActor extends XmlActorAdapter {
 				}
 			}
 
-			MindMapNode node = getExMapFeedback().newNode(visibleText,
+			NodeAdapter node = (NodeAdapter) getExMapFeedback().newNode(visibleText,
 					parent.getMap());
 			if (textLines.length == 1) {
 				pastedNode = node;
@@ -921,11 +933,11 @@ public class PasteActor extends XmlActorAdapter {
 	 *
 	 */
 	public void processUnfinishedLinksInHooks(MindMapNode node) {
-		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
+		for (Iterator<MindMapNode> i = ((NodeAdapter) node).childrenUnfolded(); i.hasNext();) {
 			MindMapNode child = i.next();
 			processUnfinishedLinksInHooks(child);
 		}
-		for (PermanentNodeHook hook : node.getHooks()) {
+		for (PermanentNodeHook hook : ((NodeAdapter) node).getHooks()) {
 			hook.processUnfinishedLinks();
 		}
 	}

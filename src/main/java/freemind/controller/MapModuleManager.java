@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMap;
 import freemind.main.Tools;
 import freemind.modes.Mode;
 import freemind.modes.ModeController;

@@ -28,12 +28,13 @@ import java.util.Collection;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
-import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMap;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.controller.MenuItemSelectedListener;
 import freemind.extensions.HookRegistration;
 import freemind.extensions.PermanentNodeHook;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.actions.NodeHookAction;
 
@@ -48,20 +49,22 @@ public class DatabaseRegistration implements HookRegistration,
 		logger = controller.getFrame().getLogger(this.getClass().getName());
 	}
 
+	@Override
 	public void register() {
 		logger.fine("Registration of database registration.");
 	}
 
+	@Override
 	public void deRegister() {
 		logger.fine("Deregistration of database registration.");
 	}
 
+	@Override
 	public boolean isSelected(JMenuItem pCheckItem, Action pAction) {
 		logger.info(this + " is asked for " + pAction + ".");
-		if (pAction instanceof NodeHookAction) {
-			NodeHookAction action = (NodeHookAction) pAction;
-			if (action.getHookName().equals(
-					DatabaseConnector.SLAVE_STARTER_NAME)) {
+		if (pAction instanceof NodeHookAction action) {
+			if (DatabaseConnector.SLAVE_STARTER_NAME.equals(
+					action.getHookName())) {
 				return isSlave();
 			}
 		}
@@ -69,7 +72,7 @@ public class DatabaseRegistration implements HookRegistration,
 	}
 
 	private boolean isMaster() {
-		Collection<PermanentNodeHook> activatedHooks = mController.getRootNode().getActivatedHooks();
+		Collection<PermanentNodeHook> activatedHooks = ((NodeAdapter) mController.getRootNode()).getActivatedHooks();
 		for (PermanentNodeHook hook : activatedHooks) {
 			if (hook instanceof DatabaseStarter) {
 				return true;
@@ -79,7 +82,7 @@ public class DatabaseRegistration implements HookRegistration,
 	}
 
 	private boolean isSlave() {
-		Collection<PermanentNodeHook> activatedHooks = mController.getRootNode().getActivatedHooks();
+		Collection<PermanentNodeHook> activatedHooks = ((NodeAdapter) mController.getRootNode()).getActivatedHooks();
 		for (PermanentNodeHook hook : activatedHooks) {
 			if (hook instanceof DatabaseConnectionHook) {
 				return true;
@@ -91,12 +94,12 @@ public class DatabaseRegistration implements HookRegistration,
 	/**
 	 * When one option is enabled, the other is impossible.
 	 * */
+	@Override
 	public boolean isEnabled(JMenuItem pItem, Action pAction) {
 		logger.info(this + " is asked for " + pAction + ".");
-		if (pAction instanceof NodeHookAction) {
-			NodeHookAction action = (NodeHookAction) pAction;
-			if (action.getHookName().equals(
-					DatabaseConnector.SLAVE_STARTER_NAME)) {
+		if (pAction instanceof NodeHookAction action) {
+			if (DatabaseConnector.SLAVE_STARTER_NAME.equals(
+					action.getHookName())) {
 				return !isMaster();
 			}
 		}

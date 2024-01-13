@@ -30,7 +30,7 @@ import java.util.Vector;
 
 import javax.swing.Action;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.FreeMind;
 import freemind.main.Tools;
 import freemind.modes.IconInformation;

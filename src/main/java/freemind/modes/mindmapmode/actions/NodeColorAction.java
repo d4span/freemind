@@ -27,8 +27,9 @@ package freemind.modes.mindmapmode.actions;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 
 @SuppressWarnings("serial")
@@ -40,10 +41,12 @@ public class NodeColorAction extends MindmapAction {
 		this.controller = controller;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
+		NodeAdapter selectedNode = (NodeAdapter) controller.getSelected();
 		Color color = Controller.showCommonJColorChooserDialog(controller
 				.getView().getSelected(), controller
-				.getText("choose_node_color"), controller.getSelected()
+				.getText("choose_node_color"), selectedNode
 				.getColor());
 		if (color == null) {
 			return;

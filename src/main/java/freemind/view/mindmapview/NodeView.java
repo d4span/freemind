@@ -33,8 +33,6 @@ import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -48,11 +46,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
-import ch.d4span.freemind.treemodel.TreeNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.treemodel.TreeModelListener;
+import ch.d4span.freemind.domain.treemodel.TreeNode;
+import ch.d4span.freemind.presentation.NodeStyle;
 import freemind.controller.Controller;
 import freemind.main.FreeMind;
 import freemind.main.FreeMindMain;
@@ -71,7 +69,8 @@ import freemind.preferences.FreemindPropertyListener;
 @SuppressWarnings("serial")
 public class NodeView extends JComponent implements TreeModelListener {
 
-	public void setFocusCycleRoot(boolean pFocusCycleRoot) {
+	@Override
+    public void setFocusCycleRoot(boolean pFocusCycleRoot) {
 		// FIXME: On purpose removed. test this!
 		// super.setFocusCycleRoot(pFocusCycleRoot);
 	}
@@ -120,19 +119,15 @@ public class NodeView extends JComponent implements TreeModelListener {
 					.getLogger(this.getClass().getName());
 		}
 		if(sListener == null){
-			sListener = new FreemindPropertyListener() {
-				
-				public void propertyChanged(String pPropertyName,
-						String pNewValue, String pOldValue) {
-					if (Tools.safeEquals(pPropertyName,
-							FreeMind.TOOLTIP_DISPLAY_TIME)) {
-						// control tooltip times:
-						ToolTipManager.sharedInstance().setDismissDelay(
-								Resources.getInstance().getIntProperty(
-										FreeMind.TOOLTIP_DISPLAY_TIME, 4000));
-					}
-				}
-			};
+			sListener = (pPropertyName, pNewValue, pOldValue) -> {
+if (Tools.safeEquals(pPropertyName,
+            	FreeMind.TOOLTIP_DISPLAY_TIME)) {
+            // control tooltip times:
+            ToolTipManager.sharedInstance().setDismissDelay(
+            		Resources.getInstance().getIntProperty(
+            				FreeMind.TOOLTIP_DISPLAY_TIME, 4000));
+}
+};
 			Controller.addPropertyChangeListenerAndPropagate(sListener);
 		}
 
@@ -153,12 +148,7 @@ public class NodeView extends JComponent implements TreeModelListener {
 			mFoldingListener = new NodeFoldingComponent(this);
 			add(mFoldingListener, getComponentCount()-1);
 
-			mFoldingListener.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent pE) {
-					getViewFeedback().setFolded(getModel(), !getModel().isFolded());
-				}
-			});
+			mFoldingListener.addActionListener(pE -> getViewFeedback().setFolded(getModel(), !((NodeAdapter) getModel()).isFolded()));
 		}
 	}
 
@@ -363,7 +353,7 @@ public class NodeView extends JComponent implements TreeModelListener {
 
 	/** Is the node left of root? */
 	public boolean isLeft() {
-		return getModel().isLeft();
+		return ((NodeAdapter) getModel()).isLeft();
 	}
 
 	protected void setModel(MindMapNode model) {
@@ -380,9 +370,8 @@ public class NodeView extends JComponent implements TreeModelListener {
 
 	boolean isParentHidden() {
 		final Container parent = getParent();
-		if (!(parent instanceof NodeView))
+		if (!(parent instanceof NodeView parentView))
 			return false;
-		NodeView parentView = (NodeView) parent;
 		return !parentView.isContentVisible();
 	}
 
@@ -395,9 +384,8 @@ public class NodeView extends JComponent implements TreeModelListener {
 
 	public NodeView getVisibleParentView() {
 		final Container parent = getParent();
-		if (!(parent instanceof NodeView))
+		if (!(parent instanceof NodeView parentView))
 			return null;
-		NodeView parentView = (NodeView) parent;
 		if (parentView.isContentVisible()) {
 			return parentView;
 		}
@@ -411,10 +399,9 @@ public class NodeView extends JComponent implements TreeModelListener {
 		LinkedList<NodeView> childrenViews = new LinkedList<>();
 		final Component[] components = getComponents();
 		for (int i = 0; i < components.length; i++) {
-			if (!(components[i] instanceof NodeView)) {
+			if (!(components[i] instanceof NodeView view)) {
 				continue;
 			}
-			NodeView view = (NodeView) components[i];
 			childrenViews.add(view); // child.getViewer() );
 		}
 		return childrenViews;
@@ -615,10 +602,9 @@ public class NodeView extends JComponent implements TreeModelListener {
 				}
 				continue;
 			}
-			if (!(components[i] instanceof NodeView)) {
+			if (!(components[i] instanceof NodeView view)) {
 				continue;
 			}
-			NodeView view = (NodeView) components[i];
 			if (leftOnly && !view.isLeft() || rightOnly && view.isLeft()) {
 				continue;
 			}
@@ -649,10 +635,9 @@ public class NodeView extends JComponent implements TreeModelListener {
 				}
 				continue;
 			}
-			if (!(components[i] instanceof NodeView)) {
+			if (!(components[i] instanceof NodeView view)) {
 				continue;
 			}
-			NodeView view = (NodeView) components[i];
 			if (leftOnly && !view.isLeft() || rightOnly && view.isLeft()) {
 				continue;
 			}
@@ -779,7 +764,7 @@ public class NodeView extends JComponent implements TreeModelListener {
 	//
 
 	void insert() {
-		ListIterator<MindMapNode> it = getModel().childrenFolded();
+		ListIterator<MindMapNode> it = ((NodeAdapter) getModel()).childrenFolded();
 		while (it.hasNext()) {
 			insert(it.next(), 0);
 		}
@@ -886,7 +871,7 @@ public class NodeView extends JComponent implements TreeModelListener {
 			// Set user HTML head
 			String htmlLongNodeHead = getViewFeedback()
 					.getProperty("html_long_node_head");
-			if (htmlLongNodeHead != null && !htmlLongNodeHead.equals("")) {
+			if (htmlLongNodeHead != null && !"".equals(htmlLongNodeHead)) {
 				if (nodeText.matches("(?ims).*<head>.*")) {
 					nodeText = nodeText.replaceFirst("(?ims).*<head>.*",
 							"<head>" + htmlLongNodeHead);
@@ -942,7 +927,7 @@ public class NodeView extends JComponent implements TreeModelListener {
 	}
 
 	private void updateFont() {
-		Font font = getModel().getFont();
+		Font font = ((NodeAdapter) getModel()).getFont();
 		font = font == null ? getViewFeedback().getDefaultFont() : font;
 		if (font != null) {
 			mainView.setFont(font);
@@ -966,7 +951,7 @@ public class NodeView extends JComponent implements TreeModelListener {
 
 		}
 		
-		if (SHOW_ATTRIBUTE_ICON && (getModel().getAttributeTableLength()>0)) {
+		if (SHOW_ATTRIBUTE_ICON && (((NodeAdapter) getModel()).getAttributeTableLength()>0)) {
 			if (sAttributeIcon == null) {
 				sAttributeIcon = freemind.view.ImageFactory.getInstance().createUnscaledIcon(Resources.getInstance().getResource(
 						"images/showAttributes.gif"));
@@ -1015,7 +1000,7 @@ public class NodeView extends JComponent implements TreeModelListener {
 
 	private void updateTextColor() {
 		Color color;
-		color = getModel().getColor();
+		color = ((NodeAdapter) getModel()).getColor();
 		if (color == null) {
 			color = MapView.standardNodeTextColor;
 		}
@@ -1029,7 +1014,7 @@ public class NodeView extends JComponent implements TreeModelListener {
 
 	void updateStyle() {
 		if (mainView != null
-				&& (mainView.getStyle().equals(model.getStyle()) || model
+				&& (mainView.getStyle().equals(((NodeAdapter) model).getStyle().getStyle()) || model
 						.isRoot())) {
 			return;
 		}
@@ -1169,18 +1154,18 @@ public class NodeView extends JComponent implements TreeModelListener {
 	 */
 
 	public int getShift() {
-		return mapView.getZoomed(model.calcShiftY());
+		return mapView.getZoomed(((NodeAdapter) model).calcShiftY());
 	}
 
 	/**
 	 * @return Returns the VGAP.
 	 */
 	public int getVGap() {
-		return mapView.getZoomed(model.getVGap());
+		return mapView.getZoomed(((NodeAdapter) model).getVGap());
 	}
 
 	public int getHGap() {
-		return mapView.getZoomed(model.getHGap());
+		return mapView.getZoomed(((NodeAdapter) model).getHGap());
 	}
 
 	public MainView getMainView() {
@@ -1192,7 +1177,7 @@ public class NodeView extends JComponent implements TreeModelListener {
 	}
 
 	public Color getTextColor() {
-		Color color = getModel().getColor();
+		Color color = ((NodeAdapter) getModel()).getColor();
 		if (color == null) {
 			color = MapView.standardNodeTextColor;
 		}
@@ -1228,10 +1213,9 @@ public class NodeView extends JComponent implements TreeModelListener {
 			NodeView newSelected = null;
 			for (int i = 0; i < getComponentCount(); i++) {
 				Component c = getComponent(i);
-				if (!(c instanceof NodeView)) {
+				if (!(c instanceof NodeView childView)) {
 					continue;
 				}
-				NodeView childView = (NodeView) c;
 				if (!(childView.isLeft() == left)) {
 					continue;
 				}
@@ -1277,7 +1261,8 @@ public class NodeView extends JComponent implements TreeModelListener {
 	 * javax.swing.event.TreeModelListener#treeNodesChanged(javax.swing.event
 	 * .TreeModelEvent)
 	 */
-	public void treeNodesChanged(TreeModelEvent e) {
+	@Override
+    public void treeNodesChanged(TreeModelEvent e) {
 		update();
 	}
 
@@ -1288,9 +1273,10 @@ public class NodeView extends JComponent implements TreeModelListener {
 	 * javax.swing.event.TreeModelListener#treeNodesInserted(javax.swing.event
 	 * .TreeModelEvent)
 	 */
-	public void treeNodesInserted(TreeModelEvent e) {
+	@Override
+    public void treeNodesInserted(TreeModelEvent e) {
 		addFoldingListener();
-		if (getModel().isFolded()) {
+		if (((NodeAdapter) getModel()).isFolded()) {
 			return;
 		}
 		final int[] childIndices = e.getChildIndices();
@@ -1310,12 +1296,13 @@ public class NodeView extends JComponent implements TreeModelListener {
 	 * javax.swing.event.TreeModelListener#treeNodesRemoved(javax.swing.event
 	 * .TreeModelEvent)
 	 */
-	public void treeNodesRemoved(TreeModelEvent e) {
+	@Override
+    public void treeNodesRemoved(TreeModelEvent e) {
 		if(!getModel().hasVisibleChilds()) {
 			removeFoldingListener();
 		}
 		getMap().resetShiftSelectionOrigin();
-		if (getModel().isFolded()) {
+		if (((NodeAdapter) getModel()).isFolded()) {
 			return;
 		}
 
@@ -1330,10 +1317,9 @@ public class NodeView extends JComponent implements TreeModelListener {
 				this.preferredChild = null;
 				for (int j = index + 1; j < getComponentCount(); j++) {
 					final Component c = getComponent(j);
-					if (!(c instanceof NodeView)) {
+					if (!(c instanceof NodeView candidate)) {
 						break;
 					}
-					NodeView candidate = (NodeView) c;
 					if (candidate.isVisible()
 							&& node.isLeft() == candidate.isLeft()) {
 						this.preferredChild = candidate;
@@ -1343,10 +1329,9 @@ public class NodeView extends JComponent implements TreeModelListener {
 				if (this.preferredChild == null) {
 					for (int j = index - 1; j >= 0; j--) {
 						final Component c = getComponent(j);
-						if (!(c instanceof NodeView)) {
+						if (!(c instanceof NodeView candidate)) {
 							break;
 						}
-						NodeView candidate = (NodeView) c;
 						if (candidate.isVisible()
 								&& node.isLeft() == candidate.isLeft()) {
 							this.preferredChild = candidate;
@@ -1373,7 +1358,8 @@ public class NodeView extends JComponent implements TreeModelListener {
 	 * javax.swing.event.TreeModelListener#treeStructureChanged(javax.swing.
 	 * event.TreeModelEvent)
 	 */
-	public void treeStructureChanged(TreeModelEvent e) {
+	@Override
+    public void treeStructureChanged(TreeModelEvent e) {
 		getMap().resetShiftSelectionOrigin();
 		for (ListIterator<NodeView> i = getChildrenViews().listIterator(); i.hasNext();) {
 			i.next().remove();
@@ -1420,7 +1406,8 @@ public class NodeView extends JComponent implements TreeModelListener {
 		return motionListenerView;
 	}
 
-	public void setBounds(int x, int y, int width, int height) {
+	@Override
+    public void setBounds(int x, int y, int width, int height) {
 		super.setBounds(x, y, width, height);
 		if (motionListenerView != null) {
 			motionListenerView.invalidate();
@@ -1430,7 +1417,8 @@ public class NodeView extends JComponent implements TreeModelListener {
 		}
 	}
 
-	public void setVisible(boolean isVisible) {
+	@Override
+    public void setVisible(boolean isVisible) {
 		super.setVisible(isVisible);
 		if (motionListenerView != null) {
 			motionListenerView.setVisible(isVisible);
@@ -1444,10 +1432,9 @@ public class NodeView extends JComponent implements TreeModelListener {
 		Object renderingHint = getMap().setEdgesRenderingHint(g);
 		for (int i = 0; i < getComponentCount(); i++) {
 			final Component component = getComponent(i);
-			if (!(component instanceof NodeView)) {
+			if (!(component instanceof NodeView nodeView)) {
 				continue;
 			}
-			NodeView nodeView = (NodeView) component;
 			if (nodeView.isContentVisible()) {
 				Point p = new Point();
 				Tools.convertPointToAncestor(nodeView, p, this);
@@ -1468,7 +1455,8 @@ public class NodeView extends JComponent implements TreeModelListener {
 	 * 
 	 * @see javax.swing.JComponent#paint(java.awt.Graphics)
 	 */
-	public void paint(Graphics g) {
+	@Override
+    public void paint(Graphics g) {
 		final boolean isRoot = isRoot();
 		if (isRoot) {
 			paintCloud(g);
@@ -1501,7 +1489,8 @@ public class NodeView extends JComponent implements TreeModelListener {
 	 * 
 	 * @see java.awt.Component#toString()
 	 */
-	public String toString() {
+	@Override
+    public String toString() {
 		return getModel().toString() + ", " + super.toString();
 	}
 
@@ -1511,7 +1500,8 @@ public class NodeView extends JComponent implements TreeModelListener {
 				- 2 * space);
 	}
 
-	public boolean contains(int x, int y) {
+	@Override
+    public boolean contains(int x, int y) {
 		final int space = getMap().getZoomed(SPACE_AROUND) - 2
 				* getZoomedFoldingSymbolHalfWidth();
 		return (x >= space) && (x < getWidth() - space) && (y >= space)
@@ -1519,7 +1509,7 @@ public class NodeView extends JComponent implements TreeModelListener {
 	}
 
 	public Color getTextBackground() {
-		final Color modelBackgroundColor = getModel().getBackgroundColor();
+		final Color modelBackgroundColor = ((NodeAdapter) getModel()).getBackgroundColor();
 		if (modelBackgroundColor != null) {
 			return modelBackgroundColor;
 		}

@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.CompoundAction;
 import freemind.controller.actions.generated.instance.HookNodeAction;
 import freemind.controller.actions.generated.instance.NodeChildParameter;
@@ -42,6 +42,7 @@ import freemind.extensions.PermanentNodeHookAdapter;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
 import freemind.modes.ExtendedMapFeedback;
+import freemind.modes.NodeAdapter;
 import freemind.modes.ViewAbstraction;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 import freemind.view.mindmapview.NodeView;
@@ -115,7 +116,7 @@ public class AddHookActor extends XmlActorAdapter {
 			// remove the hook:
 			for (MindMapNode currentDestinationNode : destinationNodes) {
 				// find the hook in the current node, if present:
-				for (PermanentNodeHook hook : currentDestinationNode.getActivatedHooks()) {
+				for (PermanentNodeHook hook : ((NodeAdapter) currentDestinationNode).getActivatedHooks()) {
 					if (hook.getName().equals(hookName)) {
 						XMLElement child = new XMLElement();
 						if(!(hook instanceof DontSaveMarker)) {
@@ -178,9 +179,9 @@ public class AddHookActor extends XmlActorAdapter {
 		return hookNodeAction;
 	}
 
+	@Override
 	public void act(XmlAction action) {
-		if (action instanceof HookNodeAction) {
-			HookNodeAction hookNodeAction = (HookNodeAction) action;
+		if (action instanceof HookNodeAction hookNodeAction) {
 			MindMapNode selected = getNodeFromID(
 					hookNodeAction.getNode());
 			Vector<MindMapNode> selecteds = new Vector<>();
@@ -203,6 +204,7 @@ public class AddHookActor extends XmlActorAdapter {
 		}
 	}
 
+	@Override
 	public Class<HookNodeAction> getDoActionClass() {
 		return HookNodeAction.class;
 	}
@@ -232,7 +234,7 @@ public class AddHookActor extends XmlActorAdapter {
 		if (instMethod.isAlreadyPresent(hookName, adaptedFocussedNode)) {
 			// remove the hook:
 			for (Iterator<MindMapNode> i = destinationNodes.iterator(); i.hasNext();) {
-				MindMapNode currentDestinationNode = i.next();
+				NodeAdapter currentDestinationNode = (NodeAdapter) i.next();
 				// find the hook ini the current node, if present:
 				for (PermanentNodeHook hook : currentDestinationNode.getActivatedHooks()) {
 					if (hook.getName().equals(hookName)) {
@@ -260,9 +262,8 @@ public class AddHookActor extends XmlActorAdapter {
 					((PermanentNodeHook) hook).loadFrom(pXmlParent);
 				}
 				// call invoke.
-				currentDestinationNode.invokeHook(hook);
-				if (hook instanceof PermanentNodeHook) {
-					PermanentNodeHook permHook = (PermanentNodeHook) hook;
+				((NodeAdapter) currentDestinationNode).invokeHook(hook);
+				if (hook instanceof PermanentNodeHook permHook) {
 					logger.finest("This is a permanent hook " + hookName);
 					// the focused receives the focus:
 					if (currentDestinationNode == adaptedFocussedNode) {

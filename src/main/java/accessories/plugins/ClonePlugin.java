@@ -31,11 +31,12 @@ import java.util.Vector;
 import accessories.plugins.ClonePasteAction.CloneProperties;
 import accessories.plugins.ClonePasteAction.ClonePropertiesObserver;
 import accessories.plugins.ClonePasteAction.Registration;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.extensions.PermanentNodeHook;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
 import freemind.modes.ModeController.NodeLifetimeListener;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.hooks.PermanentMindMapNodeHookAdapter;
 
 public class ClonePlugin extends PermanentMindMapNodeHookAdapter implements
@@ -67,6 +68,7 @@ public class ClonePlugin extends PermanentMindMapNodeHookAdapter implements
 	public ClonePlugin() {
 	}
 
+	@Override
 	public void invoke(MindMapNode node) {
 		super.invoke(node);
 		registerPlugin();
@@ -85,13 +87,11 @@ public class ClonePlugin extends PermanentMindMapNodeHookAdapter implements
 		mDisabled = true;
 		getMindMapController().getController().errorMessage(
 				getMindMapController().getText("clone_plugin_impossible"));
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				if (getHook(getNode()) != null) {
-					removeHook();
-				}
-			}
-		});
+		EventQueue.invokeLater(() -> {
+        	if (getHook(getNode()) != null) {
+        		removeHook();
+        	}
+        });
 	}
 
 	/**
@@ -106,6 +106,7 @@ public class ClonePlugin extends PermanentMindMapNodeHookAdapter implements
 				.addHook(getNode(), selecteds, PLUGIN_LABEL, null);
 	}
 
+	@Override
 	public void save(XMLElement xml) {
 		super.save(xml);
 		HashMap<String, Object> values = new HashMap<>();
@@ -133,6 +134,7 @@ public class ClonePlugin extends PermanentMindMapNodeHookAdapter implements
 		return cloneIds.toString();
 	}
 
+	@Override
 	public void loadFrom(XMLElement child) {
 		super.loadFrom(child);
 		mCloneNodes = null;
@@ -156,6 +158,7 @@ public class ClonePlugin extends PermanentMindMapNodeHookAdapter implements
 		logger.finest("Loaded mCloneItself to " + mCloneItself);
 	}
 
+	@Override
 	public void shutdownMapHook() {
 		logger.fine("Shutdown of clones");
 		deregisterPlugin();
@@ -216,6 +219,7 @@ public class ClonePlugin extends PermanentMindMapNodeHookAdapter implements
 		getRegistration().deregisterClone(mCloneId, this);
 	}
 
+	@Override
 	public void onCreateNodeHook(MindMapNode node) {
 		HashSet<MindMapNode> cloneNodes = getCloneNodes();
 		for (MindMapNode clone :cloneNodes) {
@@ -227,9 +231,11 @@ public class ClonePlugin extends PermanentMindMapNodeHookAdapter implements
 		}
 	}
 
+	@Override
 	public void onPreDeleteNode(MindMapNode node) {
 	}
 
+	@Override
 	public void onPostDeleteNode(MindMapNode node, MindMapNode parent) {
 	}
 
@@ -314,9 +320,8 @@ public class ClonePlugin extends PermanentMindMapNodeHookAdapter implements
 		if (originalNode == null) {
 			return null;
 		}
-		for (PermanentNodeHook hook :originalNode.getActivatedHooks()) {
-			if (hook instanceof ClonePlugin) {
-				ClonePlugin cloneHook = (ClonePlugin) hook;
+		for (PermanentNodeHook hook :((NodeAdapter) originalNode).getActivatedHooks()) {
+			if (hook instanceof ClonePlugin cloneHook) {
 				return cloneHook;
 			}
 		}
@@ -329,6 +334,7 @@ public class ClonePlugin extends PermanentMindMapNodeHookAdapter implements
 	 * @see
 	 * freemind.extensions.PermanentNodeHookAdapter#processUnfinishedLinks()
 	 */
+	@Override
 	public void processUnfinishedLinks() {
 		super.processUnfinishedLinks();
 		if (mDisabled)
@@ -360,6 +366,7 @@ public class ClonePlugin extends PermanentMindMapNodeHookAdapter implements
 	 * @see accessories.plugins.ClonePasteAction.ClonePropertiesObserver#
 	 * propertiesChanged(accessories.plugins.ClonePasteAction.CloneProperties)
 	 */
+	@Override
 	public void propertiesChanged(CloneProperties pCloneProperties) {
 		mCloneItself = Boolean.valueOf(pCloneProperties.isCloneItself());
 	}

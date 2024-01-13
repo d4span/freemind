@@ -48,13 +48,14 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import io.github.geniot.jortho.SpellChecker;
 
 import freemind.main.FreeMindCommon;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 
 /**
  * @author foltin
@@ -117,7 +118,7 @@ public class EditNodeTextField extends EditNodeBase {
 		xOffset += nodeView.getMainView().getTextX();
 		int xExtraWidth = 0;
 		if (MINIMAL_LEAF_WIDTH > xSize
-				&& (model.isFolded() || !model.hasChildren())) {
+				&& (((NodeAdapter) model).isFolded() || !model.hasChildren())) {
 			// leaf or folded node with small size
 			xExtraWidth = MINIMAL_LEAF_WIDTH - xSize;
 			xSize = MINIMAL_LEAF_WIDTH; // increase minimum size
@@ -171,6 +172,7 @@ public class EditNodeTextField extends EditNodeBase {
 		textfield.getDocument().addUndoableEditListener(mUndoManager);
 		// Create an undo action and add it to the text component
 		textfield.getActionMap().put("Undo", new AbstractAction("Undo") {
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				try {
 					if (mUndoManager.canUndo()) {
@@ -188,6 +190,7 @@ public class EditNodeTextField extends EditNodeBase {
 
 		// Create a redo action and add it to the text component
 		textfield.getActionMap().put("Redo", new AbstractAction("Redo") {
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				try {
 					if (mUndoManager.canRedo()) {
@@ -231,14 +234,12 @@ public class EditNodeTextField extends EditNodeBase {
 		if (checkSpelling) {
 			SpellChecker.register(textfield, false, true, true, true);
 		}
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				textfield.requestFocus();
-				// Add listener now, as there are focus changes before.
-				textfield.addFocusListener(textFieldListener);
-				mFocusListener.addComponentListener(textFieldListener);
-			}
-		});
+		EventQueue.invokeLater(() -> {
+        	textfield.requestFocus();
+        	// Add listener now, as there are focus changes before.
+        	textfield.addFocusListener(textFieldListener);
+        	mFocusListener.addComponentListener(textFieldListener);
+        });
 	}
 
 	// listener class
@@ -247,9 +248,11 @@ public class EditNodeTextField extends EditNodeBase {
 		private boolean checkSpelling = Resources.getInstance()
 				.getBoolProperty(FreeMindCommon.CHECK_SPELLING);
 
+		@Override
 		public void focusGained(FocusEvent e) {
 		} // focus gained
 
+		@Override
 		public void focusLost(FocusEvent e) {
 			// %%% open problems:
 			// - adding of a child to the rightmost node
@@ -273,6 +276,7 @@ public class EditNodeTextField extends EditNodeBase {
 			}
 		}
 
+		@Override
 		public void keyPressed(KeyEvent e) {
 			// add to check meta keydown by koh 2004.04.16
 			// logger.info("Key " + e);
@@ -304,25 +308,32 @@ public class EditNodeTextField extends EditNodeBase {
 			}
 		}
 
+		@Override
 		public void keyTyped(KeyEvent e) {
 		}
 
+		@Override
 		public void keyReleased(KeyEvent e) {
 		}
 
+		@Override
 		public void mouseClicked(MouseEvent e) {
 		}
 
+		@Override
 		public void mouseEntered(MouseEvent e) {
 		}
 
+		@Override
 		public void mouseExited(MouseEvent e) {
 		}
 
+		@Override
 		public void mousePressed(MouseEvent e) {
 			conditionallyShowPopup(e);
 		}
 
+		@Override
 		public void mouseReleased(MouseEvent e) {
 			conditionallyShowPopup(e);
 		}
@@ -340,18 +351,22 @@ public class EditNodeTextField extends EditNodeBase {
 			}
 		}
 
+		@Override
 		public void componentHidden(ComponentEvent e) {
 			focusLost(null);
 		}
 
+		@Override
 		public void componentMoved(ComponentEvent e) {
 			focusLost(null);
 		}
 
+		@Override
 		public void componentResized(ComponentEvent e) {
 			focusLost(null);
 		}
 
+		@Override
 		public void componentShown(ComponentEvent e) {
 			focusLost(null);
 		}

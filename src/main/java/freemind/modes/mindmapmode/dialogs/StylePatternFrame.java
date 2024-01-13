@@ -27,6 +27,7 @@ import java.awt.CardLayout;
 import java.awt.HeadlessException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -36,7 +37,8 @@ import javax.swing.JPanel;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.presentation.NodeStyle;
 import freemind.common.BooleanProperty;
 import freemind.common.ColorProperty;
 import freemind.common.ComboProperty;
@@ -281,19 +283,15 @@ public class StylePatternFrame extends JPanel implements TextTranslator,
 	public void addListeners() {
 		// add listeners:
 		for (PropertyControl control : mControls) {
-			if (control instanceof PropertyBean) {
-				PropertyBean bean = (PropertyBean) control;
+			if (control instanceof PropertyBean bean) {
 				bean.addPropertyChangeListener(this);
 			}
 		}
-		mClearSetters.addPropertyChangeListener(new PropertyChangeListener() {
-
-			public void propertyChange(PropertyChangeEvent pEvt) {
-				for (ThreeCheckBoxProperty booleanProp : mPropertyChangePropagation.keySet()) {
-					booleanProp.setValue(mClearSetters.getValue());
-				}
-			}
-		});
+		mClearSetters.addPropertyChangeListener(pEvt -> {
+        	for (ThreeCheckBoxProperty booleanProp : mPropertyChangePropagation.keySet()) {
+        		booleanProp.setValue(mClearSetters.getValue());
+        	}
+        });
 	}
 
 	private String[] sizes = new String[] { "2", "4", "6", "8", "10", "12",
@@ -343,8 +341,9 @@ public class StylePatternFrame extends JPanel implements TextTranslator,
 		mSetNodeStyle = new ThreeCheckBoxProperty(SET_NODE_STYLE + ".tooltip",
 				SET_NODE_STYLE);
 		controls.add(mSetNodeStyle);
+		var styles = Arrays.stream(NodeStyle.values()).map(NodeStyle::getStyle).toArray(String[]::new);
 		mNodeStyle = new ComboProperty(NODE_STYLE + ".tooltip", NODE_STYLE,
-				MindMapNode.NODE_STYLES, this);
+				styles, this);
 		controls.add(mNodeStyle);
 		mIconInformationVector = new Vector<>();
 		MindMapController controller = mMindMapController;
@@ -461,6 +460,7 @@ public class StylePatternFrame extends JPanel implements TextTranslator,
 		return childNames;
 	}
 
+	@Override
 	public String getText(String pKey) {
 		return mTranslator.getText("PatternDialog." + pKey);
 	}
@@ -474,7 +474,7 @@ public class StylePatternFrame extends JPanel implements TextTranslator,
 				mSetNodeBackgroundColor, mNodeBackgroundColor,
 				fmMain.getDefaultProperty(FreeMind.RESOURCES_BACKGROUND_COLOR));
 		setPatternControls(pattern.getPatternNodeStyle(), mSetNodeStyle,
-				mNodeStyle, MindMapNode.STYLE_AS_PARENT);
+				mNodeStyle, NodeStyle.AS_PARENT.getStyle());
 		setPatternControls(pattern.getPatternNodeText(), mSetNodeText,
 				mNodeText, "");
 		setPatternControls(pattern.getPatternEdgeColor(), mSetEdgeColor,
@@ -522,18 +522,21 @@ public class StylePatternFrame extends JPanel implements TextTranslator,
 	}
 
 	private final class IdentityTransformer implements ValueTransformator {
+		@Override
 		public String transform(String value) {
 			return value;
 		}
 	}
 
 	private final class EdgeWidthTransformer implements ValueTransformator {
+		@Override
 		public String transform(String value) {
 			return transformEdgeWidth(value);
 		}
 	}
 
 	private final class EdgeWidthBackTransformer implements ValueTransformator {
+		@Override
 		public String transform(String value) {
 			return transformStringToWidth(value);
 		}
@@ -666,10 +669,10 @@ public class StylePatternFrame extends JPanel implements TextTranslator,
 		if (checkboxResult == null) {
 			return null;
 		}
-		if (checkboxResult.equals(ThreeCheckBoxProperty.DON_T_TOUCH_VALUE)) {
+		if (ThreeCheckBoxProperty.DON_T_TOUCH_VALUE.equals(checkboxResult)) {
 			return null;
 		}
-		if (checkboxResult.equals(ThreeCheckBoxProperty.FALSE_VALUE)) {
+		if (ThreeCheckBoxProperty.FALSE_VALUE.equals(checkboxResult)) {
 			// remove property:
 			return baseProperty;
 		}
@@ -681,6 +684,7 @@ public class StylePatternFrame extends JPanel implements TextTranslator,
 	 * Used to enable/disable the attribute controls, if the check boxes are
 	 * changed.
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent pEvt) {
 		// System.out.println("Propagation of "+ pEvt.getPropertyName()
 		// + " with value " + pEvt.getNewValue() + " and source " +

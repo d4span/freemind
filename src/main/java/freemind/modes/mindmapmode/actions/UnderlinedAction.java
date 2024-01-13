@@ -28,6 +28,7 @@ import javax.swing.JMenuItem;
 
 import freemind.controller.MenuItemSelectedListener;
 import freemind.controller.actions.generated.instance.UnderlinedNodeAction;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 
 @SuppressWarnings("serial")
@@ -43,7 +44,9 @@ public class UnderlinedAction extends NodeGeneralAction implements
 		setDoActionClass(UnderlinedNodeAction.class);
 	}
 
+	@Override
 	public boolean isSelected(JMenuItem item, Action action) {
-		return modeController.getSelected().isUnderlined();
+		NodeAdapter selected = (NodeAdapter) modeController.getSelected();
+		return selected.isUnderlined();
 	}
 }

@@ -23,8 +23,8 @@ package freemind.modes;
 import java.awt.Font;
 import java.util.List;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.extensions.NodeHook;
 import freemind.view.mindmapview.ViewFeedback;
 

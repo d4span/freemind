@@ -99,6 +99,7 @@ public class UpdateThread extends Thread implements ResultHandler,
 		mController = pController;
 	}
 
+	@Override
 	public void run() {
 		try {
 			mPrepareStatement = mConnection.prepareStatement(QUERY);
@@ -160,6 +161,7 @@ public class UpdateThread extends Thread implements ResultHandler,
 		}
 	}
 
+	@Override
 	public void processResults(ResultSet rs) {
 		try {
 			while (rs.next()) {
@@ -215,10 +217,9 @@ public class UpdateThread extends Thread implements ResultHandler,
 			// add new hook
 			DatabaseBasics.togglePermanentHook(mController);
 			// tell him about this thread.
-			Collection<PermanentNodeHook> activatedHooks = mController.getRootNode().getActivatedHooks();
+			Collection<PermanentNodeHook> activatedHooks = ((NodeAdapter) mController.getRootNode()).getActivatedHooks();
 			for (PermanentNodeHook hook : activatedHooks) {
-				if (hook instanceof DatabaseConnectionHook) {
-					DatabaseConnectionHook connHook = (DatabaseConnectionHook) hook;
+				if (hook instanceof DatabaseConnectionHook connHook) {
 					connHook.setUpdateThread(this);
 					break;
 				}
@@ -230,16 +231,14 @@ public class UpdateThread extends Thread implements ResultHandler,
 
 	private void executeTransaction(final ActionPair pair)
 			throws InterruptedException, InvocationTargetException {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				mFilterEnabled = false;
-				try {
-					mController.doTransaction("update", pair);
-				} finally {
-					mFilterEnabled = true;
-				}
-			}
-		});
+		SwingUtilities.invokeLater(() -> {
+        	mFilterEnabled = false;
+        	try {
+        		mController.doTransaction("update", pair);
+        	} finally {
+        		mFilterEnabled = true;
+        	}
+        });
 	}
 
 	protected void insertIntoActionTable(String expression) throws SQLException {
@@ -273,6 +272,7 @@ public class UpdateThread extends Thread implements ResultHandler,
 		return i != -1;
 	}
 
+	@Override
 	public ActionPair filterAction(ActionPair pPair) {
 		if (pPair == null || !mFilterEnabled)
 			return pPair;

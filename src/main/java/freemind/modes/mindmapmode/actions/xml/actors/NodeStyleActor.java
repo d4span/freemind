@@ -20,11 +20,13 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.presentation.NodeStyle;
 import freemind.controller.actions.generated.instance.NodeStyleFormatAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.main.Tools;
 import freemind.modes.ExtendedMapFeedback;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 
 /**
@@ -40,6 +42,7 @@ public class NodeStyleActor extends XmlActorAdapter {
 		super(pMapFeedback);
 	}
 	
+	@Override
 	public Class<NodeStyleFormatAction> getDoActionClass() {
 		return NodeStyleFormatAction.class;
 	}
@@ -49,8 +52,8 @@ public class NodeStyleActor extends XmlActorAdapter {
 			execute(getActionPair(node, null));
 			return;
 		}
-		for (int i = 0; i < MindMapNode.NODE_STYLES.length; i++) {
-			String dstyle = MindMapNode.NODE_STYLES[i];
+		for (int i = 0; i < NodeStyle.values().length; i++) {
+			String dstyle = NodeStyle.values()[i].getStyle();
 			if(Tools.safeEquals(style, dstyle)) {
 				execute(getActionPair(node, style));
 				return;
@@ -63,7 +66,7 @@ public class NodeStyleActor extends XmlActorAdapter {
 		NodeStyleFormatAction styleAction = createNodeStyleFormatAction(
 				targetNode, style);
 		NodeStyleFormatAction undoStyleAction = createNodeStyleFormatAction(
-				targetNode, targetNode.getStyle());
+				targetNode, ((NodeAdapter) targetNode).getStyle().getStyle());
 		return new ActionPair(styleAction, undoStyleAction);
 	}
 
@@ -75,16 +78,16 @@ public class NodeStyleActor extends XmlActorAdapter {
 		return nodeStyleAction;
 	}
 
+	@Override
 	public void act(XmlAction action) {
-		if (action instanceof NodeStyleFormatAction) {
-			NodeStyleFormatAction nodeStyleAction = (NodeStyleFormatAction) action;
-			MindMapNode node = getNodeFromID(nodeStyleAction.getNode());
+		if (action instanceof NodeStyleFormatAction nodeStyleAction) {
+			NodeAdapter node = getNodeFromID(nodeStyleAction.getNode());
 			String style = nodeStyleAction.getStyle();
 			if (!Tools.safeEquals(node.hasStyle() ? node.getBareStyle() : null,
 					style)) {
 				// logger.info("Setting style of " + node + " to "+ style +
 				// " and was " + node.getStyle());
-				node.setStyle(style);
+				node.setStyle(NodeStyle.valueOf(style));
 				getExMapFeedback().nodeStyleChanged(node);					
 			}
 		}

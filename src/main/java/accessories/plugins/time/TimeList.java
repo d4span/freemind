@@ -69,7 +69,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.common.ScalableJTable;
 import freemind.controller.MapModuleManager.MapModuleChangeObserver;
 import freemind.controller.MenuItemSelectedListener;
@@ -83,6 +83,7 @@ import freemind.main.Tools;
 import freemind.modes.MindIcon;
 import freemind.modes.Mode;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 import freemind.modes.common.plugins.ReminderHookBase;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.hooks.MindMapHookAdapter;
@@ -159,6 +160,7 @@ public class TimeList extends MindMapHookAdapter implements
 
 	private JLabel mStatisticsLabel;
 
+	@Override
 	public void startupMapHook() {
 		super.startupMapHook();
 
@@ -185,11 +187,13 @@ public class TimeList extends MindMapHookAdapter implements
 		mDialog.setTitle(getResourceString(windowTitle));
 		mDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		mDialog.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent event) {
 				disposeDialog();
 			}
 		});
 		Tools.addEscapeActionToDialog(mDialog, new AbstractAction() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				disposeDialog();
 			}
@@ -208,6 +212,7 @@ public class TimeList extends MindMapHookAdapter implements
 		mFilterTextSearchField.getDocument().addDocumentListener(
 				new FilterTextDocumentListener());
 		mFilterTextSearchField.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent pEvent) {
 				// logger.info("Key event:" + pEvent.getKeyCode());
 				if (pEvent.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -231,6 +236,7 @@ public class TimeList extends MindMapHookAdapter implements
 						GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
 						new Insets(0, 0, 0, 0), 0, 0));
 		mFilterTextReplaceField.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent pEvent) {
 				if (pEvent.getKeyCode() == KeyEvent.VK_DOWN) {
 					logger.info("Set Focus to table");
@@ -280,30 +286,35 @@ public class TimeList extends MindMapHookAdapter implements
 		// button bar
 		AbstractAction selectAction = new AbstractAction(
 				getResourceString("plugins/TimeManagement.xml_Select")) {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				selectSelectedRows();
 			}
 		};
 		AbstractAction exportAction = new AbstractAction(
 				getResourceString("plugins/TimeManagement.xml_Export")) {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				exportSelectedRowsAndClose();
 			}
 		};
 		AbstractAction replaceAllAction = new AbstractAction(
 				getResourceString("plugins/TimeManagement.xml_Replace_All")) {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				replace(new ReplaceAllInfo());
 			}
 		};
 		AbstractAction replaceSelectedAction = new AbstractAction(
 				getResourceString("plugins/TimeManagement.xml_Replace_Selected")) {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				replace(new ReplaceSelectedInfo());
 			}
 		};
 		AbstractAction gotoAction = new AbstractAction(
 				getResourceString("plugins/TimeManagement.xml_Goto")) {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				selectSelectedRows();
 				disposeDialog();
@@ -311,6 +322,7 @@ public class TimeList extends MindMapHookAdapter implements
 		};
 		AbstractAction disposeAction = new AbstractAction(
 				getResourceString("plugins/TimeManagement.xml_Cancel")) {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				disposeDialog();
 			}
@@ -363,26 +375,25 @@ public class TimeList extends MindMapHookAdapter implements
 
 		// table selection listeners to enable/disable menu actions:
 		ListSelectionModel rowSM = mTimeTable.getSelectionModel();
-		rowSM.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				// Ignore extra messages.
-				if (e.getValueIsAdjusting())
-					return;
+		rowSM.addListSelectionListener(e -> {
+        	// Ignore extra messages.
+        	if (e.getValueIsAdjusting())
+        		return;
 
-				ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-				boolean enable = !(lsm.isSelectionEmpty());
-				replaceSelectedMenuItem.setEnabled(enable);
-				selectMenuItem.setEnabled(enable);
-				gotoMenuItem.setEnabled(enable);
-				exportMenuItem.setEnabled(enable);
-			}
-		});
+        	ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+        	boolean enable = !(lsm.isSelectionEmpty());
+        	replaceSelectedMenuItem.setEnabled(enable);
+        	selectMenuItem.setEnabled(enable);
+        	gotoMenuItem.setEnabled(enable);
+        	exportMenuItem.setEnabled(enable);
+        });
 		// table selection listener to display the history of the selected nodes
 		rowSM.addListSelectionListener(new ListSelectionListener() {
 			String getNodeText(MindMapNode node) {
 				return Tools.getNodeTextHierarchy(node, getMindMapController());
 			}
 
+			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				// Ignore extra messages.
 				if (e.getValueIsAdjusting())
@@ -477,20 +488,13 @@ public class TimeList extends MindMapHookAdapter implements
 		 */
 		@Override
 		public Class<?> getColumnClass(int arg0) {
-			switch (arg0) {
-			case DATE_COLUMN:
-			case NODE_CREATED_COLUMN:
-			case NODE_MODIFIED_COLUMN:
-				return Date.class;
-			case NODE_TEXT_COLUMN:
-				return NodeHolder.class;
-			case NODE_ICON_COLUMN:
-				return IconsHolder.class;
-			case NODE_NOTES_COLUMN:
-				return NotesHolder.class;
-			default:
-				return Object.class;
-			}
+			return switch (arg0) {
+                case DATE_COLUMN, NODE_CREATED_COLUMN, NODE_MODIFIED_COLUMN -> Date.class;
+                case NODE_TEXT_COLUMN -> NodeHolder.class;
+                case NODE_ICON_COLUMN -> IconsHolder.class;
+                case NODE_NOTES_COLUMN -> NotesHolder.class;
+                default -> Object.class;
+            };
 		}
 	}
 
@@ -506,6 +510,7 @@ public class TimeList extends MindMapHookAdapter implements
 			super(pName);
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			toggleViewFoldedNodes();
 		}
@@ -513,6 +518,7 @@ public class TimeList extends MindMapHookAdapter implements
 		/* (non-Javadoc)
 		 * @see freemind.controller.MenuItemSelectedListener#isSelected(javax.swing.JMenuItem, javax.swing.Action)
 		 */
+		@Override
 		public boolean isSelected(JMenuItem pCheckItem, Action pAction) {
 			return mViewFoldedNodes;
 		}
@@ -561,30 +567,36 @@ public class TimeList extends MindMapHookAdapter implements
 	}
 
 	private class ReplaceAllInfo implements IReplaceInputInformation {
+		@Override
 		public int getLength() {
 			return mFlatNodeTableFilterModel.getRowCount();
 		}
 
+		@Override
 		public NodeHolder getNodeHolderAt(int i) {
 			return (NodeHolder) mFlatNodeTableFilterModel.getValueAt(i,
 					NODE_TEXT_COLUMN);
 		}
 
+		@Override
 		public void changeString(NodeHolder nodeHolder, String newText) {
 			getMindMapController().setNodeText(nodeHolder.node, newText);
 		}
 	}
 
 	private class ReplaceSelectedInfo implements IReplaceInputInformation {
+		@Override
 		public int getLength() {
 			return mTimeTable.getSelectedRowCount();
 		}
 
+		@Override
 		public NodeHolder getNodeHolderAt(int i) {
 			return (NodeHolder) mSorter.getValueAt(
 					mTimeTable.getSelectedRows()[i], NODE_TEXT_COLUMN);
 		}
 
+		@Override
 		public void changeString(NodeHolder nodeHolder, String newText) {
 			getMindMapController().setNodeText(nodeHolder.node, newText);
 		}
@@ -637,7 +649,7 @@ public class TimeList extends MindMapHookAdapter implements
 		model.addColumn(COLUMN_MODIFIED);
 		model.addColumn(COLUMN_NOTES);
 		MindMapNode node = getMindMapController().getMap().getRootNode();
-		updateModel(model, node);
+		updateModel(model, (NodeAdapter) node);
 		mTimeTableModel = model;
 		mFlatNodeTableFilterModel = new FlatNodeTableFilterModel(
 				mTimeTableModel, NODE_TEXT_COLUMN, NODE_NOTES_COLUMN);
@@ -660,7 +672,7 @@ public class TimeList extends MindMapHookAdapter implements
 		return model;
 	}
 
-	private void updateModel(DefaultTableModel model, MindMapNode node) {
+	private void updateModel(DefaultTableModel model, NodeAdapter node) {
 		ReminderHookBase hook = TimeManagementOrganizer.getHook(node);
 		// show all nodes or only those with reminder:
 		if (mShowAllNodes || hook != null) {
@@ -680,7 +692,7 @@ public class TimeList extends MindMapHookAdapter implements
 		}
 		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
 			MindMapNode child = i.next();
-			updateModel(model, child);
+			updateModel(model, (NodeAdapter) child);
 		}
 	}
 
@@ -752,15 +764,18 @@ public class TimeList extends MindMapHookAdapter implements
 					TYPE_DELAY_TIME);
 		}
 
+		@Override
 		public void insertUpdate(DocumentEvent event) {
 			change(event);
 		}
 
+		@Override
 		public void removeUpdate(DocumentEvent event) {
 			change(event);
 
 		}
 
+		@Override
 		public void changedUpdate(DocumentEvent event) {
 			change(event);
 
@@ -774,27 +789,27 @@ public class TimeList extends MindMapHookAdapter implements
 				this.event = event;
 			}
 
+			@Override
 			public void run() {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							Document document = event.getDocument();
-							String text = getRegularExpression(getText(document));
-							mFlatNodeTableFilterModel.setFilter(text);
-							updateStatistics();
-						} catch (BadLocationException e) {
-							freemind.main.Resources.getInstance().logException(
-									e);
-							mFlatNodeTableFilterModel.resetFilter();
-						}
-					}
-				});
+				SwingUtilities.invokeLater(() -> {
+                	try {
+                		Document document = event.getDocument();
+                		String text = getRegularExpression(getText(document));
+                		mFlatNodeTableFilterModel.setFilter(text);
+                		updateStatistics();
+                	} catch (BadLocationException e) {
+                		freemind.main.Resources.getInstance().logException(
+                				e);
+                		mFlatNodeTableFilterModel.resetFilter();
+                	}
+                });
 			}
 		}
 
 	}
 
 	private final class FlatNodeTableMouseAdapter extends MouseAdapter {
+		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (e.getClickCount() == 2) {
 				Point p = e.getPoint();
@@ -806,12 +821,15 @@ public class TimeList extends MindMapHookAdapter implements
 	}
 
 	private final class FlatNodeTableKeyListener implements KeyListener {
+		@Override
 		public void keyTyped(KeyEvent arg0) {
 		}
 
+		@Override
 		public void keyPressed(KeyEvent arg0) {
 		}
 
+		@Override
 		public void keyReleased(KeyEvent arg0) {
 			if (arg0.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				disposeDialog();
@@ -824,6 +842,7 @@ public class TimeList extends MindMapHookAdapter implements
 	}
 
 	private final class FlatNodeTable extends ScalableJTable {
+		@Override
 		public TableCellRenderer getCellRenderer(int row, int column) {
 			Object object = getModel().getValueAt(row, column);
 			if (object instanceof Date)
@@ -837,10 +856,12 @@ public class TimeList extends MindMapHookAdapter implements
 			return super.getCellRenderer(row, column);
 		}
 
+		@Override
 		public boolean isCellEditable(int rowIndex, int vColIndex) {
 			return false;
 		}
 
+		@Override
 		protected void processKeyEvent(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				EventListener[] el = super.getListeners(KeyListener.class);
@@ -884,6 +905,7 @@ public class TimeList extends MindMapHookAdapter implements
 			super();
 		}
 
+		@Override
 		public void setValue(Object value) {
 			if (formatter == null) {
 				formatter = DateFormat.getDateTimeInstance();
@@ -897,6 +919,7 @@ public class TimeList extends MindMapHookAdapter implements
 			super();
 		}
 
+		@Override
 		public void setValue(Object value) {
 			NodeHolder holder = (NodeHolder) value;
 			setText((value == null) ? "" : holder
@@ -909,6 +932,7 @@ public class TimeList extends MindMapHookAdapter implements
 			super();
 		}
 
+		@Override
 		public void setValue(Object value) {
 			setText((value == null) ? "" : ((NotesHolder) value)
 					.getUntaggedNotesText());
@@ -1027,6 +1051,7 @@ public class TimeList extends MindMapHookAdapter implements
 		}
 
 		/** Returns a sorted list of icon names. */
+		@Override
 		public String toString() {
 			String result = "";
 			for (String name : iconNames) {
@@ -1042,9 +1067,9 @@ public class TimeList extends MindMapHookAdapter implements
 			super();
 		}
 
+		@Override
 		public void setValue(Object value) {
-			if (value instanceof IconsHolder) {
-				IconsHolder iconsHolder = (IconsHolder) value;
+			if (value instanceof IconsHolder iconsHolder) {
 				MultipleImage iconImages = new MultipleImage(1.0f);
 				for (MindIcon icon : iconsHolder.getIcons()) {
 					iconImages.addImage(icon.getIcon());
@@ -1063,6 +1088,7 @@ public class TimeList extends MindMapHookAdapter implements
 	 * terminated, the dialog is still present and needs the controller to store
 	 * its values.
 	 * */
+	@Override
 	public MindMapController getMindMapController() {
 		return mMyMindMapController;
 	}
@@ -1074,6 +1100,7 @@ public class TimeList extends MindMapHookAdapter implements
 	 * isMapModuleChangeAllowed(freemind.view.MapModule, freemind.modes.Mode,
 	 * freemind.view.MapModule, freemind.modes.Mode)
 	 */
+	@Override
 	public boolean isMapModuleChangeAllowed(MapModule pOldMapModule,
 			Mode pOldMode, MapModule pNewMapModule, Mode pNewMode) {
 		return true;
@@ -1086,6 +1113,7 @@ public class TimeList extends MindMapHookAdapter implements
 	 * beforeMapModuleChange(freemind.view.MapModule, freemind.modes.Mode,
 	 * freemind.view.MapModule, freemind.modes.Mode)
 	 */
+	@Override
 	public void beforeMapModuleChange(MapModule pOldMapModule, Mode pOldMode,
 			MapModule pNewMapModule, Mode pNewMode) {
 
@@ -1098,6 +1126,7 @@ public class TimeList extends MindMapHookAdapter implements
 	 * freemind.controller.MapModuleManager.MapModuleChangeObserver#afterMapClose
 	 * (freemind.view.MapModule, freemind.modes.Mode)
 	 */
+	@Override
 	public void afterMapClose(MapModule pOldMapModule, Mode pOldMode) {
 		disposeDialog();
 	}
@@ -1109,6 +1138,7 @@ public class TimeList extends MindMapHookAdapter implements
 	 * afterMapModuleChange(freemind.view.MapModule, freemind.modes.Mode,
 	 * freemind.view.MapModule, freemind.modes.Mode)
 	 */
+	@Override
 	public void afterMapModuleChange(MapModule pOldMapModule, Mode pOldMode,
 			MapModule pNewMapModule, Mode pNewMode) {
 		disposeDialog();
@@ -1121,6 +1151,7 @@ public class TimeList extends MindMapHookAdapter implements
 	 * @see freemind.controller.MapModuleManager.MapModuleChangeObserver#
 	 * numberOfOpenMapInformation(int, int)
 	 */
+	@Override
 	public void numberOfOpenMapInformation(int pNumber, int pIndex) {
 	}
 

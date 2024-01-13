@@ -29,16 +29,16 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.extensions.HookRegistration;
 import freemind.modes.MapAdapter;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 import freemind.modes.common.dialogs.EnterPasswordDialog;
 import freemind.modes.mindmapmode.EncryptedMindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
-import freemind.modes.mindmapmode.MindMapController.NewNodeCreator;
 import freemind.modes.mindmapmode.MindMapMapModel;
 import freemind.modes.mindmapmode.actions.NodeHookAction;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
@@ -66,10 +66,12 @@ public class EncryptNode extends MindMapNodeHookAdapter {
 			this.controller = controller;
 		}
 
+		@Override
 		public void register() {
 			enabled = true;
 		}
 
+		@Override
 		public void deRegister() {
 			enabled = false;
 		}
@@ -81,12 +83,13 @@ public class EncryptNode extends MindMapNodeHookAdapter {
 		 * freemind.controller.MenuItemEnabledListener#isEnabled(javax.swing
 		 * .JMenuItem, javax.swing.Action)
 		 */
+		@Override
 		public boolean isEnabled(JMenuItem item, Action action) {
 			String hookName = ((NodeHookAction) action).getHookName();
 			if (!enabled)
 				return false;
-			if (hookName
-					.equals("accessories/plugins/NewEncryptedMap.properties")) {
+			if ("accessories/plugins/NewEncryptedMap.properties"
+					.equals(hookName)) {
 				return true;
 			}
 			boolean isEncryptedNode = false;
@@ -98,7 +101,7 @@ public class EncryptNode extends MindMapNodeHookAdapter {
 						.getSelected();
 				isOpened = enode.isAccessible();
 			}
-			if (hookName.equals("accessories/plugins/EnterPassword.properties")) {
+			if ("accessories/plugins/EnterPassword.properties".equals(hookName)) {
 				return isEncryptedNode;
 			} else {
 				/*
@@ -117,18 +120,19 @@ public class EncryptNode extends MindMapNodeHookAdapter {
 		super();
 	}
 
+	@Override
 	public void invoke(MindMapNode node) {
 		super.invoke(node);
 		String actionType = getResourceString("action");
-		if (actionType.equals("encrypt")) {
-			encrypt(node);
+		if ("encrypt".equals(actionType)) {
+			encrypt((NodeAdapter) node);
 			getController().nodeRefresh(node);
 			return;
-		} else if (actionType.equals("toggleCryptState")) {
+		} else if ("toggleCryptState".equals(actionType)) {
 			toggleCryptState(node);
 			getController().nodeRefresh(node);
 			return;
-		} else if (actionType.equals("encrypted_map")) {
+		} else if ("encrypted_map".equals(actionType)) {
 			// new map
 			newEncryptedMap();
 			return;
@@ -164,22 +168,19 @@ public class EncryptNode extends MindMapNodeHookAdapter {
 
 	/**
      */
-	private void encrypt(MindMapNode node) {
+	private void encrypt(NodeAdapter node) {
 		final StringBuffer password = getUsersPassword();
 		if (password == null) {
 			return;
 		}
 		MindMapController mindmapcontroller = (MindMapController) getMindMapController();
 		// FIXME: not multithreading safe
-		mindmapcontroller.setNewNodeCreator(new NewNodeCreator() {
-
-			public MindMapNode createNode(Object userObject, MindMap map) {
-				EncryptedMindMapNode encryptedMindMapNode = new EncryptedMindMapNode(
-						userObject, map);
-				encryptedMindMapNode.setPassword(password);
-				return encryptedMindMapNode;
-			}
-		});
+		mindmapcontroller.setNewNodeCreator((userObject, map) -> {
+        	EncryptedMindMapNode encryptedMindMapNode = new EncryptedMindMapNode(
+        			userObject, map);
+        	encryptedMindMapNode.setPassword(password);
+        	return encryptedMindMapNode;
+        });
 		try {
 			getMindMapController().addNewNode(node, 0,
 					node.isLeft());
@@ -209,8 +210,7 @@ public class EncryptNode extends MindMapNodeHookAdapter {
      */
 	private void toggleCryptState(MindMapNode node) {
 		final MindMapController mindMapController = getMindMapController();
-		if (node instanceof EncryptedMindMapNode) {
-			EncryptedMindMapNode encNode = (EncryptedMindMapNode) node;
+		if (node instanceof EncryptedMindMapNode encNode) {
 			if (encNode.isAccessible()) {
 				// to remove all children views:
 				encNode.encrypt();

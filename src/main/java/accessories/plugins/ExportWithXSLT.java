@@ -51,8 +51,8 @@ import javax.xml.transform.stream.StreamSource;
 
 import accessories.plugins.util.html.ClickableImageCreator;
 import accessories.plugins.util.xslt.ExportDialog;
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.extensions.ExportHook;
 import freemind.main.Resources;
 import freemind.main.Tools;

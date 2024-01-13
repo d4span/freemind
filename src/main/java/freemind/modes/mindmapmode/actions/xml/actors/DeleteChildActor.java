@@ -23,14 +23,15 @@ package freemind.modes.mindmapmode.actions.xml.actors;
 import java.awt.datatransfer.Transferable;
 import java.util.Iterator;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.DeleteNodeAction;
 import freemind.controller.actions.generated.instance.PasteNodeAction;
 import freemind.controller.actions.generated.instance.UndoPasteNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.extensions.PermanentNodeHook;
 import freemind.modes.ExtendedMapFeedback;
+import freemind.modes.NodeAdapter;
 import freemind.modes.ViewAbstraction;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 import freemind.modes.mindmapmode.actions.xml.actors.PasteActor.NodeCoordinate;
@@ -55,6 +56,7 @@ public class DeleteChildActor extends XmlActorAdapter {
 	 * freemind.controller.actions.ActorXml#act(freemind.controller.actions.
 	 * generated.instance.XmlAction)
 	 */
+	@Override
 	public void act(XmlAction action) {
 		DeleteNodeAction deleteNodeAction = (DeleteNodeAction) action;
 		MindMapNode selectedNode = getNodeFromID(deleteNodeAction.getNode());
@@ -68,7 +70,7 @@ public class DeleteChildActor extends XmlActorAdapter {
 			throw new IllegalArgumentException("Root node can't be deleted");
 		}
 		// remove hooks:
-		removeHooks(selectedNode);
+		removeHooks((NodeAdapter) selectedNode);
 		MindMapNode parent = selectedNode.getParentNode();
 		getExMapFeedback().fireNodePreDeleteEvent(selectedNode);
 		// deregister node:
@@ -82,7 +84,7 @@ public class DeleteChildActor extends XmlActorAdapter {
 			view.deselect(nodeView);
 			if(view.getSelecteds().size() == 0) {
 				NodeView newSelectedView;
-				int childIndex = parent.getChildPosition(selectedNode);
+				int childIndex = parent.getChildPosition(selectedNode).get();
 				if(parent.getChildCount() > childIndex+1) {
 					// the next node
 					newSelectedView = view.getNodeView((MindMapNode) parent.getChildAt(childIndex+1));
@@ -101,10 +103,10 @@ public class DeleteChildActor extends XmlActorAdapter {
 		getExMapFeedback().fireNodePostDeleteEvent(selectedNode, parent);
 	}
 
-	private void removeHooks(MindMapNode selectedNode) {
+	private void removeHooks(NodeAdapter selectedNode) {
 		for (Iterator<MindMapNode> it = selectedNode.childrenUnfolded(); it.hasNext();) {
 			MindMapNode child = it.next();
-			removeHooks(child);
+			removeHooks((NodeAdapter) child);
 		}
 		long currentRun = 0;
 		// determine timeout:
@@ -125,6 +127,7 @@ public class DeleteChildActor extends XmlActorAdapter {
 	 * 
 	 * @see freemind.controller.actions.ActorXml#getDoActionClass()
 	 */
+	@Override
 	public Class<DeleteNodeAction> getDoActionClass() {
 		return DeleteNodeAction.class;
 	}
@@ -137,7 +140,7 @@ public class DeleteChildActor extends XmlActorAdapter {
 
 		Transferable copy = getExMapFeedback().copy(selectedNode, true);
 		NodeCoordinate coord = new NodeCoordinate(selectedNode,
-				selectedNode.isLeft());
+		((NodeAdapter) selectedNode).isLeft());
 		// Undo-action
 		PasteNodeAction pasteNodeAction = null;
 		pasteNodeAction = getExMapFeedback().getActorFactory().

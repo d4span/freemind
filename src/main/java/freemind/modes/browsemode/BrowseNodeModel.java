@@ -22,7 +22,7 @@ package freemind.modes.browsemode;
 
 import java.util.LinkedList;
 
-import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMap;
 import freemind.main.XMLElement;
 import freemind.modes.NodeAdapter;
 

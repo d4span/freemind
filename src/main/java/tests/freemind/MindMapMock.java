@@ -32,9 +32,9 @@ import java.util.List;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
-import ch.d4span.freemind.treemodel.TreeNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.treemodel.TreeNode;
 import freemind.controller.filter.Filter;
 import freemind.controller.filter.util.SortedListModel;
 import freemind.controller.filter.util.SortedMapListModel;
@@ -160,20 +160,8 @@ public class MindMapMock implements MindMap {
 	}
 
 	@Override
-	public void valueForPathChanged(TreePath path, TreeNode newValue) {
-	}
-
-	@Override
 	public int getIndexOfChild(TreeNode parent, TreeNode child) {
 		return 0;
-	}
-
-	@Override
-	public void addTreeModelListener(TreeModelListener l) {
-	}
-
-	@Override
-	public void removeTreeModelListener(TreeModelListener l) {
 	}
 
 	@Override

@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
 
-import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMap;
 import freemind.modes.ArrowLinkAdapter;
 import freemind.modes.ArrowLinkTarget;
 import freemind.modes.CloudAdapter;

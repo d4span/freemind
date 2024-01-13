@@ -26,10 +26,11 @@ package freemind.controller.filter;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.filter.condition.Condition;
+import freemind.modes.NodeAdapter;
 import freemind.view.mindmapview.MapView;
 import freemind.view.mindmapview.NodeView;
 
@@ -61,6 +62,7 @@ public class DefaultFilter implements Filter {
 	 * @see
 	 * freemind.controller.filter.Filter#applyFilter(freemind.modes.MindMap)
 	 */
+	@Override
 	public void applyFilter(Controller c) {
 		if (condition != null) {
 			try {
@@ -69,7 +71,7 @@ public class DefaultFilter implements Filter {
 				MapView mapView = c.getView();
 				MindMapNode root = map.getRootNode();
 				resetFilter(root);
-				if (filterChildren(root, c, condition.checkNode(c, root), false)) {
+				if (filterChildren((NodeAdapter) root, c, condition.checkNode(c, root), false)) {
 					addFilterResult(root, FILTER_SHOW_ANCESTOR);
 				}
 				selectVisibleNode(mapView);
@@ -110,7 +112,7 @@ public class DefaultFilter implements Filter {
 	 * @param c
 	 *            TODO
 	 */
-	private boolean filterChildren(MindMapNode parent, Controller c,
+	private boolean filterChildren(NodeAdapter parent, Controller c,
 			boolean isAncestorSelected, boolean isAncestorEclipsed) {
 		ListIterator<MindMapNode> iterator = parent.childrenUnfolded();
 		boolean isDescendantSelected = false;
@@ -138,7 +140,7 @@ public class DefaultFilter implements Filter {
 		if (isAncestorEclipsed) {
 			addFilterResult(node, FILTER_SHOW_ECLIPSED);
 		}
-		if (filterChildren(node, c, conditionSatisfied || isAncestorSelected,
+		if (filterChildren((NodeAdapter) node, c, conditionSatisfied || isAncestorSelected,
 				!conditionSatisfied || isAncestorEclipsed)) {
 			addFilterResult(node, FILTER_SHOW_ANCESTOR);
 			isDescendantSelected = true;
@@ -152,6 +154,7 @@ public class DefaultFilter implements Filter {
 	 * @see
 	 * freemind.controller.filter.Filter#isVisible(freemind.modes.MindMapNode)
 	 */
+	@Override
 	public boolean isVisible(MindMapNode node) {
 		if (condition == null)
 			return true;
@@ -174,6 +177,7 @@ public class DefaultFilter implements Filter {
 	 * 
 	 * @see freemind.controller.filter.Filter#areMatchedShown()
 	 */
+	@Override
 	public boolean areMatchedShown() {
 		return true;
 	}
@@ -183,6 +187,7 @@ public class DefaultFilter implements Filter {
 	 * 
 	 * @see freemind.controller.filter.Filter#areHiddenShown()
 	 */
+	@Override
 	public boolean areHiddenShown() {
 		return false;
 	}
@@ -192,6 +197,7 @@ public class DefaultFilter implements Filter {
 	 * 
 	 * @see freemind.controller.filter.Filter#areAncestorsShown()
 	 */
+	@Override
 	public boolean areAncestorsShown() {
 		return 0 != (options & FILTER_SHOW_ANCESTOR);
 	}
@@ -201,6 +207,7 @@ public class DefaultFilter implements Filter {
 	 * 
 	 * @see freemind.controller.filter.Filter#areDescendantsShown()
 	 */
+	@Override
 	public boolean areDescendantsShown() {
 		return 0 != (options & FILTER_SHOW_DESCENDANT);
 	}
@@ -210,10 +217,12 @@ public class DefaultFilter implements Filter {
 	 * 
 	 * @see freemind.controller.filter.Filter#areEclipsedShown()
 	 */
+	@Override
 	public boolean areEclipsedShown() {
 		return true;
 	}
 
+	@Override
 	public Object getCondition() {
 		return condition;
 	}

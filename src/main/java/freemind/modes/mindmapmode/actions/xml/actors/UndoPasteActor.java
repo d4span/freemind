@@ -20,7 +20,7 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.UndoPasteNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
@@ -48,9 +48,9 @@ public class UndoPasteActor extends XmlActorAdapter {
 	 * freemind.modes.mindmapmode.actions.xml.ActorXml#act(freemind.controller
 	 * .actions.generated.instance.XmlAction)
 	 */
-	public void act(XmlAction pAction) {
-		if (pAction instanceof UndoPasteNodeAction) {
-			UndoPasteNodeAction undoAction = (UndoPasteNodeAction) pAction;
+	@Override
+    public void act(XmlAction pAction) {
+		if (pAction instanceof UndoPasteNodeAction undoAction) {
 			MindMapNode selectedNode = getNodeFromID(undoAction.getNode());
 			int amount = undoAction.getNodeAmount();
 			while(amount > 0) {
@@ -68,7 +68,8 @@ public class UndoPasteActor extends XmlActorAdapter {
 	 * 
 	 * @see freemind.modes.mindmapmode.actions.xml.ActorXml#getDoActionClass()
 	 */
-	public Class<UndoPasteNodeAction> getDoActionClass() {
+	@Override
+    public Class<UndoPasteNodeAction> getDoActionClass() {
 		return UndoPasteNodeAction.class;
 	}
 

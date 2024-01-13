@@ -24,8 +24,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.FreeMindMain;
 import freemind.modes.ArrowLinkAdapter;
 import freemind.modes.ArrowLinkTarget;
@@ -53,13 +53,14 @@ public class FileMapModel extends MapAdapter {
 			ModeController modeController) {
 		super(modeController);
 		setRoot(new FileNodeModel(root, this));
-		getRootNode().setFolded(false);
+		((NodeAdapter) getRootNode()).setFolded(false);
 		linkRegistry = new MindMapLinkRegistry();
 	}
 
 	//
 	// Other methods
 	//
+	@Override
 	public MindMapLinkRegistry getLinkRegistry() {
 		return linkRegistry;
 	}
@@ -67,6 +68,7 @@ public class FileMapModel extends MapAdapter {
 	//
 	// Other methods
 	//
+	@Override
 	public boolean save(File file) {
 		return true;
 	}
@@ -75,6 +77,7 @@ public class FileMapModel extends MapAdapter {
      *
      */
 
+	@Override
 	public void destroy() {
 		/*
 		 * fc, 8.8.2004: don't call super.destroy as this method tries to remove
@@ -84,10 +87,12 @@ public class FileMapModel extends MapAdapter {
 		cancelFileChangeObservationTimer();
 	}
 
+	@Override
 	public boolean isSaved() {
 		return true;
 	}
 
+	@Override
 	public String toString() {
 		return "File: " + getRoot().toString();
 	}
@@ -118,6 +123,7 @@ public class FileMapModel extends MapAdapter {
 	 * 
 	 * @see freemind.modes.MindMap#getXml(java.io.Writer)
 	 */
+	@Override
 	public void getXml(Writer fileout) throws IOException {
 		// nothing.
 		// FIXME: Implement me if you need me.
@@ -129,6 +135,7 @@ public class FileMapModel extends MapAdapter {
 	 * 
 	 * @see freemind.modes.MindMap#getFilteredXml(java.io.Writer)
 	 */
+	@Override
 	public void getFilteredXml(Writer fileout) throws IOException {
 		// nothing.
 		// FIXME: Implement me if you need me.

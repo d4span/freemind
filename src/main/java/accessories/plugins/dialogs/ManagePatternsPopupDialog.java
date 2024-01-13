@@ -59,7 +59,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.common.TextTranslator;
 import freemind.controller.StructuredMenuHolder;
 import freemind.controller.actions.generated.instance.ManageStyleEditorWindowConfigurationStorage;

@@ -27,14 +27,15 @@ import java.util.Vector;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.controller.actions.generated.instance.ChangeRootNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.extensions.HookRegistration;
 import freemind.main.Tools;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 import freemind.modes.mindmapmode.actions.xml.ActorXml;
@@ -53,6 +54,7 @@ import freemind.view.mindmapview.NodeView;
 public class ChangeRootNode extends MindMapNodeHookAdapter {
 	private static final String TRANSACTION_NAME = "ChangeRootNode";
 
+	@Override
 	public void invoke(MindMapNode node) {
 		// we dont need node.
 		MindMapNode focussed = getMindMapController().getSelected();
@@ -97,6 +99,7 @@ public class ChangeRootNode extends MindMapNodeHookAdapter {
 		 * freemind.controller.MenuItemEnabledListener#isEnabled(javax.swing
 		 * .JMenuItem, javax.swing.Action)
 		 */
+		@Override
 		public boolean isEnabled(JMenuItem pItem, Action pAction) {
 			return controller.getSelecteds().size() == 1;
 		}
@@ -106,6 +109,7 @@ public class ChangeRootNode extends MindMapNodeHookAdapter {
 		 * 
 		 * @see freemind.extensions.HookRegistration#register()
 		 */
+		@Override
 		public void register() {
 			controller.getActionRegistry().registerActor(this,
 					getDoActionClass());
@@ -116,6 +120,7 @@ public class ChangeRootNode extends MindMapNodeHookAdapter {
 		 * 
 		 * @see freemind.extensions.HookRegistration#deRegister()
 		 */
+		@Override
 		public void deRegister() {
 			controller.getActionRegistry().deregisterActor(getDoActionClass());
 		}
@@ -127,9 +132,9 @@ public class ChangeRootNode extends MindMapNodeHookAdapter {
 		 * freemind.modes.mindmapmode.actions.xml.ActorXml#act(freemind.controller
 		 * .actions.generated.instance.XmlAction)
 		 */
+		@Override
 		public void act(XmlAction pAction) {
-			if (pAction instanceof ChangeRootNodeAction) {
-				ChangeRootNodeAction rootNodeAction = (ChangeRootNodeAction) pAction;
+			if (pAction instanceof ChangeRootNodeAction rootNodeAction) {
 				MindMapNode focussed = controller.getNodeFromID(rootNodeAction.getNode());
 				if (focussed.isRoot()) {
 					// node is already root. Everything ok.
@@ -141,7 +146,7 @@ public class ChangeRootNode extends MindMapNodeHookAdapter {
 				 * 3. deactivate all root hooks. this is possibly the best
 				 * solution as it is consequent. Method 3 is chosen.
 				 */
-				MindMapNode oldRoot = mMap.getRootNode();
+				NodeAdapter oldRoot = (NodeAdapter) mMap.getRootNode();
 				oldRoot.removeAllHooks();
 				// change the root node:
 				mMap.changeRoot(focussed);
@@ -186,6 +191,7 @@ public class ChangeRootNode extends MindMapNodeHookAdapter {
 		 * @see
 		 * freemind.modes.mindmapmode.actions.xml.ActorXml#getDoActionClass()
 		 */
+		@Override
 		public Class<ChangeRootNodeAction> getDoActionClass() {
 			return ChangeRootNodeAction.class;
 		}

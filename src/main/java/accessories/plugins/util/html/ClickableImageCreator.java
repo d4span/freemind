@@ -27,9 +27,10 @@ import java.util.Vector;
 
 import javax.swing.JComponent;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.HtmlTools;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 import freemind.view.mindmapview.MapView;
 import freemind.view.mindmapview.NodeView;
 
@@ -114,12 +115,12 @@ public class ClickableImageCreator {
 	}
 
 	private void createArea() {
-		createArea(root);
+		createArea((NodeAdapter) root);
 	}
 
 	/**
      */
-	private void createArea(MindMapNode node) {
+	private void createArea(NodeAdapter node) {
 		if (mapView == null) {
 			return;
 		}
@@ -128,7 +129,7 @@ public class ClickableImageCreator {
 			AreaHolder holder = new AreaHolder();
 			holder.title = node.getShortText(modeController);
 			holder.alt = node.getShortText(modeController);
-			holder.href = node.getObjectId(modeController);
+			holder.href = modeController.getNodeID(node);
 			holder.link = node.getLink()!=null?node.getLink():"";
 			Point contentXY = mapView.getNodeContentLocation(nodeView);
 			final JComponent content = nodeView.getContent();
@@ -139,7 +140,7 @@ public class ClickableImageCreator {
 			area.add(holder);
 			for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
 				MindMapNode child = i.next();
-				createArea(child);
+				createArea((NodeAdapter) child);
 			}
 		}
 	}

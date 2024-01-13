@@ -27,8 +27,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.presentation.NodeStyle;
 import freemind.main.Tools;
 import freemind.modes.NodeAdapter;
 
@@ -52,8 +53,9 @@ public class FileNodeModel extends NodeAdapter {
 	}
 
 	// Overwritten get Methods
-	public String getStyle() {
-		return MindMapNode.STYLE_FORK;
+	@Override
+	public NodeStyle getStyle() {
+		return NodeStyle.FORK;
 		// // This condition shows the code is not quite logical:
 		// // ordinary file should not be considered folded and
 		// // therefore the clause !isLeaf() should not be necessary.
@@ -76,6 +78,7 @@ public class FileNodeModel extends NodeAdapter {
 	/**
 	 * This could be a nice feature. Improve it!
 	 */
+	@Override
 	public Color getColor() {
 		if (color == null) {
 
@@ -96,18 +99,21 @@ public class FileNodeModel extends NodeAdapter {
 	// this.file = file;
 	// }
 
+	@Override
 	public String toString() {
 		String name = file.getName();
-		if (name.equals("")) {
+		if ("".equals(name)) {
 			name = "Root";
 		}
 		return name;
 	}
 
+	@Override
 	public String getText() {
 		return toString();
 	}
 
+	@Override
 	public boolean hasChildren() {
 		return !file.isFile() || (children != null && !children.isEmpty());
 	}
@@ -115,6 +121,7 @@ public class FileNodeModel extends NodeAdapter {
 	/**
      * 
      */
+	@Override
 	public ListIterator<MindMapNode> childrenFolded() {
 		if (!isRoot()) {
 			if (isFolded() || isLeaf()) {
@@ -125,6 +132,7 @@ public class FileNodeModel extends NodeAdapter {
 		return childrenUnfolded();
 	}
 
+	@Override
 	public ListIterator<MindMapNode> childrenUnfolded() {
 		if (children != null) {
 			return children.listIterator();
@@ -152,10 +160,12 @@ public class FileNodeModel extends NodeAdapter {
 		return children != null ? children.listIterator() : Collections.<MindMapNode>emptyListIterator();
 	}
 
+	@Override
 	public boolean isLeaf() {
 		return file.isFile();
 	}
 
+	@Override
 	public String getLink() {
 		try {
 			return Tools.fileToUrl(file).toString();
@@ -165,6 +175,7 @@ public class FileNodeModel extends NodeAdapter {
 		return file.toString();
 	}
 
+	@Override
 	public boolean isWriteable() {
 		return false;
 	}

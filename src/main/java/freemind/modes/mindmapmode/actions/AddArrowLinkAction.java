@@ -28,7 +28,7 @@ import java.util.Vector;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.Tools;
 import freemind.modes.mindmapmode.MindMapController;
 
@@ -48,6 +48,7 @@ public class AddArrowLinkAction extends MindmapAction {
 		this.modeController = modeController;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		MindMapNode selected = modeController.getSelected();
 		Vector<MindMapNode> nodesFromClipboard = Tools

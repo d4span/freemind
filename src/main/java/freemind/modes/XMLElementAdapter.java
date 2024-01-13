@@ -25,8 +25,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.presentation.NodeStyle;
 import freemind.extensions.PermanentNodeHook;
 import freemind.extensions.PermanentNodeHookSubstituteUnknown;
 import freemind.main.Tools;
@@ -100,6 +101,7 @@ public class XMLElementAdapter extends XMLElement {
 	}
 
 	/** abstract method to create elements of my type (factory). */
+	@Override
 	protected XMLElement createAnotherElement() {
 		// We do not need to initialize the things of XMLElement.
 		return new XMLElementAdapter(mMapFeedback, mArrowLinkAdapters,
@@ -108,6 +110,7 @@ public class XMLElementAdapter extends XMLElement {
 
 
 
+	@Override
 	public Object getUserObject() {
 		return userObject;
 	}
@@ -122,37 +125,38 @@ public class XMLElementAdapter extends XMLElement {
 
 	// Real parsing methods
 
+	@Override
 	public void setName(String name) {
 		super.setName(name);
 		// Create user object based on name
-		if (name.equals(XML_NODE)) {
+		if (XML_NODE.equals(name)) {
 			userObject = getMap().createNodeAdapter(getMap(), null);
 			nodeAttributes.clear();
-		} else if (name.equals("edge")) {
+		} else if ("edge".equals(name)) {
 			userObject = getMap().createEdgeAdapter(null);
-		} else if (name.equals("cloud")) {
+		} else if ("cloud".equals(name)) {
 			userObject = getMap().createCloudAdapter(null);
-		} else if (name.equals("arrowlink")) {
+		} else if ("arrowlink".equals(name)) {
 			userObject = getMap().createArrowLinkAdapter(null, null);
-		} else if (name.equals("linktarget")) {
+		} else if ("linktarget".equals(name)) {
 			userObject = getMap().createArrowLinkTarget(null, null);
-		} else if (name.equals("font")) {
+		} else if ("font".equals(name)) {
 			userObject = null;
-		} else if (name.equals(XML_NODE_ATTRIBUTE)) {
+		} else if (XML_NODE_ATTRIBUTE.equals(name)) {
 			userObject = null;
-		} else if (name.equals(XML_NODE_ATTRIBUTE_LAYOUT)) {
+		} else if (XML_NODE_ATTRIBUTE_LAYOUT.equals(name)) {
 			userObject = null;
-		} else if (name.equals("map")) {
+		} else if ("map".equals(name)) {
 			userObject = null;
-		} else if (name.equals(XML_NODE_ATTRIBUTE_REGISTRY)) {
+		} else if (XML_NODE_ATTRIBUTE_REGISTRY.equals(name)) {
 			userObject = null;
-		} else if (name.equals(XML_NODE_REGISTERED_ATTRIBUTE_NAME)) {
+		} else if (XML_NODE_REGISTERED_ATTRIBUTE_NAME.equals(name)) {
 			userObject = null;
-		} else if (name.equals(XML_NODE_REGISTERED_ATTRIBUTE_VALUE)) {
+		} else if (XML_NODE_REGISTERED_ATTRIBUTE_VALUE.equals(name)) {
 			userObject = null;
-		} else if (name.equals("icon")) {
+		} else if ("icon".equals(name)) {
 			userObject = null;
-		} else if (name.equals("hook")) {
+		} else if ("hook".equals(name)) {
 			// we gather the xml element and send it to the hook after
 			// completion.
 			userObject = new XMLElement();
@@ -165,8 +169,9 @@ public class XMLElementAdapter extends XMLElement {
 		return mMapFeedback.getMap();
 	}
 
+	@Override
 	public void addChild(XMLElement child) {
-		if (getName().equals("map")) {
+		if ("map".equals(getName())) {
 			mapChild = (NodeAdapter) child.getUserObject();
 			return;
 		}
@@ -175,8 +180,7 @@ public class XMLElementAdapter extends XMLElement {
 			super.addChild(child);
 			return;
 		}
-		if (userObject instanceof NodeAdapter) {
-			NodeAdapter node = (NodeAdapter) userObject;
+		if (userObject instanceof NodeAdapter node) {
 			if (child.getUserObject() instanceof NodeAdapter) {
 				node.insert((NodeAdapter) child.getUserObject(), -1);
 			} // to the end without preferable... (PN)
@@ -203,13 +207,13 @@ public class XMLElementAdapter extends XMLElement {
 				// annotate this link: (later processed by caller.).
 				// System.out.println("arrowLink="+arrowLink);
 				mArrowLinkAdapters.add(arrowLink);
-			} else if (child.getName().equals("font")) {
+			} else if ("font".equals(child.getName())) {
 				node.setFont((Font) child.getUserObject());
-			} else if (child.getName().equals(XML_NODE_ATTRIBUTE)) {
+			} else if (XML_NODE_ATTRIBUTE.equals(child.getName())) {
 				node.addAttribute(
 						(Attribute) child.getUserObject());
 
-			} else if (child.getName().equals(XML_NODE_ATTRIBUTE_LAYOUT)) {
+			} else if (XML_NODE_ATTRIBUTE_LAYOUT.equals(child.getName())) {
 //				node.createAttributeTableModel();
 //				AttributeTableLayoutModel layout = node.getAttributes()
 //						.getLayout();
@@ -217,9 +221,9 @@ public class XMLElementAdapter extends XMLElement {
 //						((XMLElementAdapter) child).attributeNameWidth);
 //				layout.setColumnWidth(1,
 //						((XMLElementAdapter) child).attributeValueWidth);
-			} else if (child.getName().equals("icon")) {
+			} else if ("icon".equals(child.getName())) {
 				node.addIcon((MindIcon) child.getUserObject(), MindIcon.LAST);
-			} else if (child.getName().equals(XML_NODE_XHTML_CONTENT_TAG)) {
+			} else if (XML_NODE_XHTML_CONTENT_TAG.equals(child.getName())) {
 				String xmlText = ((XMLElement) child).getContent();
 				Object typeAttribute = child
 						.getAttribute(XML_NODE_XHTML_TYPE_TAG);
@@ -232,7 +236,7 @@ public class XMLElementAdapter extends XMLElement {
 					logger.finest("Setting note html content to:" + xmlText);
 					node.setXmlNoteText(xmlText);
 				}
-			} else if (child.getName().equals("hook")) {
+			} else if ("hook".equals(child.getName())) {
 				XMLElement xml = (XMLElement) child/* .getUserObject() */;
 				String loadName = (String) xml.getAttribute("NAME");
 				PermanentNodeHook hook = null;
@@ -256,11 +260,12 @@ public class XMLElementAdapter extends XMLElement {
 			return;
 		}
 		if (child instanceof XMLElementAdapter
-				&& getName().equals(XML_NODE_REGISTERED_ATTRIBUTE_NAME)
-				&& child.getName().equals(XML_NODE_REGISTERED_ATTRIBUTE_VALUE)) {
+				&& XML_NODE_REGISTERED_ATTRIBUTE_NAME.equals(getName())
+				&& XML_NODE_REGISTERED_ATTRIBUTE_VALUE.equals(child.getName())) {
 		}
 	}
 
+	@Override
 	public void setAttribute(String name, Object value) {
 		// We take advantage of precondition that value != null.
 		String sValue = value.toString();
@@ -274,22 +279,20 @@ public class XMLElementAdapter extends XMLElement {
 			return;
 		}
 
-		if (userObject instanceof NodeAdapter) {
+		if (userObject instanceof NodeAdapter node) {
 			//
-			NodeAdapter node = (NodeAdapter) userObject;
 			userObject = setNodeAttribute(name, sValue, node);
 			nodeAttributes.put(name, sValue);
 			return;
 		}
 
-		if (userObject instanceof EdgeAdapter) {
-			EdgeAdapter edge = (EdgeAdapter) userObject;
-			if (name.equals("STYLE")) {
+		if (userObject instanceof EdgeAdapter edge) {
+			if ("STYLE".equals(name)) {
 				edge.setStyle(sValue);
-			} else if (name.equals("COLOR")) {
+			} else if ("COLOR".equals(name)) {
 				edge.setColor(Tools.xmlToColor(sValue));
-			} else if (name.equals("WIDTH")) {
-				if (sValue.equals(EdgeAdapter.EDGE_WIDTH_THIN_STRING)) {
+			} else if ("WIDTH".equals(name)) {
+				if (EdgeAdapter.EDGE_WIDTH_THIN_STRING.equals(sValue)) {
 					edge.setWidth(EdgeAdapter.WIDTH_THIN);
 				} else {
 					edge.setWidth(Integer.parseInt(sValue));
@@ -298,96 +301,93 @@ public class XMLElementAdapter extends XMLElement {
 			return;
 		}
 
-		if (userObject instanceof CloudAdapter) {
-			CloudAdapter cloud = (CloudAdapter) userObject;
-			if (name.equals("STYLE")) {
+		if (userObject instanceof CloudAdapter cloud) {
+			if ("STYLE".equals(name)) {
 				cloud.setStyle(sValue);
-			} else if (name.equals("COLOR")) {
+			} else if ("COLOR".equals(name)) {
 				cloud.setColor(Tools.xmlToColor(sValue));
-			} else if (name.equals("WIDTH")) {
+			} else if ("WIDTH".equals(name)) {
 				cloud.setWidth(Integer.parseInt(sValue));
 			}
 			return;
 		}
 
-		if (userObject instanceof ArrowLinkAdapter) {
-			ArrowLinkAdapter arrowLink = (ArrowLinkAdapter) userObject;
-			if (name.equals("STYLE")) {
+		if (userObject instanceof ArrowLinkAdapter arrowLink) {
+			if ("STYLE".equals(name)) {
 				arrowLink.setStyle(sValue);
-			} else if (name.equals("ID")) {
+			} else if ("ID".equals(name)) {
 				arrowLink.setUniqueId(sValue);
-			} else if (name.equals("COLOR")) {
+			} else if ("COLOR".equals(name)) {
 				arrowLink.setColor(Tools.xmlToColor(sValue));
-			} else if (name.equals("DESTINATION")) {
+			} else if ("DESTINATION".equals(name)) {
 				arrowLink.setDestinationLabel(sValue);
-			} else if (name.equals("REFERENCETEXT")) {
+			} else if ("REFERENCETEXT".equals(name)) {
 				arrowLink.setReferenceText((sValue));
-			} else if (name.equals("STARTINCLINATION")) {
+			} else if ("STARTINCLINATION".equals(name)) {
 				arrowLink.setStartInclination(Tools.xmlToPoint(sValue));
-			} else if (name.equals("ENDINCLINATION")) {
+			} else if ("ENDINCLINATION".equals(name)) {
 				arrowLink.setEndInclination(Tools.xmlToPoint(sValue));
-			} else if (name.equals("STARTARROW")) {
+			} else if ("STARTARROW".equals(name)) {
 				arrowLink.setStartArrow(sValue);
-			} else if (name.equals("ENDARROW")) {
+			} else if ("ENDARROW".equals(name)) {
 				arrowLink.setEndArrow(sValue);
-			} else if (name.equals("WIDTH")) {
+			} else if ("WIDTH".equals(name)) {
 				arrowLink.setWidth(Integer.parseInt(sValue));
 			}
-			if (userObject instanceof ArrowLinkTarget) {
-				ArrowLinkTarget arrowLinkTarget = (ArrowLinkTarget) userObject;
-				if (name.equals("SOURCE")) {
+			if (userObject instanceof ArrowLinkTarget arrowLinkTarget) {
+				if ("SOURCE".equals(name)) {
 					arrowLinkTarget.setSourceLabel(sValue);
 				}
 			}
 			return;
 		}
 
-		if (getName().equals("font")) {
-			if (name.equals("SIZE")) {
+		if ("font".equals(getName())) {
+			if ("SIZE".equals(name)) {
 				fontSize = Integer.parseInt(sValue);
-			} else if (name.equals("NAME")) {
+			} else if ("NAME".equals(name)) {
 				fontName = sValue;
 			}
 
 			// Styling
-			else if (sValue.equals("true")) {
-				if (name.equals("BOLD")) {
+			else if ("true".equals(sValue)) {
+				if ("BOLD".equals(name)) {
 					fontStyle += Font.BOLD;
-				} else if (name.equals("ITALIC")) {
+				} else if ("ITALIC".equals(name)) {
 					fontStyle += Font.ITALIC;
-				} else if (name.equals("STRIKETHROUGH")){
+				} else if ("STRIKETHROUGH".equals(name)){
 					fontStyleStrikethrough = true;
 				}
 			}
 		}
 		/* icons */
-		if (getName().equals("icon")) {
-			if (name.equals("BUILTIN")) {
+		if ("icon".equals(getName())) {
+			if ("BUILTIN".equals(name)) {
 				iconName = sValue;
 			}
 		}
 		/* attributes */
-		else if (getName().equals(XML_NODE_ATTRIBUTE)) {
-			if (name.equals("NAME")) {
+		else if (XML_NODE_ATTRIBUTE.equals(getName())) {
+			if ("NAME".equals(name)) {
 				attributeName = sValue;
-			} else if (name.equals("VALUE")) {
+			} else if ("VALUE".equals(name)) {
 				attributeValue = sValue;
 			}
-		} else if (getName().equals(XML_NODE_ATTRIBUTE_LAYOUT)) {
+		} else if (XML_NODE_ATTRIBUTE_LAYOUT.equals(getName())) {
 //			if (name.equals("NAME_WIDTH")) {
 //				attributeNameWidth = Integer.parseInt(sValue);
 //			} else if (name.equals("VALUE_WIDTH")) {
 //				attributeValueWidth = Integer.parseInt(sValue);
 //			}
-		} else if (getName().equals(XML_NODE_ATTRIBUTE_REGISTRY)) {
-		} else if (getName().equals(XML_NODE_REGISTERED_ATTRIBUTE_NAME)) {
-			if (name.equals("NAME")) {
+		} else if (XML_NODE_ATTRIBUTE_REGISTRY.equals(getName())) {
+		} else if (XML_NODE_REGISTERED_ATTRIBUTE_NAME.equals(getName())) {
+			if ("NAME".equals(name)) {
 				attributeName = sValue;
 			} else {
 				super.setAttribute(name, sValue);
 			}
-		} else if (getName().equals(XML_NODE_REGISTERED_ATTRIBUTE_VALUE)) {
-			if (name.equals("VALUE")) {
+		} else if (XML_NODE_REGISTERED_ATTRIBUTE_VALUE.equals(getName())) {
+			if ("VALUE".equals(name)) {
 				attributeValue = sValue;
 			}
 		}
@@ -395,53 +395,53 @@ public class XMLElementAdapter extends XMLElement {
 
 	private NodeAdapter setNodeAttribute(String name, String sValue,
 			NodeAdapter node) {
-		if (name.equals(XML_NODE_TEXT)) {
+		if (XML_NODE_TEXT.equals(name)) {
 			logger.finest("Setting node text content to:" + sValue);
-			node.setUserObject(sValue);
-		} else if (name.equals(XML_NODE_ENCRYPTED_CONTENT)) {
+			node.setText(sValue);
+		} else if (XML_NODE_ENCRYPTED_CONTENT.equals(name)) {
 			// we change the node implementation to EncryptedMindMapNode.
 			node = getMap().createEncryptedNode(sValue);
 			setUserObject(node);
 			copyAttributesToNode(node);
-		} else if (name.equals(XML_NODE_HISTORY_CREATED_AT)) {
+		} else if (XML_NODE_HISTORY_CREATED_AT.equals(name)) {
 			if (node.getHistoryInformation() == null) {
 				node.setHistoryInformation(new HistoryInformation());
 			}
 			node.getHistoryInformation().setCreatedAt(Tools.xmlToDate(sValue));
-		} else if (name.equals(XML_NODE_HISTORY_LAST_MODIFIED_AT)) {
+		} else if (XML_NODE_HISTORY_LAST_MODIFIED_AT.equals(name)) {
 			if (node.getHistoryInformation() == null) {
 				node.setHistoryInformation(new HistoryInformation());
 			}
 			node.getHistoryInformation().setLastModifiedAt(
 					Tools.xmlToDate(sValue));
-		} else if (name.equals("FOLDED")) {
-			if (sValue.equals("true")) {
+		} else if ("FOLDED".equals(name)) {
+			if ("true".equals(sValue)) {
 				node.setFolded(true);
 			}
-		} else if (name.equals("POSITION")) {
+		} else if ("POSITION".equals(name)) {
 			// fc, 17.12.2003: Remove the left/right bug.
-			node.setLeft(sValue.equals("left"));
-		} else if (name.equals("COLOR")) {
+			node.setLeft("left".equals(sValue));
+		} else if ("COLOR".equals(name)) {
 			if (sValue.length() == 7) {
 				node.setColor(Tools.xmlToColor(sValue));
 			}
-		} else if (name.equals("BACKGROUND_COLOR")) {
+		} else if ("BACKGROUND_COLOR".equals(name)) {
 			if (sValue.length() == 7) {
 				node.setBackgroundColor(Tools.xmlToColor(sValue));
 			}
-		} else if (name.equals("LINK")) {
+		} else if ("LINK".equals(name)) {
 			node.setLink(sValue);
-		} else if (name.equals("STYLE")) {
-			node.setStyle(sValue);
-		} else if (name.equals("ID")) {
+		} else if ("STYLE".equals(name)) {
+			node.setStyle(NodeStyle.valueOf(sValue));
+		} else if ("ID".equals(name)) {
 			// do not set label but annotate in list:
 			// System.out.println("(sValue, node) = " + sValue + ", "+ node);
 			mIdToTarget.put(sValue, node);
-		} else if (name.equals("VSHIFT")) {
+		} else if ("VSHIFT".equals(name)) {
 			node.setShiftY(Integer.parseInt(sValue));
-		} else if (name.equals("VGAP")) {
+		} else if ("VGAP".equals(name)) {
 			node.setVGap(Integer.parseInt(sValue));
-		} else if (name.equals("HGAP")) {
+		} else if ("HGAP".equals(name)) {
 			node.setHGap(Integer.parseInt(sValue));
 		}
 		return node;
@@ -460,15 +460,16 @@ public class XMLElementAdapter extends XMLElement {
 		}
 	}
 
+	@Override
 	protected void completeElement() {
-		if (getName().equals(XML_NODE)) {
+		if (XML_NODE.equals(getName())) {
 			// unify map child behaviour:
 			if (mapChild == null) {
 				mapChild = (NodeAdapter) userObject;
 			}
 			return;
 		}
-		if (getName().equals("font")) {
+		if ("font".equals(getName())) {
 			Font font = new Font(fontName, fontStyle, fontSize);
 			if(fontStyleStrikethrough){
 				Map attr = font.getAttributes();
@@ -479,16 +480,16 @@ public class XMLElementAdapter extends XMLElement {
 			return;
 		}
 		/* icons */
-		if (getName().equals("icon")) {
+		if ("icon".equals(getName())) {
 			userObject = MindIcon.factory(iconName);
 			return;
 		}
 		/* attributes */
-		if (getName().equals(XML_NODE_ATTRIBUTE)) {
+		if (XML_NODE_ATTRIBUTE.equals(getName())) {
 			userObject = new Attribute(attributeName, attributeValue);
 			return;
 		}
-		if (getName().equals(XML_NODE_REGISTERED_ATTRIBUTE_NAME)) {
+		if (XML_NODE_REGISTERED_ATTRIBUTE_NAME.equals(getName())) {
 			return;
 		}
 	}
@@ -515,8 +516,7 @@ public class XMLElementAdapter extends XMLElement {
 		// complete arrow links with right labels:
 		for (int i = 0; i < mArrowLinkAdapters.size(); ++i) {
 			Object arrowObject = mArrowLinkAdapters.get(i);
-			if (arrowObject instanceof ArrowLinkTarget) {
-				ArrowLinkTarget linkTarget = (ArrowLinkTarget) arrowObject;
+			if (arrowObject instanceof ArrowLinkTarget linkTarget) {
 				// do the same as for ArrowLinkAdapter and start to search for the source.
 				String oldId = linkTarget.getSourceLabel();
 				MindMapNode source = (MindMapNode) registry.getTargetForId(oldId);
@@ -568,8 +568,7 @@ public class XMLElementAdapter extends XMLElement {
 					ArrowLinkAdapter linkAdapter = linkTarget.createArrowLinkAdapter(registry);
 					registry.registerLink(linkAdapter);
 				}
-			} else if (arrowObject instanceof ArrowLinkAdapter) {
-				ArrowLinkAdapter arrowLink = (ArrowLinkAdapter) arrowObject;
+			} else if (arrowObject instanceof ArrowLinkAdapter arrowLink) {
 				// here, the source is in the paste, and the destination is now
 				// searched:
 				String oldId = arrowLink.getDestinationLabel();

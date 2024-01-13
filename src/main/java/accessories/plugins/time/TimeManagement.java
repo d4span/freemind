@@ -51,7 +51,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.common.XmlBindingTools;
 import freemind.controller.MapModuleManager.MapModuleChangeObserver;
 import freemind.controller.StructuredMenuHolder;
@@ -62,6 +62,7 @@ import freemind.main.FreeMindCommon;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.Mode;
+import freemind.modes.NodeAdapter;
 import freemind.modes.common.plugins.ReminderHookBase;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.hooks.MindMapHookAdapter;
@@ -98,6 +99,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 			putValue(Action.NAME, getMindMapController().getText(pText));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			MindMapNode lastElement = null;
 			Vector<MindMapNode> sel = new Vector<>();
@@ -118,41 +120,28 @@ public class TimeManagement extends MindMapHookAdapter implements
 
 	private class AppendDateAction extends AppendDateAbstractAction {
 		public AppendDateAction() {
-			init(new NodeFactory() {
-
-				public MindMapNode getNode(MindMapNode pNode) {
-					return pNode;
-				}
-			}, "plugins/TimeManagement.xml_appendButton");
+			init(pNode -> pNode, "plugins/TimeManagement.xml_appendButton");
 		}
 
 	}
 
 	private class AppendDateToChildAction extends AppendDateAbstractAction {
 		public AppendDateToChildAction() {
-			init(new NodeFactory() {
-
-				public MindMapNode getNode(MindMapNode pNode) {
-					return getMindMapController().addNewNode(pNode,
-							pNode.getChildCount(), pNode.isLeft());
-				}
-			}, "plugins/TimeManagement.xml_appendAsNewButton");
+			init(pNode -> getMindMapController().addNewNode(pNode,
+            		pNode.getChildCount(), ((NodeAdapter) pNode).isLeft()), "plugins/TimeManagement.xml_appendAsNewButton");
 		}
 	}
 
 	private class AppendDateToSiblingAction extends AppendDateAbstractAction {
 		public AppendDateToSiblingAction() {
-			init(new NodeFactory() {
-
-				public MindMapNode getNode(MindMapNode pNode) {
-					MindMapNode parent = pNode;
-					if (!pNode.isRoot()) {
-						parent = pNode.getParentNode();
-					}
-					return getMindMapController().addNewNode(parent,
-							parent.getIndex(pNode) + 1, parent.isLeft());
-				}
-			}, "plugins/TimeManagement.xml_appendAsNewSiblingButton");
+			init(pNode -> {
+            	MindMapNode parent = pNode;
+            	if (!pNode.isRoot()) {
+            		parent = pNode.getParentNode();
+            	}
+            	return getMindMapController().addNewNode(parent,
+            			parent.getIndex(pNode) + 1, ((NodeAdapter) parent).isLeft());
+            }, "plugins/TimeManagement.xml_appendAsNewSiblingButton");
 		}
 	}
 
@@ -162,6 +151,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 					"plugins/TimeManagement.xml_reminderButton"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent pE) {
 			TimeManagement.this.actionPerformed(pE);
 		}
@@ -173,6 +163,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 					"plugins/TimeManagement.xml_removeReminderButton"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			for (MindMapNode node : getMindMapController().getSelecteds()) {
 				ReminderHookBase alreadyPresentHook = TimeManagementOrganizer
@@ -191,6 +182,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 					"plugins/TimeManagement.xml_todayButton"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			calendar.setCalendar(Calendar.getInstance());
 		}
@@ -202,6 +194,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 					"plugins/TimeManagement.xml_closeButton"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			disposeDialog();
 		}
@@ -213,6 +206,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 			putValue(Action.NAME, getMindMapController().getText("plugins/TimeManagement.xml_addMarkingsButton"));
 		}
 		
+		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			Calendar cal = getCalendar();
 			Resources res = Resources.getInstance();
@@ -237,6 +231,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 			putValue(Action.NAME, getMindMapController().getText("plugins/TimeManagement.removeMarkingsButton"));
 		}
 		
+		@Override
 		public void actionPerformed(ActionEvent actionEvent) {
 			Calendar cal = getCalendar();
 			Resources res = Resources.getInstance();
@@ -280,6 +275,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 
 	private static TimeManagement sCurrentlyOpenTimeManagement = null;
 
+	@Override
 	public void startupMapHook() {
 		super.startupMapHook();
 		if (sCurrentlyOpenTimeManagement != null) {
@@ -298,6 +294,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 		mDialog.setTitle(getResourceString("plugins/TimeManagement.xml_WindowTitle"));
 		mDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		mDialog.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent event) {
 				disposeDialog();
 			}
@@ -370,6 +367,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 		// focus fix after startup.
 		mDialog.addWindowFocusListener(new WindowAdapter() {
 
+			@Override
 			public void windowGainedFocus(WindowEvent e) {
 				requestFocusForDay();
 				mDialog.removeWindowFocusListener(this);
@@ -434,11 +432,13 @@ public class TimeManagement extends MindMapHookAdapter implements
 		return timePanel;
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getPropertyName().equals(JDayChooser.DAY_PROPERTY)) {
+		if (JDayChooser.DAY_PROPERTY.equals(event.getPropertyName())) {
 		}
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		Date date = getCalendarDate();
 		// add permanent node hook to the nodes and this hook checks
@@ -471,7 +471,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 				throw new IllegalArgumentException(
 						"hook not found although it is present!!");
 			}
-			node.invokeHook(rh);
+			((NodeAdapter)node).invokeHook(rh);
 			getMindMapController().nodeChanged(node);
 		}
 		// disposeDialog();
@@ -527,13 +527,16 @@ public class TimeManagement extends MindMapHookAdapter implements
 		return calendar.getCalendar();
 	}
 
+	@Override
 	public void afterMapClose(MapModule oldMapModule, Mode oldMode) {
 	}
 
+	@Override
 	public void afterMapModuleChange(MapModule oldMapModule, Mode oldMode,
 			MapModule newMapModule, Mode newMode) {
 	}
 
+	@Override
 	public void beforeMapModuleChange(MapModule oldMapModule, Mode oldMode,
 			MapModule newMapModule, Mode newMode) {
 		getMindMapController().getController().getMapModuleManager()
@@ -541,11 +544,13 @@ public class TimeManagement extends MindMapHookAdapter implements
 		disposeDialog();
 	}
 
+	@Override
 	public boolean isMapModuleChangeAllowed(MapModule oldMapModule,
 			Mode oldMode, MapModule newMapModule, Mode newMode) {
 		return true;
 	}
 
+	@Override
 	public void numberOfOpenMapInformation(int number, int pIndex) {
 	}
 
@@ -556,6 +561,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 	 * freemind.modes.mindmapmode.hooks.MindMapHookAdapter#getMindMapController
 	 * ()
 	 */
+	@Override
 	public MindMapController getMindMapController() {
 		return mController;
 	}

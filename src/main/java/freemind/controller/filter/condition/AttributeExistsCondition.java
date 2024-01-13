@@ -23,10 +23,11 @@
  */
 package freemind.controller.filter.condition;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.main.Resources;
 import freemind.main.XMLElement;
+import freemind.modes.NodeAdapter;
 import freemind.modes.attributes.Attribute;
 
 /**
@@ -51,15 +52,17 @@ public class AttributeExistsCondition extends NodeCondition {
 	 * freemind.controller.filter.condition.Condition#checkNode(freemind.modes
 	 * .MindMapNode)
 	 */
+	@Override
 	public boolean checkNode(Controller c, MindMapNode node) {
-		for (int i = 0; i < node.getAttributeTableLength(); i++) {
-			Attribute attribute2 = node.getAttribute(i);
+		for (int i = 0; i < ((NodeAdapter) node).getAttributeTableLength(); i++) {
+			Attribute attribute2 = ((NodeAdapter) node).getAttribute(i);
 			if (attribute2.getName().equals(attribute))
 				return true;
 		}
 		return false;
 	}
 
+	@Override
 	public void save(XMLElement element) {
 		XMLElement child = new XMLElement();
 		child.setName(NAME);
@@ -73,6 +76,7 @@ public class AttributeExistsCondition extends NodeCondition {
 				element.getStringAttribute(ATTRIBUTE));
 	}
 
+	@Override
 	protected String createDesctiption() {
 		final String simpleCondition = Resources.getInstance()
 				.getResourceString(ConditionFactory.FILTER_EXIST);

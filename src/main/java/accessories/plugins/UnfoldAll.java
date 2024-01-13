@@ -27,11 +27,12 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.Iterator;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.extensions.HookRegistration;
 import freemind.main.Tools;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
 import freemind.view.mindmapview.ViewFeedback.MouseWheelEventHandler;
@@ -138,7 +139,7 @@ public class UnfoldAll extends MindMapNodeHookAdapter {
 	/**
 	 */
 	protected void foldAll(MindMapNode node) {
-		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
+		for (Iterator<MindMapNode> i = ((NodeAdapter) node).childrenUnfolded(); i.hasNext();) {
 			foldAll(i.next());
 		}
 		setFolded(node, true);
@@ -146,7 +147,7 @@ public class UnfoldAll extends MindMapNodeHookAdapter {
 
 	public void unfoldAll(MindMapNode node) {
 		setFolded(node, false);
-		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
+		for (Iterator<MindMapNode> i = ((NodeAdapter) node).childrenUnfolded(); i.hasNext();) {
 			unfoldAll(i.next());
 		}
 	}
@@ -161,20 +162,20 @@ public class UnfoldAll extends MindMapNodeHookAdapter {
 	 */
 	public void foldLastBranches(MindMapNode node) {
 		boolean nodeHasChildWhichIsLeave = false;
-		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
+		for (Iterator<MindMapNode> i = ((NodeAdapter) node).childrenUnfolded(); i.hasNext();) {
 			MindMapNode child = i.next();
 			if (child.getChildCount() == 0) {
 				nodeHasChildWhichIsLeave = true;
 			}
 		}
 		setFolded(node, nodeHasChildWhichIsLeave);
-		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
+		for (Iterator<MindMapNode> i = ((NodeAdapter) node).childrenUnfolded(); i.hasNext();) {
 			foldLastBranches(i.next());
 		}
 	}
 
 	protected void setFolded(MindMapNode node, boolean state) {
-		if (node.hasChildren() && (node.isFolded() != state)) {
+		if (node.hasChildren() && (((NodeAdapter) node).isFolded() != state)) {
 			getMindMapController().setFolded(node, state);
 		}
 	}
@@ -183,7 +184,7 @@ public class UnfoldAll extends MindMapNodeHookAdapter {
 		int k = depth(node);
 		if (k < stage) {
 			setFolded(node, false);
-			for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
+			for (Iterator<MindMapNode> i = ((NodeAdapter) node).childrenUnfolded(); i.hasNext();) {
 				unfoldStageN(i.next(), stage);
 			}
 		} else {
@@ -195,7 +196,7 @@ public class UnfoldAll extends MindMapNodeHookAdapter {
 		int k = depth(node);
 		if (k < stage) {
 			setFolded(node, false);
-			for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
+			for (Iterator<MindMapNode> i = ((NodeAdapter) node).childrenUnfolded(); i.hasNext();) {
 				foldStageN(i.next(), stage);
 			}
 		} else {
@@ -204,12 +205,12 @@ public class UnfoldAll extends MindMapNodeHookAdapter {
 	}
 
 	public int getMinDepth(MindMapNode node) {
-		if (node.isFolded())
+		if (((NodeAdapter) node).isFolded())
 			return depth(node);
 		if (!node.hasChildren())
 			return Integer.MAX_VALUE;
 		int k = Integer.MAX_VALUE;
-		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
+		for (Iterator<MindMapNode> i = ((NodeAdapter) node).childrenUnfolded(); i.hasNext();) {
 			int l = getMinDepth(i.next());
 			if (l < k)
 				k = l;
@@ -220,10 +221,10 @@ public class UnfoldAll extends MindMapNodeHookAdapter {
 	/**
 	 */
 	protected int getMaxDepth(MindMapNode node) {
-		if (node.isFolded() || !node.hasChildren())
+		if (((NodeAdapter) node).isFolded() || !node.hasChildren())
 			return depth(node);
 		int k = 0;
-		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
+		for (Iterator<MindMapNode> i = ((NodeAdapter) node).childrenUnfolded(); i.hasNext();) {
 			int l = getMaxDepth(i.next());
 			if (l > k)
 				k = l;

@@ -28,9 +28,9 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
-import ch.d4span.freemind.treemodel.MutableTreeNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.treemodel.MutableTreeNode;
 import freemind.main.HtmlTools;
 import freemind.main.Tools;
 import freemind.main.Tools.SingleDesEncrypter;
@@ -39,6 +39,7 @@ import freemind.modes.MapAdapter;
 import freemind.modes.MindIcon;
 import freemind.modes.MindMapLinkRegistry;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 
 public class EncryptedMindMapNode extends MindMapNodeModel {
 
@@ -87,6 +88,7 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
 		}
 	}
 
+	@Override
 	public void setMap(MindMap map) {
 		super.setMap(map);
 		updateIcon();
@@ -123,7 +125,7 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
 					node = getNodeFromXml(mapContent);
 				}
 				int index = 0;
-				for (ListIterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
+				for (ListIterator<MindMapNode> i = ((NodeAdapter) node).childrenUnfolded(); i.hasNext();) {
 					MindMapNode importNode = i.next();
 					getMap().insertNodeInto(importNode, this, index++);
 				}
@@ -205,6 +207,7 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
 		}
 	}
 
+	@Override
 	public int getChildCount() {
 		if (isAccessible()) {
 			return super.getChildCount();
@@ -212,6 +215,7 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
 		return 0;
 	}
 
+	@Override
 	public ListIterator<MindMapNode> childrenFolded() {
 		if (isAccessible()) {
 			return super.childrenFolded();
@@ -219,6 +223,7 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
 		return new Vector<MindMapNode>().listIterator();
 	}
 
+	@Override
 	public ListIterator<MindMapNode> childrenUnfolded() {
 		if (isAccessible() || isShuttingDown) {
 			return super.childrenUnfolded();
@@ -226,6 +231,7 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
 		return new Vector<MindMapNode>().listIterator();
 	}
 
+	@Override
 	public boolean hasChildren() {
 		if (isAccessible()) {
 			return super.hasChildren();
@@ -256,6 +262,7 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
      *  
      */
 
+	@Override
 	public boolean isFolded() {
 		if (isAccessible()) {
 			return super.isFolded();
@@ -267,6 +274,7 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
      *  
      */
 
+	@Override
 	public void setFolded(boolean folded) {
 		if (isAccessible()) {
 			super.setFolded(folded);
@@ -279,12 +287,14 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
      *  
      */
 
+	@Override
 	public void setAdditionalInfo(String info) {
 		encryptedContent = info;
 		setAccessible(false);
 		isDecrypted = false;
 	}
 
+	@Override
 	public String getAdditionalInfo() {
 		if (isStoringEncryptedContent()) {
 			return null;
@@ -296,6 +306,7 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
      *  
      */
 
+	@Override
 	public XMLElement save(Writer writer, MindMapLinkRegistry registry,
 			boolean saveHidden, boolean saveChildren) throws IOException {
 		if (isStoringEncryptedContent()) {
@@ -403,6 +414,7 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
 		return isAccessible;
 	}
 
+	@Override
 	public void insert(MutableTreeNode pChild, int pIndex) {
 		if (isAccessible()) {
 			super.insert(pChild, pIndex);
@@ -413,6 +425,7 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
 
 	}
 
+	@Override
 	public boolean isWriteable() {
 		return isAccessible() && super.isWriteable();
 	}

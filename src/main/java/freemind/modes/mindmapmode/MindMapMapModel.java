@@ -44,8 +44,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.FreeMind;
 import freemind.main.HtmlTools;
 import freemind.main.Resources;
@@ -91,20 +91,17 @@ public class MindMapMapModel extends MapAdapter {
 		setRoot(root);
 		readOnly = false;
 		// automatic save: start timer after the map is completely loaded
-		EventQueue.invokeLater(new Runnable() {
-
-			public void run() {
-				scheduleTimerForAutomaticSaving();
-			}
-		});
+		EventQueue.invokeLater(this::scheduleTimerForAutomaticSaving);
 	}
 
 	//
 
+	@Override
 	public MindMapLinkRegistry getLinkRegistry() {
 		return linkRegistry;
 	}
 
+	@Override
 	public String getRestorable() {
 		return getFile() == null ? null : RESTORE_MODE_MIND_MAP
 				+ getFile().getAbsolutePath();
@@ -112,9 +109,9 @@ public class MindMapMapModel extends MapAdapter {
 
 	public void changeNode(MindMapNode node, String newText) {
 		if (node.toString().startsWith("<html>")) {
-			node.setUserObject(HtmlTools.unescapeHTMLUnicodeEntity(newText));
+			node.setText(HtmlTools.unescapeHTMLUnicodeEntity(newText));
 		} else {
-			node.setUserObject(newText);
+			node.setText(newText);
 		}
 		nodeChanged(node);
 	}
@@ -123,6 +120,7 @@ public class MindMapMapModel extends MapAdapter {
 	// Other methods
 	//
 
+	@Override
 	public String toString() {
 		return getFile() == null ? null : getFile().getName();
 	}
@@ -131,6 +129,7 @@ public class MindMapMapModel extends MapAdapter {
 	// Export and saving
 	//
 
+	@Override
 	public String getAsHTML(List mindMapNodes) {
 		// Returns success of the operation.
 		try {
@@ -146,6 +145,7 @@ public class MindMapMapModel extends MapAdapter {
 		}
 	}
 
+	@Override
 	public String getAsPlainText(List mindMapNodes) {
 		// Returns success of the operation.
 		try {
@@ -181,6 +181,7 @@ public class MindMapMapModel extends MapAdapter {
 		}
 	}
 
+	@Override
 	public String getAsRTF(List mindMapNodes) {
 		// Returns success of the operation.
 		try {
@@ -242,6 +243,7 @@ public class MindMapMapModel extends MapAdapter {
 	 * Return the success of saving
 	 * @throws IOException 
 	 */
+	@Override
 	public boolean save(File file) throws IOException {
 		boolean result;
 		synchronized (this) {
@@ -309,10 +311,12 @@ public class MindMapMapModel extends MapAdapter {
 		fileout.close();
 	}
 
+	@Override
 	public void getXml(Writer fileout) throws IOException {
 		getXml(fileout, true);
 	}
 
+	@Override
 	public void getFilteredXml(Writer fileout) throws IOException {
 		getXml(fileout, false);
 	}
@@ -326,6 +330,7 @@ public class MindMapMapModel extends MapAdapter {
 	 *             , when the locking failed for other reasons than that the
 	 *             file is being edited.
 	 */
+	@Override
 	public String tryToLock(File file) throws Exception {
 		String lockingUser = lockManager.tryToLock(file);
 		String lockingUserOfOldLock = lockManager.popLockingUserOfOldLock();
@@ -343,6 +348,7 @@ public class MindMapMapModel extends MapAdapter {
 	}
 
 	/** When a map is closed, this method is called. */
+	@Override
 	public void destroy() {
 		super.destroy();
 		lockManager.releaseLock();
@@ -489,6 +495,7 @@ public class MindMapMapModel extends MapAdapter {
 			}
 		}
 
+		@Override
 		public synchronized void run() { // update semaphore file
 			if (lockedSemaphoreFile == null) {
 				System.err
@@ -512,20 +519,25 @@ public class MindMapMapModel extends MapAdapter {
 	}
 
 	private class DummyLockManager extends LockManager {
+		@Override
 		public synchronized String popLockingUserOfOldLock() {
 			return null;
 		}
 
+		@Override
 		public synchronized String tryToLock(File file) throws Exception {
 			return null;
 		}
 
+		@Override
 		public synchronized void releaseLock() {
 		}
 
+		@Override
 		public synchronized void releaseTimer() {
 		}
 
+		@Override
 		public synchronized void run() {
 		}
 	}
@@ -553,6 +565,7 @@ public class MindMapMapModel extends MapAdapter {
 			changeState = model.getNumberOfChangesSinceLastSave();
 		}
 
+		@Override
 		public void run() {
 			/* Map is dirty enough? */
 			if (model.getNumberOfChangesSinceLastSave() == changeState)
@@ -564,49 +577,47 @@ public class MindMapMapModel extends MapAdapter {
 			}
 			try {
 				cancel();
-				EventQueue.invokeAndWait(new Runnable() {
-					public void run() {
-						/* Now, it is dirty, we save it. */
-						File tempFile;
-						if (tempFileStack.size() >= numberOfFiles)
-							tempFile = (File) tempFileStack.remove(0); // pop
-						else {
-							try {
-								tempFile = File.createTempFile(
-										"FM_"
-												+ ((model.toString() == null) ? "unnamed"
-														: model.toString()),
-										freemind.main.FreeMindCommon.FREEMIND_FILE_EXTENSION,
-										pathToStore);
-								if (filesShouldBeDeletedAfterShutdown)
-									tempFile.deleteOnExit();
-							} catch (Exception e) {
-								System.err
-										.println("Error in automatic MindMapMapModel.save(): "
-												+ e.getMessage());
-								freemind.main.Resources.getInstance()
-										.logException(e);
-								return;
-							}
-						}
-						try {
-							model.saveInternal(tempFile, true /* =internal call */);
-							model.getMapFeedback()
-									.out(Resources
-											.getInstance()
-											.format("automatically_save_message",
-													new Object[] { tempFile
-															.toString() }));
-						} catch (Exception e) {
-							System.err
-									.println("Error in automatic MindMapMapModel.save(): "
-											+ e.getMessage());
-							freemind.main.Resources.getInstance().logException(
-									e);
-						}
-						tempFileStack.add(tempFile); // add at the back.
-					}
-				});
+				EventQueue.invokeAndWait(() -> {
+                	/* Now, it is dirty, we save it. */
+                	File tempFile;
+                	if (tempFileStack.size() >= numberOfFiles)
+                		tempFile = (File) tempFileStack.remove(0); // pop
+                	else {
+                		try {
+                			tempFile = File.createTempFile(
+                					"FM_"
+                							+ ((model.toString() == null) ? "unnamed"
+                									: model.toString()),
+                					freemind.main.FreeMindCommon.FREEMIND_FILE_EXTENSION,
+                					pathToStore);
+                			if (filesShouldBeDeletedAfterShutdown)
+                				tempFile.deleteOnExit();
+                		} catch (Exception e) {
+                			System.err
+                					.println("Error in automatic MindMapMapModel.save(): "
+                							+ e.getMessage());
+                			freemind.main.Resources.getInstance()
+                					.logException(e);
+                			return;
+                		}
+                	}
+                	try {
+                		model.saveInternal(tempFile, true /* =internal call */);
+                		model.getMapFeedback()
+                				.out(Resources
+                						.getInstance()
+                						.format("automatically_save_message",
+                								new Object[] { tempFile
+                										.toString() }));
+                	} catch (Exception e) {
+                		System.err
+                				.println("Error in automatic MindMapMapModel.save(): "
+                						+ e.getMessage());
+                		freemind.main.Resources.getInstance().logException(
+                				e);
+                	}
+                	tempFileStack.add(tempFile); // add at the back.
+                });
 			} catch (InterruptedException e) {
 				freemind.main.Resources.getInstance().logException(e);
 			} catch (InvocationTargetException e) {
@@ -615,6 +626,7 @@ public class MindMapMapModel extends MapAdapter {
 		}
 	}
 
+	@Override
 	public NodeAdapter createNodeAdapter(MindMap pMap, String nodeClass) {
 		if (nodeClass == null) {
 			return new MindMapNodeModel(pMap);
@@ -641,24 +653,29 @@ public class MindMapMapModel extends MapAdapter {
 		}
 	}
 
+	@Override
 	public EdgeAdapter createEdgeAdapter(NodeAdapter node) {
 		return new MindMapEdgeModel(node, mMapFeedback);
 	}
 
+	@Override
 	public CloudAdapter createCloudAdapter(NodeAdapter node) {
 		return new MindMapCloudModel(node, mMapFeedback);
 	}
 
+	@Override
 	public ArrowLinkAdapter createArrowLinkAdapter(NodeAdapter source,
 			NodeAdapter target) {
 		return new MindMapArrowLinkModel(source, target, mMapFeedback);
 	}
 
+	@Override
 	public ArrowLinkTarget createArrowLinkTarget(NodeAdapter source,
 			NodeAdapter target) {
 		return new ArrowLinkTarget(source, target, mMapFeedback);
 	}
 	
+	@Override
 	public NodeAdapter createEncryptedNode(String additionalInfo) {
 		NodeAdapter node = createNodeAdapter(mMapFeedback.getMap(),
 				EncryptedMindMapNode.class.getName());

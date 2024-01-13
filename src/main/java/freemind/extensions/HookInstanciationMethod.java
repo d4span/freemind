@@ -28,8 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.modes.MapFeedback;
+import freemind.modes.NodeAdapter;
 
 public class HookInstanciationMethod {
 	private static interface DestinationNodesGetter {
@@ -39,10 +40,12 @@ public class HookInstanciationMethod {
 	}
 
 	private static class DefaultDestinationNodesGetter implements DestinationNodesGetter {
+		@Override
 		public Collection<MindMapNode> getDestinationNodes(MapFeedback controller, MindMapNode focussed, List<MindMapNode> selecteds) {
 			return selecteds;
 		}
 
+		@Override
 		public MindMapNode getCenterNode(MapFeedback controller,
 				MindMapNode focussed, List<MindMapNode> selecteds) {
 			return focussed;
@@ -50,12 +53,14 @@ public class HookInstanciationMethod {
 	}
 
 	private static class RootDestinationNodesGetter implements DestinationNodesGetter {
+		@Override
 		public Collection<MindMapNode> getDestinationNodes(MapFeedback controller, MindMapNode focussed, List<MindMapNode> selecteds) {
 			Vector<MindMapNode> returnValue = new Vector<MindMapNode>();
 			returnValue.add(controller.getMap().getRootNode());
 			return returnValue;
 		}
 
+		@Override
 		public MindMapNode getCenterNode(MapFeedback controller, MindMapNode focussed, List<MindMapNode> selecteds) {
 			return controller.getMap().getRootNode();
 		}
@@ -63,20 +68,22 @@ public class HookInstanciationMethod {
 
 	private static class AllDestinationNodesGetter implements
 			DestinationNodesGetter {
-		private void addChilds(MindMapNode node, Collection<MindMapNode> allNodeCollection) {
+		private void addChilds(NodeAdapter node, Collection<MindMapNode> allNodeCollection) {
 			allNodeCollection.add(node);
 			for (Iterator<MindMapNode> i = node.childrenFolded(); i.hasNext();) {
 				MindMapNode child = i.next();
-				addChilds(child, allNodeCollection);
+				addChilds((NodeAdapter) child, allNodeCollection);
 			}
 		}
 
+		@Override
 		public Collection<MindMapNode> getDestinationNodes(MapFeedback controller, MindMapNode focussed, List<MindMapNode> selecteds) {
 			Vector<MindMapNode> returnValue = new Vector<MindMapNode>();
-			addChilds(controller.getMap().getRootNode(), returnValue);
+			addChilds((NodeAdapter) controller.getMap().getRootNode(), returnValue);
 			return returnValue;
 		}
 
+		@Override
 		public MindMapNode getCenterNode(MapFeedback controller, MindMapNode focussed, List<MindMapNode> selecteds) {
 			return focussed;
 		}
@@ -150,7 +157,7 @@ public class HookInstanciationMethod {
 	/**
 	 */
 	public boolean isAlreadyPresent(String hookName, MindMapNode focussed) {
-		for (Iterator<PermanentNodeHook> i = focussed.getActivatedHooks().iterator(); i.hasNext();) {
+		for (Iterator<PermanentNodeHook> i = ((NodeAdapter) focussed).getActivatedHooks().iterator(); i.hasNext();) {
 			PermanentNodeHook hook = i.next();
 			if (hookName.equals(hook.getName())) {
 				return true;

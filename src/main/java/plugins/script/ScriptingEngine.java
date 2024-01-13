@@ -39,13 +39,14 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer;
 import org.codehaus.groovy.runtime.InvokerHelper;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.common.OptionalDontShowMeAgainDialog;
 import freemind.main.FreeMind;
 import freemind.main.FreeMindMain;
 import freemind.main.FreeMindSecurityManager;
 import freemind.main.Tools;
 import freemind.main.Tools.BooleanHolder;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.hooks.MindMapHookAdapter;
 import groovy.lang.Binding;
@@ -67,6 +68,7 @@ public class ScriptingEngine extends MindMapHookAdapter {
 		void gotoLine(int pLineNumber);
 	}
 
+	@Override
 	public void startupMapHook() {
 		super.startupMapHook();
 		MindMapNode node = getMindMapController().getMap().getRootNode();
@@ -80,7 +82,7 @@ public class ScriptingEngine extends MindMapHookAdapter {
 		// start calculation:
 		getController().getFrame().setWaitingCursor(true);
 		try {
-			performScriptOperation(node, booleanHolder);
+			performScriptOperation((NodeAdapter) node, booleanHolder);
 		} finally {
 			getController().getFrame().setWaitingCursor(false);
 		}
@@ -95,18 +97,16 @@ public class ScriptingEngine extends MindMapHookAdapter {
 			return;
 		}
 		executeScript(pNode, pBooleanHolder, scriptContent,
-				getMindMapController(), new ErrorHandler() {
-					public void gotoLine(int pLineNumber) {
-					}
-				}, System.out, reg.getScriptCookies());
+				getMindMapController(), pLineNumber -> {
+                }, System.out, reg.getScriptCookies());
 	}
 
-	private void performScriptOperation(MindMapNode node,
+	private void performScriptOperation(NodeAdapter node,
 			BooleanHolder pAlreadyAScriptExecuted) {
 		// depth first:
 		for (Iterator<MindMapNode> iter = node.childrenUnfolded(); iter.hasNext();) {
 			MindMapNode element = iter.next();
-			performScriptOperation(element, pAlreadyAScriptExecuted);
+			performScriptOperation((NodeAdapter) element, pAlreadyAScriptExecuted);
 		}
 		// FIXME: Scripts
 		Object attributes = null;
@@ -256,6 +256,7 @@ public class ScriptingEngine extends MindMapHookAdapter {
 				 *            is the logical file name of the script (which is
 				 *            used to create the class name of the script)
 				 */
+				@Override
 				public Object evaluate(Reader in, String fileName)
 						throws CompilationFailedException {
 					Script script = null;
@@ -335,11 +336,7 @@ public class ScriptingEngine extends MindMapHookAdapter {
 							: "") + message;
 			pOutStream.println(errorMessage);
 			if(! (e2 instanceof InterruptedException)) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						pMindMapController.getController().errorMessage(errorMessage);
-					}
-				});
+				EventQueue.invokeLater(() -> pMindMapController.getController().errorMessage(errorMessage));
 			}
 			return false;
 		}

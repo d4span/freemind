@@ -25,6 +25,7 @@ import javax.swing.JMenuItem;
 
 import freemind.controller.MenuItemSelectedListener;
 import freemind.controller.actions.generated.instance.StrikethroughNodeAction;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 
 @SuppressWarnings("serial")
@@ -36,8 +37,10 @@ public class StrikethroughAction extends NodeGeneralAction implements
 		super(modeController, "Strikethrough", "images/format-text-strikethrough.png");
 		setDoActionClass(StrikethroughNodeAction.class);
 	}
+	@Override
 	public boolean isSelected(JMenuItem item, Action action) {
-		return modeController.getSelected().isStrikethrough();
+		NodeAdapter selected = (NodeAdapter) modeController.getSelected();
+		return selected.isStrikethrough();
 	}
 
 }

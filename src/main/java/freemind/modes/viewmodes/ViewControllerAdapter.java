@@ -22,16 +22,15 @@
 
 package freemind.modes.viewmodes;
 
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.extensions.NodeHook;
 import freemind.extensions.PermanentNodeHookSubstituteUnknown;
 import freemind.modes.ControllerAdapter;
 import freemind.modes.Mode;
+import freemind.modes.NodeAdapter;
 import freemind.modes.common.CommonNodeKeyListener;
-import freemind.modes.common.CommonNodeKeyListener.EditHandler;
 import freemind.modes.common.CommonToggleFoldedAction;
 import freemind.modes.common.actions.FindAction;
 import freemind.modes.common.actions.FindAction.FindNextAction;
@@ -64,13 +63,16 @@ public abstract class ViewControllerAdapter extends ControllerAdapter {
 		findNext = new FindNextAction(this, find);
 	}
 
-	public void doubleClick(MouseEvent e) {
+	@Override
+    public void doubleClick(MouseEvent e) {
 	}
 
-	public void plainClick(MouseEvent e) {
+	@Override
+    public void plainClick(MouseEvent e) {
 	}
 
-	public boolean extendSelection(MouseEvent e) {
+	@Override
+    public boolean extendSelection(MouseEvent e) {
 		// FIXME: Remove double code
 		NodeView newlySelectedNodeView = ((MainView) e.getComponent())
 				.getNodeView();
@@ -124,7 +126,8 @@ public abstract class ViewControllerAdapter extends ControllerAdapter {
 		return retValue;
 	}
 
-	public void setFolded(MindMapNode node, boolean folded) {
+	@Override
+    public void setFolded(MindMapNode node, boolean folded) {
 		if (node == null)
 			throw new IllegalArgumentException(
 					"setFolded was called with a null node.");
@@ -132,37 +135,36 @@ public abstract class ViewControllerAdapter extends ControllerAdapter {
 		if (node.isRoot() && folded) {
 			return;
 		}
-		if (node.isFolded() != folded) {
-			node.setFolded(folded);
+		if (((NodeAdapter) node).isFolded() != folded) {
+			((NodeAdapter) node).setFolded(folded);
 			nodeStructureChanged(node);
 		}
 	}
 
-	public void startupController() {
+	@Override
+    public void startupController() {
 		super.startupController();
 		getNodeMouseMotionListener().register(
 				new CommonNodeMouseMotionListener(this));
 		getMapMouseMotionListener().register(
 				new CommonMouseMotionManager(this));
 		getNodeKeyListener().register(
-				new CommonNodeKeyListener(this, new EditHandler() {
-
-					public void edit(KeyEvent e, boolean addNew,
-							boolean editLong) {
-						// no edit.
-					}
-				}));
+				new CommonNodeKeyListener(this, (e, addNew, editLong) -> {
+// no edit.
+}));
 
 	}
 
-	public void shutdownController() {
+	@Override
+    public void shutdownController() {
 		super.shutdownController();
 		getNodeMouseMotionListener().deregister();
 		getMapMouseMotionListener().deregister();
 		getNodeKeyListener().deregister();
 	}
 
-	protected void setAllActions(boolean enabled) {
+	@Override
+    protected void setAllActions(boolean enabled) {
 		super.setAllActions(enabled);
 		find.setEnabled(enabled);
 		findNext.setEnabled(enabled);

@@ -20,7 +20,7 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.AddAttributeAction;
 import freemind.controller.actions.generated.instance.RemoveAttributeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
@@ -35,9 +35,9 @@ public class AddAttributeActor extends XmlActorAdapter {
 		super(pMapFeedback);
 	}
 
+	@Override
 	public void act(XmlAction action) {
-		if (action instanceof AddAttributeAction) {
-			AddAttributeAction addAttributeAction = (AddAttributeAction) action;
+		if (action instanceof AddAttributeAction addAttributeAction) {
 			NodeAdapter node = getNodeFromID(addAttributeAction.getNode());
 			Attribute newAttribute = new Attribute(
 					addAttributeAction.getName(), addAttributeAction.getValue());
@@ -46,6 +46,7 @@ public class AddAttributeActor extends XmlActorAdapter {
 		}
 	}
 
+	@Override
 	public Class<AddAttributeAction> getDoActionClass() {
 		return AddAttributeAction.class;
 	}
@@ -54,7 +55,7 @@ public class AddAttributeActor extends XmlActorAdapter {
 		AddAttributeAction setAttributeAction = getAddAttributeAction(selected,
 				pAttribute);
 		RemoveAttributeAction undoAddAttributeAction = getXmlActorFactory().getRemoveAttributeActor()
-				.getRemoveAttributeAction(selected, selected.getAttributeTableLength());
+				.getRemoveAttributeAction(selected, ((NodeAdapter) selected).getAttributeTableLength());
 		return new ActionPair(setAttributeAction, undoAddAttributeAction);
 	}
 
@@ -73,7 +74,7 @@ public class AddAttributeActor extends XmlActorAdapter {
 	}
 
 	public int addAttribute(MindMapNode pNode, Attribute pAttribute) {
-		int retValue = pNode.getAttributeTableLength();
+		int retValue = ((NodeAdapter) pNode).getAttributeTableLength();
 		ActionPair actionPair = getActionPair(pNode, pAttribute);
 		execute(actionPair);
 		return retValue;

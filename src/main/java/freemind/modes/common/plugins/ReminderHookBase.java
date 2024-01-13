@@ -31,7 +31,7 @@ import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.extensions.PermanentNodeHookAdapter;
 import freemind.main.XMLElement;
 import freemind.modes.MindIcon;
@@ -73,6 +73,7 @@ public abstract class ReminderHookBase extends PermanentNodeHookAdapter {
 		super();
 	}
 
+	@Override
 	public void loadFrom(XMLElement child) {
 		super.loadFrom(child);
 		HashMap<String, String> hash = loadNameValuePairs(child);
@@ -83,6 +84,7 @@ public abstract class ReminderHookBase extends PermanentNodeHookAdapter {
 
 	}
 
+	@Override
 	public void save(XMLElement xml) {
 		super.save(xml);
 		HashMap<String, Object> nameValuePairs = new HashMap<>();
@@ -90,6 +92,7 @@ public abstract class ReminderHookBase extends PermanentNodeHookAdapter {
 		saveNameValuePairs(nameValuePairs, xml);
 	}
 
+	@Override
 	public void shutdownMapHook() {
 		setToolTip(getNode(), getName(), null);
 		if (timer != null) {
@@ -99,6 +102,7 @@ public abstract class ReminderHookBase extends PermanentNodeHookAdapter {
 		super.shutdownMapHook();
 	}
 
+	@Override
 	public void invoke(MindMapNode node) {
 		super.invoke(node);
 		if (remindUserAt == 0) {
@@ -114,7 +118,7 @@ public abstract class ReminderHookBase extends PermanentNodeHookAdapter {
 			setToolTip(node, getName(), message);
 			displayState(CLOCK_VISIBLE, getNode(), false);
 		}
-		logger.info("Invoke for node: " + node.getObjectId(getController()));
+		logger.info("Invoke for node: " + getController().getNodeID(node));
 	}
 
 	/**
@@ -161,6 +165,7 @@ public abstract class ReminderHookBase extends PermanentNodeHookAdapter {
 
 		private boolean stateAdded = false;
 
+		@Override
 		public void actionPerformed(ActionEvent pE) {
 			// check for time over:
 			int remindAt = getRemindUserAtAsSecondsFromNow();
@@ -204,6 +209,7 @@ public abstract class ReminderHookBase extends PermanentNodeHookAdapter {
 
 	protected abstract void nodeRefresh(MindMapNode node);
 
+	@Override
 	protected abstract void setToolTip(MindMapNode node, String key,
 			String value);
 

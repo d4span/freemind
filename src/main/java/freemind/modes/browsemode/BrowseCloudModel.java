@@ -20,7 +20,7 @@
 
 package freemind.modes.browsemode;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.XMLElement;
 import freemind.modes.CloudAdapter;
 import freemind.modes.MapFeedback;

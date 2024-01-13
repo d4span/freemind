@@ -25,7 +25,7 @@ package freemind.modes.mindmapmode.actions;
 
 import java.awt.event.ActionEvent;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.view.mindmapview.MapView;
 
@@ -38,8 +38,9 @@ public class ToggleChildrenFoldedAction extends MindmapAction {
 		this.modeController = modeController;
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		MindMapNode selected = modeController.getSelected();
+	@Override
+    public void actionPerformed(ActionEvent e) {
+		NodeAdapter selected = (NodeAdapter) modeController.getSelected();
 		modeController.getActorFactory().getToggleFoldedActor().toggleFolded(selected.childrenUnfolded());
 		final MapView mapView = modeController.getView();
 		mapView.selectAsTheOnlyOneSelected(mapView.getNodeView(selected));

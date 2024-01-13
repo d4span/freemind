@@ -25,12 +25,13 @@ package accessories.plugins.time;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.extensions.HookRegistration;
 import freemind.extensions.PermanentNodeHook;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 import freemind.modes.common.plugins.ReminderHookBase;
 import freemind.modes.mindmapmode.actions.NodeHookAction;
 
@@ -86,7 +87,7 @@ public class TimeManagementOrganizer implements HookRegistration,
 	/**
 	 */
 	public static ReminderHookBase getHook(MindMapNode node) {
-		for (PermanentNodeHook element : node.getActivatedHooks()) {
+		for (PermanentNodeHook element : ((NodeAdapter) node).getActivatedHooks()) {
 			if (element instanceof ReminderHookBase) {
 				return (ReminderHookBase) element;
 			}

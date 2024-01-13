@@ -27,7 +27,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.logging.Logger;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.EncryptedMindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.view.mindmapview.NodeView;
@@ -49,13 +50,14 @@ public class NewChildAction extends MindmapAction  {
 		return c;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		this.c.addNew(c.getSelected(), MindMapController.NEW_CHILD, null);
 	}
 
 	public MindMapNode addNew(final MindMapNode target, int newNodeMode,
 			final KeyEvent e) {
-		final MindMapNode targetNode = target;
+		final NodeAdapter targetNode = (NodeAdapter) target;
 		MindMapNode newNode = null;
 
 		switch (newNodeMode) {
@@ -63,7 +65,7 @@ public class NewChildAction extends MindmapAction  {
 		case MindMapController.NEW_SIBLING_BEHIND: {
 			if (!targetNode.isRoot()) {
 				MindMapNode parent = targetNode.getParentNode();
-				int childPosition = parent.getChildPosition(targetNode);
+				int childPosition = parent.getChildPosition(targetNode).get();
 				if (newNodeMode == MindMapController.NEW_SIBLING_BEHIND) {
 					childPosition++;
 				}
@@ -85,12 +87,12 @@ public class NewChildAction extends MindmapAction  {
 		case MindMapController.NEW_CHILD_WITHOUT_FOCUS: {
 			if(targetNode instanceof EncryptedMindMapNode && !((EncryptedMindMapNode) targetNode).isAccessible())
 				break;
-			final boolean parentFolded = targetNode.isFolded();
+			final boolean parentFolded = ((NodeAdapter) targetNode).isFolded();
 			if (parentFolded) {
 				getModeController().setFolded(targetNode, false);
 			}
-			int position = c.getProperty("placenewbranches")
-					.equals("last") ? targetNode.getChildCount() : 0;
+			int position = "last"
+					.equals(c.getProperty("placenewbranches")) ? targetNode.getChildCount() : 0;
 			newNode = addNewNode(targetNode, position);
 			final NodeView nodeView = getModeController().getNodeView(newNode);
 			if (newNodeMode == MindMapController.NEW_CHILD) {

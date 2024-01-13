@@ -26,7 +26,7 @@ package plugins.collaboration.socket;
 import java.io.IOException;
 import java.io.Writer;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.CollaborationUserInformation;
 import freemind.extensions.DontSaveMarker;
 import freemind.extensions.PermanentNodeHook;
@@ -47,23 +47,27 @@ public class SocketConnectionHook extends SocketBasics implements
      *
      */
 
-	public void startupMapHook() {
+	@Override
+    public void startupMapHook() {
 		super.startupMapHook();
 		// this is the internal call. do nothing
 		logger.info("Startup of the permanent hook.");
 		return;
 	}
 
-	public void loadFrom(XMLElement pChild) {
+	@Override
+    public void loadFrom(XMLElement pChild) {
 		// this plugin should not be saved.
 	}
 
-	public void save(XMLElement pXml) {
+	@Override
+    public void save(XMLElement pXml) {
 		// this plugin should not be saved.
 		// nothing to do.
 	}
 
-	public void shutdownMapHook() {
+	@Override
+    public void shutdownMapHook() {
 		deregisterFilter();
 		// this is the internal call. shutdown
 		logger.info("Shut down of the permanent hook.");
@@ -73,40 +77,52 @@ public class SocketConnectionHook extends SocketBasics implements
 		super.shutdownMapHook();
 	}
 
-	public void onAddChild(MindMapNode pAddedChildNode) {
+	@Override
+    public void onAddChild(MindMapNode pAddedChildNode) {
 	}
 
-	public void onAddChildren(MindMapNode pAddedChild) {
+	@Override
+    public void onAddChildren(MindMapNode pAddedChild) {
 	}
 
-	public void onLostFocusNode(NodeView pNodeView) {
+	@Override
+    public void onLostFocusNode(NodeView pNodeView) {
 	}
 
-	public void onNewChild(MindMapNode pNewChildNode) {
+	@Override
+    public void onNewChild(MindMapNode pNewChildNode) {
 	}
 
-	public void onRemoveChild(MindMapNode pOldChildNode) {
+	@Override
+    public void onRemoveChild(MindMapNode pOldChildNode) {
 	}
 
-	public void onRemoveChildren(MindMapNode pOldChildNode, MindMapNode pOldDad) {
+	@Override
+    public void onRemoveChildren(MindMapNode pOldChildNode, MindMapNode pOldDad) {
 	}
 
-	public void onFocusNode(NodeView pNodeView) {
+	@Override
+    public void onFocusNode(NodeView pNodeView) {
 	}
 
-	public void onUpdateChildrenHook(MindMapNode pUpdatedNode) {
+	@Override
+    public void onUpdateChildrenHook(MindMapNode pUpdatedNode) {
 	}
 
-	public void onUpdateNodeHook() {
+	@Override
+    public void onUpdateNodeHook() {
 	}
 
-	public void onViewCreatedHook(NodeView pNodeView) {
+	@Override
+    public void onViewCreatedHook(NodeView pNodeView) {
 	}
 
-	public void onViewRemovedHook(NodeView pNodeView) {
+	@Override
+    public void onViewRemovedHook(NodeView pNodeView) {
 	}
 
-	public Integer getRole() {
+	@Override
+    public Integer getRole() {
 		return ROLE_SLAVE;
 	}
 
@@ -115,7 +131,8 @@ public class SocketConnectionHook extends SocketBasics implements
 	 * 
 	 * @see plugins.collaboration.socket.SocketBasics#getPort()
 	 */
-	public int getPort() {
+	@Override
+    public int getPort() {
 		return mClientCommunication.getPort();
 	}
 
@@ -124,7 +141,8 @@ public class SocketConnectionHook extends SocketBasics implements
 	 * 
 	 * @see plugins.collaboration.socket.SocketBasics#lock()
 	 */
-	protected String lock(String pUserName, ExtendedMapFeedback pController) throws UnableToGetLockException,
+	@Override
+    protected String lock(String pUserName, ExtendedMapFeedback pController) throws UnableToGetLockException,
 			InterruptedException {
 		return mClientCommunication.sendLockRequest();
 	}
@@ -136,7 +154,8 @@ public class SocketConnectionHook extends SocketBasics implements
 	 * plugins.collaboration.socket.SocketBasics#broadcastCommand(java.lang.
 	 * String, java.lang.String, java.lang.String)
 	 */
-	protected void broadcastCommand(String pDoAction, String pUndoAction,
+	@Override
+    protected void broadcastCommand(String pDoAction, String pUndoAction,
 			String pLockId, ExtendedMapFeedback pController) throws Exception {
 		mClientCommunication.sendCommand(pDoAction, pUndoAction, pLockId);
 	}
@@ -146,7 +165,8 @@ public class SocketConnectionHook extends SocketBasics implements
 	 * 
 	 * @see plugins.collaboration.socket.SocketBasics#unlock()
 	 */
-	protected void unlock(ExtendedMapFeedback pController) {
+	@Override
+    protected void unlock(ExtendedMapFeedback pController) {
 	}
 
 	/**
@@ -175,7 +195,8 @@ public class SocketConnectionHook extends SocketBasics implements
 	 * 
 	 * @see plugins.collaboration.socket.SocketBasics#getMasterInformation()
 	 */
-	public CollaborationUserInformation getMasterInformation(ExtendedMapFeedback pController) {
+	@Override
+    public CollaborationUserInformation getMasterInformation(ExtendedMapFeedback pController) {
 		if(mClientCommunication != null) {
 			return mClientCommunication.getUserInfo();
 		}
@@ -185,10 +206,12 @@ public class SocketConnectionHook extends SocketBasics implements
 	/* (non-Javadoc)
 	 * @see freemind.extensions.PermanentNodeHook#processUnfinishedLinks()
 	 */
-	public void processUnfinishedLinks() {
+	@Override
+    public void processUnfinishedLinks() {
 	}
 
-	public void saveHtml(Writer pFileout) throws IOException {
+	@Override
+    public void saveHtml(Writer pFileout) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

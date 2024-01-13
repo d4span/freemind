@@ -25,7 +25,7 @@ package freemind.controller.filter.condition;
 
 import javax.swing.JComponent;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.main.Resources;
 import freemind.main.XMLElement;
@@ -42,7 +42,8 @@ public class SelectedViewCondition implements Condition {
 		// TODO Auto-generated constructor stub
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		if (description == null) {
 			description = Resources.getInstance().getResourceString(
 					"filter_selected_node_view");
@@ -50,12 +51,14 @@ public class SelectedViewCondition implements Condition {
 		return description;
 	}
 
-	public boolean checkNode(Controller c, MindMapNode node) {
+	@Override
+    public boolean checkNode(Controller c, MindMapNode node) {
 		NodeView viewer = c.getModeController().getNodeView(node);
 		return viewer != null && viewer.isSelected();
 	}
 
-	public JComponent getListCellRendererComponent() {
+	@Override
+    public JComponent getListCellRendererComponent() {
 		if (renderer == null) {
 			renderer = ConditionFactory
 					.createCellRendererComponent(description);
@@ -70,6 +73,7 @@ public class SelectedViewCondition implements Condition {
 		return condition;
 	}
 
-	public void save(XMLElement element) {
+	@Override
+    public void save(XMLElement element) {
 	}
 }

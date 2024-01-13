@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
 
@@ -87,15 +87,16 @@ public class StylePattern {
 	 * Constructs a style pattern from a node:
 	 */
 	public StylePattern(MindMapNode node) {
-		nodeColor = node.getColor();
-		nodeBackgroundColor = node.getBackgroundColor();
-		nodeStyle = node.getStyle();
+		NodeAdapter nodeAdapter = (NodeAdapter) node;
+		nodeColor = nodeAdapter.getColor();
+		nodeBackgroundColor = nodeAdapter.getBackgroundColor();
+		nodeStyle = nodeAdapter.getStyle().getStyle();
 
-		nodeFontBold = Boolean.valueOf(node.isBold());
-		nodeFontItalic = Boolean.valueOf(node.isItalic());
-		nodeFontSize = node.getFontSize() == null ? null : Integer.valueOf(node
+		nodeFontBold = Boolean.valueOf(nodeAdapter.isBold());
+		nodeFontItalic = Boolean.valueOf(nodeAdapter.isItalic());
+		nodeFontSize = nodeAdapter.getFontSize() == null ? null : Integer.valueOf(nodeAdapter
 				.getFontSize());
-		nodeFontFamily = node.getFontFamilyName();
+		nodeFontFamily = nodeAdapter.getFontFamilyName();
 
 		nodeIcon = null;
 		// appliesToNodeIcon = node.getIcons().size()>0;
@@ -108,7 +109,8 @@ public class StylePattern {
 
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "node: " + nodeColor + ", " + nodeBackgroundColor + ", "
 				+ nodeStyle + ", " + nodeFontFamily + ", " + nodeFontSize
 				+ ", " + nodeIcon + ", " + text + ", " + "\nedge: " + edgeColor
@@ -393,7 +395,7 @@ public class StylePattern {
 			// this has to be improved!
 			// NODE
 			XMLElement child = i.next();
-			if (child.getName().equals("node")) {
+			if ("node".equals(child.getName())) {
 				if (child.getStringAttribute("color") != null
 						&& child.getStringAttribute("color").length() == 7) {
 					setNodeColor(Tools.xmlToColor(child
@@ -409,7 +411,7 @@ public class StylePattern {
 					setNodeStyle(child.getStringAttribute("style"));
 				}
 				if (child.getStringAttribute("icon") != null) {
-					setNodeIcon(child.getStringAttribute("icon").equals("none") ? null
+					setNodeIcon("none".equals(child.getStringAttribute("icon")) ? null
 							: MindIcon
 									.factory(child.getStringAttribute("icon")));
 				}
@@ -418,7 +420,7 @@ public class StylePattern {
 				for (Iterator<XMLElement> j = child.getChildren().iterator(); j.hasNext();) {
 					XMLElement nodeChild = j.next();
 					// FONT
-					if (nodeChild.getName().equals("font")) {
+					if ("font".equals(nodeChild.getName())) {
 
 						if (nodeChild.getStringAttribute("name") != null) {
 							setNodeFontFamily(nodeChild
@@ -445,7 +447,7 @@ public class StylePattern {
 			}
 
 			// EDGE
-			if (child.getName().equals("edge")) {
+			if ("edge".equals(child.getName())) {
 				if (child.getStringAttribute("style") != null) {
 					setEdgeStyle(child.getStringAttribute("style"));
 				}
@@ -454,7 +456,7 @@ public class StylePattern {
 							.getStringAttribute("color")));
 				}
 				if (child.getStringAttribute("width") != null) {
-					if (child.getStringAttribute("width").equals("thin")) {
+					if ("thin".equals(child.getStringAttribute("width"))) {
 						setEdgeWidth(Integer.valueOf(
 								freemind.modes.EdgeAdapter.WIDTH_THIN));
 					} else {
@@ -465,7 +467,7 @@ public class StylePattern {
 			}
 
 			// CHILD
-			if (child.getName().equals("child")) {
+			if ("child".equals(child.getName())) {
 				if (child.getStringAttribute("pattern") != null) {
 					// find name in list of justConstructedPatterns:
 					String searchName = child.getStringAttribute("pattern");

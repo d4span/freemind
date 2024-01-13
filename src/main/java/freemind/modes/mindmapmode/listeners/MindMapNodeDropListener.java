@@ -31,7 +31,7 @@ import java.util.ListIterator;
 
 import javax.swing.JOptionPane;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.MindMapNodesSelection;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.MindMapMapModel;

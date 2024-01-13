@@ -24,12 +24,13 @@ import java.awt.datatransfer.Transferable;
 import java.util.Iterator;
 import java.util.List;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.CompoundAction;
 import freemind.controller.actions.generated.instance.CutNodeAction;
 import freemind.controller.actions.generated.instance.UndoPasteNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 import freemind.modes.mindmapmode.actions.xml.actors.PasteActor.NodeCoordinate;
 
@@ -62,7 +63,7 @@ public class CutActor extends XmlActorAdapter {
 		// sort selectedNodes list by depth, in order to guarantee that sons are
 		// deleted first:
 		for (Iterator<MindMapNode> i = nodeList.iterator(); i.hasNext();) {
-			MindMapNode node = i.next();
+			NodeAdapter node = (NodeAdapter) i.next();
 			if (node.getParentNode() == null)
 				continue;
 			CutNodeAction cutNodeAction = getCutNodeAction(node);
@@ -90,6 +91,7 @@ public class CutActor extends XmlActorAdapter {
 	 * freemind.controller.actions.ActorXml#act(freemind.controller.actions.
 	 * generated.instance.XmlAction)
 	 */
+	@Override
 	public void act(XmlAction action) {
 		CutNodeAction cutAction = (CutNodeAction) action;
 		MindMapNode selectedNode = getNodeFromID(cutAction
@@ -102,6 +104,7 @@ public class CutActor extends XmlActorAdapter {
 	 * 
 	 * @see freemind.controller.actions.ActorXml#getDoActionClass()
 	 */
+	@Override
 	public Class<CutNodeAction> getDoActionClass() {
 		return CutNodeAction.class;
 	}

@@ -29,8 +29,9 @@ import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.HtmlTools;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 
 /**
@@ -60,6 +61,7 @@ public class PasteAsPlainTextAction extends AbstractAction {
 	 * @see
 	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent pArg0) {
 		Transferable clipboardContents = mMindMapController
 				.getClipboardContents();
@@ -72,7 +74,7 @@ public class PasteAsPlainTextAction extends AbstractAction {
 				plainText = HtmlTools.makeValidXml(plainText);
 				logger.info("Pasting string " + plainText);
 				// paste.
-				MindMapNode selected = mMindMapController.getSelected();
+				NodeAdapter selected = (NodeAdapter) mMindMapController.getSelected();
 				MindMapNode newNode = mMindMapController.addNewNode(selected,
 						selected.getChildCount(), selected.isLeft());
 				mMindMapController.setNodeText(newNode, plainText);

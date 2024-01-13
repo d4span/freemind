@@ -1,7 +1,4 @@
-package ch.d4span.freemind.treemodel;
-
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreePath;
+package ch.d4span.freemind.domain.treemodel;
 
 public interface TreeModel<V> {
   TreeNode<V> getRoot();
@@ -31,18 +28,6 @@ public interface TreeModel<V> {
   }
 
   default boolean isLeaf(TreeNode<V> node) {
-    throw new UnsupportedOperationException("Not yet implemented");
-  }
-
-  default void valueForPathChanged(TreePath path, TreeNode<V> newValue) {
-    throw new UnsupportedOperationException("Not yet implemented");
-  }
-
-  default void addTreeModelListener(TreeModelListener l) {
-    throw new UnsupportedOperationException("Not yet implemented");
-  }
-
-  default void removeTreeModelListener(TreeModelListener l) {
     throw new UnsupportedOperationException("Not yet implemented");
   }
 }

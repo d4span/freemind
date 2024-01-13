@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.ListIterator;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.Tools;
 
 /**
@@ -50,10 +50,10 @@ public class MindMapLinkRegistry {
 		 * 
 		 * @see java.util.Vector#add(java.lang.Object)
 		 */
+		@Override
 		public synchronized boolean add(MindMapLink pE) {
 			boolean add = super.add(pE);
-			if (pE instanceof MindMapLink) {
-				MindMapLink link = (MindMapLink) pE;
+			if (pE instanceof MindMapLink link) {
 				MindMapNode source = link.getSource();
 				if (!mSourceToLinks.containsKey(source)) {
 					mSourceToLinks.put(source, new Vector<MindMapLink>());
@@ -68,6 +68,7 @@ public class MindMapLinkRegistry {
 		 * 
 		 * @see java.util.Vector#removeElementAt(int)
 		 */
+		@Override
 		public synchronized void removeElementAt(int pIndex) {
 			MindMapLink link = (MindMapLink) get(pIndex);
 			MindMapNode source = link.getSource();
@@ -221,7 +222,7 @@ public class MindMapLinkRegistry {
 			deregisterLink(link);
 		}
 		// and process my sons:
-		for (ListIterator<MindMapNode> e = target.childrenUnfolded(); e.hasNext();) {
+		for (ListIterator<MindMapNode> e = ((NodeAdapter) target).childrenUnfolded(); e.hasNext();) {
 			MindMapNode child = e.next();
 			deregisterLinkTarget(child);
 		}

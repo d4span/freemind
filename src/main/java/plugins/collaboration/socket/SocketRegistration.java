@@ -28,12 +28,13 @@ import java.util.Collection;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
-import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMap;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.controller.MenuItemSelectedListener;
 import freemind.extensions.HookRegistration;
 import freemind.extensions.PermanentNodeHook;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.actions.NodeHookAction;
 
@@ -78,7 +79,7 @@ public class SocketRegistration implements HookRegistration,
 	}
 
 	private boolean isMaster() {
-		Collection<PermanentNodeHook> activatedHooks = mController.getRootNode()
+		Collection<PermanentNodeHook> activatedHooks = ((NodeAdapter) mController.getRootNode())
 				.getActivatedHooks();
 		for (PermanentNodeHook hook : activatedHooks) {
 			if (hook instanceof MindMapMaster) {
@@ -89,7 +90,7 @@ public class SocketRegistration implements HookRegistration,
 	}
 
 	private boolean isSlave() {
-		Collection<PermanentNodeHook> activatedHooks = mController.getRootNode()
+		Collection<PermanentNodeHook> activatedHooks = ((NodeAdapter) mController.getRootNode())
 				.getActivatedHooks();
 		for (PermanentNodeHook hook : activatedHooks) {
 			if (hook instanceof SocketConnectionHook) {

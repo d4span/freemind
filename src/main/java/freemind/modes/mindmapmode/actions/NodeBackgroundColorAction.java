@@ -27,11 +27,10 @@ package freemind.modes.mindmapmode.actions;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
-import freemind.modes.mindmapmode.MindMapMapModel;
-import freemind.modes.mindmapmode.MindMapNodeModel;
 
 @SuppressWarnings("serial")
 public class NodeBackgroundColorAction extends MindmapAction {
@@ -42,11 +41,12 @@ public class NodeBackgroundColorAction extends MindmapAction {
 		this.controller = controller;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
+		NodeAdapter selectedNode = (NodeAdapter) controller.getSelected();
 		Color color = Controller.showCommonJColorChooserDialog(controller
 				.getView().getSelected(), controller
-				.getText("choose_node_background_color"), controller
-				.getSelected().getBackgroundColor());
+				.getText("choose_node_background_color"), selectedNode.getBackgroundColor());
 		if (color == null) {
 			return;
 		}
@@ -61,12 +61,7 @@ public class NodeBackgroundColorAction extends MindmapAction {
 		public RemoveNodeBackgroundColorAction(
 				final MindMapController controller) {
 			super(controller, "remove_node_background_color", (String) null);
-			setSingleNodeOperation(new SingleNodeOperation() {
-
-				public void apply(MindMapMapModel map, MindMapNodeModel node) {
-					controller.setNodeBackgroundColor(node, null);
-				}
-			});
+			setSingleNodeOperation((map, node) -> controller.setNodeBackgroundColor(node, null));
 		}
 
 	}

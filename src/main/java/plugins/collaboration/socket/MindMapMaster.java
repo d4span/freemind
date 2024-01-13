@@ -33,7 +33,7 @@ import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.common.NumberProperty;
 import freemind.common.PropertyControl;
 import freemind.common.StringProperty;

@@ -23,7 +23,7 @@ package freemind.view.mindmapview;
 import java.awt.Font;
 import java.awt.event.MouseWheelEvent;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.MapMouseMotionListener;
 import freemind.controller.MapMouseWheelListener;
 import freemind.controller.NodeDragListener;

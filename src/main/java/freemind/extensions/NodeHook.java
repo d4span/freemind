@@ -22,8 +22,8 @@ package freemind.extensions;
 
 import accessories.plugins.ApplyFormatPlugin;
 import accessories.plugins.AutomaticLayout;
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 
 /**
  * This is a general base interface for hooks that implement actions belonging to nodes.

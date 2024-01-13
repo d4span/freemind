@@ -29,9 +29,10 @@ import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.Tools;
 import freemind.modes.ControllerAdapter;
+import freemind.modes.NodeAdapter;
 
 /**
  * @author foltin
@@ -50,6 +51,7 @@ public class CommonToggleFoldedAction extends AbstractAction {
 		logger = modeController.getFrame().getLogger(this.getClass().getName());
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		toggleFolded();
 	}
@@ -97,9 +99,9 @@ public class CommonToggleFoldedAction extends AbstractAction {
 			}
 			if (state == null) {
 				state = new Tools.BooleanHolder();
-				state.setValue(node.isFolded());
+				state.setValue(((NodeAdapter) node).isFolded());
 			} else {
-				if (node.isFolded() != state.getValue()) {
+				if (((NodeAdapter) node).isFolded() != state.getValue()) {
 					allNodeHaveSameFoldedStatus = false;
 					break;
 				}

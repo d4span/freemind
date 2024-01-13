@@ -20,13 +20,14 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.NodeAction;
 import freemind.controller.actions.generated.instance.RemoveAttributeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
 import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
+import groovy.util.Node;
 
 public class RemoveAttributeActor extends XmlActorAdapter {
 
@@ -37,9 +38,9 @@ public class RemoveAttributeActor extends XmlActorAdapter {
 		super(pMapFeedback);
 	}
 
+	@Override
 	public void act(XmlAction action) {
-		if (action instanceof RemoveAttributeAction) {
-			RemoveAttributeAction removeAttributeAction = (RemoveAttributeAction) action;
+		if (action instanceof RemoveAttributeAction removeAttributeAction) {
 			NodeAdapter node = getNodeFromID(removeAttributeAction.getNode());
 			int position = removeAttributeAction.getPosition();
 			node.checkAttributePosition(position);
@@ -48,6 +49,7 @@ public class RemoveAttributeActor extends XmlActorAdapter {
 		}
 	}
 
+	@Override
 	public Class<RemoveAttributeAction> getDoActionClass() {
 		return RemoveAttributeAction.class;
 	}
@@ -56,12 +58,13 @@ public class RemoveAttributeActor extends XmlActorAdapter {
 		RemoveAttributeAction setAttributeAction = getRemoveAttributeAction(selected,
 				pPosition);
 		NodeAction undoRemoveAttributeAction;
-		if (pPosition == selected.getAttributeTableLength() - 1) {
+		NodeAdapter node = (NodeAdapter) selected;
+		if (pPosition == node.getAttributeTableLength() - 1) {
 			undoRemoveAttributeAction = getXmlActorFactory().getAddAttributeActor().getAddAttributeAction(
-					selected, selected.getAttribute(pPosition));
+					selected, node.getAttribute(pPosition));
 		} else {
 			undoRemoveAttributeAction = getXmlActorFactory().getInsertAttributeActor().getInsertAttributeAction(
-					selected, pPosition, selected.getAttribute(pPosition));
+					selected, pPosition, node.getAttribute(pPosition));
 		}
 		return new ActionPair(setAttributeAction, undoRemoveAttributeAction);
 	}

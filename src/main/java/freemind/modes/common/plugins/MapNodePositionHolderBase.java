@@ -24,12 +24,13 @@ import java.io.File;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.extensions.PermanentNodeHook;
 import freemind.extensions.PermanentNodeHookAdapter;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
+import freemind.modes.NodeAdapter;
 
 /**
  * This base class is free of openstreetmap and similar classes.
@@ -90,6 +91,7 @@ public class MapNodePositionHolderBase extends PermanentNodeHookAdapter {
 	 * 
 	 * @see freemind.extensions.PermanentNodeHookAdapter#shutdownMapHook()
 	 */
+	@Override
 	public void shutdownMapHook() {
 		setStateIcon(getNode(), false);
 		hideTooltip();
@@ -102,6 +104,7 @@ public class MapNodePositionHolderBase extends PermanentNodeHookAdapter {
 	 * @see
 	 * freemind.extensions.NodeHookAdapter#invoke(freemind.modes.MindMapNode)
 	 */
+	@Override
 	public void invoke(MindMapNode pNode) {
 		super.invoke(pNode);
 		setStateIcon(pNode, true);
@@ -122,6 +125,7 @@ public class MapNodePositionHolderBase extends PermanentNodeHookAdapter {
 	}
 
 
+	@Override
 	public void loadFrom(XMLElement pChild) {
 		super.loadFrom(pChild);
 		mValues = loadNameValuePairs(pChild);
@@ -150,7 +154,7 @@ public class MapNodePositionHolderBase extends PermanentNodeHookAdapter {
 	}
 
 	public static MapNodePositionHolderBase getBaseHook(MindMapNode node) {
-		for (PermanentNodeHook element : node.getActivatedHooks()) {
+		for (PermanentNodeHook element : ((NodeAdapter) node).getActivatedHooks()) {
 			if (element instanceof MapNodePositionHolderBase) {
 				return (MapNodePositionHolderBase) element;
 			}

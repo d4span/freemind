@@ -42,8 +42,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.MenuBar;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.controller.StructuredMenuHolder;
@@ -90,6 +90,7 @@ public class BrowseController extends ViewControllerAdapter {
 					this.getClass().getName());
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			MapNodePositionHolderBase hook = getHook();
@@ -136,6 +137,7 @@ public class BrowseController extends ViewControllerAdapter {
 		/* (non-Javadoc)
 		 * @see freemind.controller.MenuItemEnabledListener#isEnabled(javax.swing.JMenuItem, javax.swing.Action)
 		 */
+		@Override
 		public boolean isEnabled(JMenuItem pItem, Action pAction) {
 			return getHook() != null;
 		}
@@ -157,22 +159,26 @@ public class BrowseController extends ViewControllerAdapter {
 		registerNodeSelectionListener(new NodeNoteViewer(this), false);
 	}
 
+	@Override
 	public void startupController() {
 		super.startupController();
 		invokeHooksRecursively((NodeAdapter) getRootNode(), getMap());
 	}
 
+	@Override
 	protected void restoreMapsLastState(ModeController pNewModeController,
 			MapAdapter pModel) {
 		// intentionally do nothing.
 	}
 
+	@Override
 	public MapAdapter newModel(ModeController newModeController) {
 		BrowseMapModel model = new BrowseMapModel(null, newModeController);
 		newModeController.setModel(model);
 		return model;
 	}
 
+	@Override
 	public void plainClick(MouseEvent e) {
 		/* perform action only if one selected node. */
 		if (getSelecteds().size() != 1)
@@ -226,10 +232,12 @@ public class BrowseController extends ViewControllerAdapter {
 	// foldOthers(parent);
 	// }
 
+	@Override
 	public MindMapNode newNode(Object userObject, MindMap map) {
 		return new BrowseNodeModel(userObject, map);
 	}
 
+	@Override
 	public JPopupMenu getPopupMenu() {
 		return popupmenu;
 	}
@@ -238,10 +246,10 @@ public class BrowseController extends ViewControllerAdapter {
 	 * Link implementation: If this is a link, we want to make a popup with at
 	 * least removelink available.
 	 */
+	@Override
 	public JPopupMenu getPopupForModel(java.lang.Object obj) {
-		if (obj instanceof BrowseArrowLinkModel) {
+		if (obj instanceof BrowseArrowLinkModel link) {
 			// yes, this is a link.
-			BrowseArrowLinkModel link = (BrowseArrowLinkModel) obj;
 			JPopupMenu arrowLinkPopup = new JPopupMenu();
 
 			arrowLinkPopup.add(getGotoLinkNodeAction(link.getSource()));
@@ -277,6 +285,7 @@ public class BrowseController extends ViewControllerAdapter {
 		return new GotoLinkNodeAction(this, destination);
 	}
 
+	@Override
 	public JToolBar getModeToolBar() {
 		return getToolBar();
 	}
@@ -334,6 +343,7 @@ public class BrowseController extends ViewControllerAdapter {
 	//
 	// }
 
+	@Override
 	public ModeController load(URL url) throws IOException, XMLParseException,
 			URISyntaxException {
 		ModeController newModeController = (ModeController) super.load(url);
@@ -343,6 +353,7 @@ public class BrowseController extends ViewControllerAdapter {
 		return newModeController;
 	}
 
+	@Override
 	public ModeController load(File pFile) throws IOException {
 		ModeController newModeController = (ModeController) super.load(pFile);
 		// decorator pattern.
@@ -351,14 +362,15 @@ public class BrowseController extends ViewControllerAdapter {
 		return newModeController;
 	}
 
+	@Override
 	public void newMap(MindMap mapModel, ModeController modeController) {
-		setNoteIcon(mapModel.getRootNode());
+		setNoteIcon((NodeAdapter) mapModel.getRootNode());
 		super.newMap(mapModel, modeController);
 	}
 
-	private void setNoteIcon(MindMapNode node) {
+	private void setNoteIcon(NodeAdapter node) {
 		String noteText = node.getNoteText();
-		if (noteText != null && !noteText.equals("")) {
+		if (noteText != null && !"".equals(noteText)) {
 			// icon
 			if (noteIcon == null) {
 				noteIcon = freemind.view.ImageFactory.getInstance().createUnscaledIcon(getController().getResource(
@@ -368,7 +380,7 @@ public class BrowseController extends ViewControllerAdapter {
 		}
 		ListIterator<MindMapNode> children = node.childrenUnfolded();
 		while (children.hasNext()) {
-			setNoteIcon((MindMapNode) children.next());
+			setNoteIcon((NodeAdapter) children.next());
 		}
 
 	}
@@ -377,6 +389,7 @@ public class BrowseController extends ViewControllerAdapter {
 	 * Enabled/Disabled all actions that are dependent on whether there is a map
 	 * open or not.
 	 */
+	@Override
 	protected void setAllActions(boolean enabled) {
 		super.setAllActions(enabled);
 		toggleFolded.setEnabled(enabled);
@@ -393,6 +406,7 @@ public class BrowseController extends ViewControllerAdapter {
 			super(getText("follow_link"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			loadURL();
 		}
@@ -404,6 +418,7 @@ public class BrowseController extends ViewControllerAdapter {
 	 * @see freemind.modes.ModeController#updateMenus(freemind.controller.
 	 * StructuredMenuHolder)
 	 */
+	@Override
 	public void updateMenus(StructuredMenuHolder holder) {
 		add(holder, MenuBar.EDIT_MENU + "/find/find", find, "keystroke_find");
 		add(holder, MenuBar.EDIT_MENU + "/find/findNext", findNext,
@@ -417,6 +432,7 @@ public class BrowseController extends ViewControllerAdapter {
 				toggleChildrenFolded, "keystroke_toggle_children_folded");
 	}
 
+	@Override
 	public HookFactory getHookFactory() {
 		return mBrowseHookFactory;
 	}

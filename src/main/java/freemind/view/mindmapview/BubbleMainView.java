@@ -27,8 +27,10 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.presentation.NodeStyle;
 import freemind.main.Tools;
+import freemind.modes.NodeAdapter;
 
 @SuppressWarnings("serial")
 class BubbleMainView extends MainView {
@@ -39,12 +41,14 @@ class BubbleMainView extends MainView {
 	 * 
 	 * @see freemind.view.mindmapview.NodeView.MainView#getPreferredSize()
 	 */
+	@Override
 	public Dimension getPreferredSize() {
 		Dimension prefSize = super.getPreferredSize();
 		prefSize.width += getNodeView().getMap().getZoomed(5);
 		return prefSize;
 	}
 
+	@Override
 	public void paint(Graphics graphics) {
 		Graphics2D g = (Graphics2D) graphics;
 		final NodeView nodeView = getNodeView();
@@ -71,6 +75,7 @@ class BubbleMainView extends MainView {
 		super.paint(g);
 	}
 
+	@Override
 	public void paintSelected(Graphics2D graphics) {
 		super.paintSelected(graphics);
 		if (getNodeView().useSelectionColors()) {
@@ -80,39 +85,45 @@ class BubbleMainView extends MainView {
 		}
 	}
 
+	@Override
 	protected void paintBackground(Graphics2D graphics, Color color) {
 		graphics.setColor(color);
 		graphics.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 10, 10);
 	}
 
+	@Override
 	Point getLeftPoint() {
 		Point in = new Point(0, getHeight() / 2);
 		return in;
 	}
 
+	@Override
 	Point getCenterPoint() {
 		Point in = getLeftPoint();
 		in.x = getWidth() / 2;
 		return in;
 	}
 
+	@Override
 	Point getRightPoint() {
 		Point in = getLeftPoint();
 		in.x = getWidth() - 1;
 		return in;
 	}
 
+	@Override
 	protected int getMainViewWidthWithFoldingMark() {
 		int width = getWidth();
 		int dW = getZoomedFoldingSymbolHalfWidth() * 2;
-		if (getNodeView().getModel().isFolded()) {
+		if (((NodeAdapter) getNodeView().getModel()).isFolded()) {
 			width += dW;
 		}
 		return width + dW;
 	}
 
+	@Override
 	public int getDeltaX() {
-		if (getNodeView().getModel().isFolded() && getNodeView().isLeft()) {
+		if (((NodeAdapter) getNodeView().getModel()).isFolded() && getNodeView().isLeft()) {
 			return super.getDeltaX() + getZoomedFoldingSymbolHalfWidth() * 2;
 		}
 		return super.getDeltaX();
@@ -123,13 +134,15 @@ class BubbleMainView extends MainView {
 	 * 
 	 * @see freemind.view.mindmapview.NodeView#getStyle()
 	 */
+	@Override
 	String getStyle() {
-		return MindMapNode.STYLE_BUBBLE;
+		return NodeStyle.BUBBLE.getStyle();
 	}
 
 	/**
 	 * Returns the relative position of the Edge
 	 */
+	@Override
 	int getAlignment() {
 		return NodeView.ALIGN_CENTER;
 	}
@@ -139,6 +152,7 @@ class BubbleMainView extends MainView {
 	 * 
 	 * @see freemind.view.mindmapview.NodeView#getTextWidth()
 	 */
+	@Override
 	public int getTextWidth() {
 		return super.getTextWidth() + getNodeView().getMap().getZoomed(5);
 	}
@@ -148,6 +162,7 @@ class BubbleMainView extends MainView {
 	 * 
 	 * @see freemind.view.mindmapview.NodeView#getTextX()
 	 */
+	@Override
 	public int getTextX() {
 		return super.getTextX() + getNodeView().getMap().getZoomed(2);
 	}

@@ -34,8 +34,9 @@ import javax.swing.text.Element;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.FixedHTMLWriter;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
 import freemind.view.mindmapview.MapView;
@@ -59,16 +60,17 @@ public class SplitNode extends MindMapNodeHookAdapter {
 	 * @see freemind.extensions.NodeHook#invoke(freemind.modes.MindMapNode,
 	 * java.util.List)
 	 */
-	public void invoke(MindMapNode node) {
+	@Override
+    public void invoke(MindMapNode node) {
 		super.invoke(node);
 		final List<MindMapNode> list = getMindMapController().getSelecteds();
 		
 		for(MindMapNode next : list) {
-			splitNode(next);
+			splitNode((NodeAdapter) next);
 		}
 	}
 
-	private void splitNode(MindMapNode node) {
+	private void splitNode(NodeAdapter node) {
 		if (node.isRoot()) {
 			return;
 		}
@@ -84,23 +86,23 @@ public class SplitNode extends MindMapNodeHookAdapter {
 		}
 		c.setNodeText(node, parts[firstPartNumber]);
 		MindMapNode parent = node.getParentNode();
-		final int nodePosition = parent.getChildPosition(node) + 1;
+		final int nodePosition = parent.getChildPosition(node).get() + 1;
 		for (int i = parts.length - 1; i > firstPartNumber; i--) {
-			final MindMapNode lowerNode = c.addNewNode(parent, nodePosition,
+			final NodeAdapter lowerNode = (NodeAdapter) c.addNewNode(parent, nodePosition,
 					node.isLeft());
 			final String part = parts[i];
 			if (part == null) {
 				continue;
 			}
-			lowerNode.setColor(node.getColor());
-			lowerNode.setFont(node.getFont());
+			NodeAdapter nodeAdapter = (NodeAdapter) node;
+
+			lowerNode.setColor(nodeAdapter.getColor());
+			lowerNode.setFont(nodeAdapter.getFont());
 			c.setNodeText(lowerNode, part);
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					final MapView mapView = c.getView();
-					mapView.toggleSelected(mapView.getNodeView(lowerNode));
-				}
-			});
+			EventQueue.invokeLater(() -> {
+            	final MapView mapView = c.getView();
+            	mapView.toggleSelected(mapView.getNodeView(lowerNode));
+            });
 		}
 	}
 
@@ -130,7 +132,7 @@ public class SplitNode extends MindMapNodeHookAdapter {
 						new FixedHTMLWriter(out, doc, start, end - start)
 								.write();
 						final String string = out.toString();
-						if (!string.equals("")) {
+						if (!"".equals(string)) {
 							parts[i] = string;
 							notEmptyElementCount++;
 						} else {
@@ -160,8 +162,8 @@ public class SplitNode extends MindMapNodeHookAdapter {
 				return parentCandidate;
 			}
 			parentCandidate = parentCandidate.getElement(0);
-		} while (!(parentCandidate.isLeaf() || parentCandidate.getName()
-				.equalsIgnoreCase("p-implied")));
+		} while (!(parentCandidate.isLeaf() || "p-implied"
+				.equalsIgnoreCase(parentCandidate.getName())));
 		return null;
 	}
 

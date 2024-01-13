@@ -22,7 +22,7 @@ package freemind.modes;
 
 import java.awt.Point;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
 

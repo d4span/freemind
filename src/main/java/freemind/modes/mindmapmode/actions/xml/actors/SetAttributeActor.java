@@ -20,7 +20,7 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.SetAttributeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
@@ -37,9 +37,9 @@ public class SetAttributeActor extends XmlActorAdapter {
 		super(pMapFeedback);
 	}
 
+	@Override
 	public void act(XmlAction action) {
-		if (action instanceof SetAttributeAction) {
-			SetAttributeAction setAttributeAction = (SetAttributeAction) action;
+		if (action instanceof SetAttributeAction setAttributeAction) {
 			NodeAdapter node = getNodeFromID(setAttributeAction.getNode());
 			Attribute newAttribute = new Attribute(setAttributeAction.getName(), setAttributeAction.getValue());
 			int position = setAttributeAction.getPosition();
@@ -51,13 +51,14 @@ public class SetAttributeActor extends XmlActorAdapter {
 		}
 	}
 
+	@Override
 	public Class<SetAttributeAction> getDoActionClass() {
 		return SetAttributeAction.class;
 	}
 
 	public ActionPair getActionPair(MindMapNode selected, int pPosition, Attribute pAttribute) {
 		SetAttributeAction setAttributeAction = getSetAttributeAction(selected, pPosition, pAttribute);
-		SetAttributeAction undoSetAttributeAction = getSetAttributeAction(selected, pPosition, selected.getAttribute(pPosition));
+		SetAttributeAction undoSetAttributeAction = getSetAttributeAction(selected, pPosition, ((NodeAdapter) selected).getAttribute(pPosition));
 		return new ActionPair(setAttributeAction, undoSetAttributeAction);
 	}
 	

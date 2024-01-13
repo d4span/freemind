@@ -27,9 +27,10 @@ package freemind.modes.mindmapmode.actions;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.MenuItemSelectedListener;
 import freemind.main.Tools;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.MindMapNodeModel;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
@@ -52,8 +53,9 @@ public class NodeStyleAction extends NodeGeneralAction implements MenuItemSelect
 	}
 	
 
+	@Override
 	public boolean isSelected(JMenuItem pCheckItem, Action pAction) {
-		MindMapNode selected = modeController.getSelected();
+		NodeAdapter selected = (NodeAdapter) modeController.getSelected();
 		if (!selected.hasStyle())
 			return false;
 		return Tools.safeEquals(mStyle, selected.getStyle());

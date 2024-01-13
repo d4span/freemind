@@ -20,8 +20,8 @@
 
 package freemind.modes.mindmapmode.actions.xml.actors;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.UnderlinedNodeAction;
 import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
@@ -59,7 +59,8 @@ public class UnderlineActor extends NodeXmlActorAdapter {
 	@Override
     public ActionPair apply(MindMap model, MindMapNode selected) {
 		// every node is set to the inverse of the focussed node.
-		boolean underlined = getExMapFeedback().getSelected().isUnderlined();
+		NodeAdapter selectedNode = (NodeAdapter) getExMapFeedback().getSelected();
+		boolean underlined = selectedNode.isUnderlined();
 		return getActionPair(selected, !underlined);
 	}
 

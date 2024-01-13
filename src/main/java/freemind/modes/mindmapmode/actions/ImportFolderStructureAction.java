@@ -25,7 +25,7 @@ import java.net.MalformedURLException;
 
 import javax.swing.JFileChooser;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.FreeMindMain;
 import freemind.main.Tools;
 import freemind.modes.FreeMindFileDialog;

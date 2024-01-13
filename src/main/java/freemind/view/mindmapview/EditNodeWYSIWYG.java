@@ -26,8 +26,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,7 +37,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.html.HTMLDocument;
 
 import accessories.plugins.NodeNoteRegistration.SimplyHtmlResources;
-
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import io.github.geniot.jortho.SpellChecker;
 import com.lightdev.app.shtm.SHTMLPanel;
 
@@ -48,6 +46,7 @@ import freemind.main.HtmlTools;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 
 /**
  * @author Daniel Polansky
@@ -76,23 +75,11 @@ public class EditNodeWYSIWYG extends EditNodeBase {
 			Tools.setLabelAndMnemonic(cancelButton, base.getText("cancel"));
 			Tools.setLabelAndMnemonic(splitButton, base.getText("split"));
 
-			okButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					submit();
-				}
-			});
+			okButton.addActionListener(e -> submit());
 
-			cancelButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					cancel();
-				}
-			});
+			cancelButton.addActionListener(e -> cancel());
 
-			splitButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					split();
-				}
-			});
+			splitButton.addActionListener(e -> split());
 
 			Tools.addKeyActionToDialog(this, new SubmitAction(), "alt ENTER",
 					"submit");
@@ -104,16 +91,14 @@ public class EditNodeWYSIWYG extends EditNodeBase {
 			buttonPane.add(splitButton);
 			buttonPane.setMaximumSize(new Dimension(1000, 20));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			htmlEditorPanel.setOpenHyperlinkHandler(new ActionListener() {
-				public void actionPerformed(ActionEvent pE) {
-					try {
-						getBase().getController().getFrame()
-								.openDocument(new URL(pE.getActionCommand()));
-					} catch (Exception e) {
-						freemind.main.Resources.getInstance().logException(e);
-					}
-				}
-			});
+			htmlEditorPanel.setOpenHyperlinkHandler(pE -> {
+            	try {
+            		getBase().getController().getFrame()
+            				.openDocument(new URL(pE.getActionCommand()));
+            	} catch (Exception e) {
+            		freemind.main.Resources.getInstance().logException(e);
+            	}
+            });
 
 			if (checkSpelling) {
 				SpellChecker.register(htmlEditorPanel.getEditorPane());
@@ -164,6 +149,7 @@ public class EditNodeWYSIWYG extends EditNodeBase {
 		 * 
 		 * @see freemind.view.mindmapview.EditNodeBase.Dialog#close()
 		 */
+		@Override
 		protected void submit() {
 			removeBodyStyle();
 			if (htmlEditorPanel.needsSaving()) {
@@ -185,6 +171,7 @@ public class EditNodeWYSIWYG extends EditNodeBase {
 		 * 
 		 * @see freemind.view.mindmapview.EditNodeBase.Dialog#split()
 		 */
+		@Override
 		protected void split() {
 			removeBodyStyle();
 			getBase().getEditControl().split(
@@ -199,16 +186,19 @@ public class EditNodeWYSIWYG extends EditNodeBase {
 		 * 
 		 * @see freemind.view.mindmapview.EditNodeBase.Dialog#close()
 		 */
+		@Override
 		protected void cancel() {
 			removeBodyStyle();
 			getBase().getEditControl().cancel();
 			super.cancel();
 		}
 
+		@Override
 		protected boolean isChanged() {
 			return htmlEditorPanel.needsSaving();
 		}
 
+		@Override
 		public Component getMostRecentFocusOwner() {
 			if (isFocused()) {
 				return getFocusOwner();
@@ -253,10 +243,11 @@ public class EditNodeWYSIWYG extends EditNodeBase {
 			rule += "font-size: " + font.getSize() + "pt;";
 			// Daniel said:, but no effect:
 			// rule += "font-size: "+node.getFont().getSize()+"pt;";
-			if (node.getModel().isItalic()) {
+			NodeAdapter model = (NodeAdapter) node.getModel();
+			if (model.isItalic()) {
 				rule += "font-style: italic; ";
 			}
-			if (node.getModel().isBold()) {
+			if (model.isBold()) {
 				rule += "font-weight: bold; ";
 			}
 			final Color nodeTextColor = node.getTextColor();
@@ -296,13 +287,12 @@ public class EditNodeWYSIWYG extends EditNodeBase {
 
 			Tools.setDialogLocationRelativeTo(htmlEditorWindow, node);
 
-			String content = node.getModel().toString();
+			String content = model.toString();
 			if (!HtmlTools.isHtmlNode(content)) {
 				content = HtmlTools.plainToHTML(content);
 			}
 			htmlEditorPanel.setCurrentDocumentContent(content);
-			if (firstEvent instanceof KeyEvent) {
-				final KeyEvent firstKeyEvent = (KeyEvent) firstEvent;
+			if (firstEvent instanceof final KeyEvent firstKeyEvent) {
 				final JTextComponent currentPane = htmlEditorPanel
 						.getEditorPane();
 				if (currentPane == htmlEditorPanel.getMostRecentFocusOwner()) {

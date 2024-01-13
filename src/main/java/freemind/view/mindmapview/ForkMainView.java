@@ -26,13 +26,16 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Iterator;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.presentation.NodeStyle;
 import freemind.main.Tools;
 import freemind.modes.EdgeAdapter;
 import freemind.modes.MindMapEdge;
+import freemind.modes.NodeAdapter;
 
 @SuppressWarnings("serial")
 class ForkMainView extends MainView {
+	@Override
 	public void paint(Graphics graphics) {
 		Graphics2D g = (Graphics2D) graphics;
 
@@ -57,25 +60,28 @@ class ForkMainView extends MainView {
 		super.paint(g);
 	}
 
+	@Override
 	protected int getMainViewWidthWithFoldingMark() {
 		int width = getWidth();
-		if (getNodeView().getModel().isFolded()) {
+		if (((NodeAdapter) getNodeView().getModel()).isFolded()) {
 			width += getZoomedFoldingSymbolHalfWidth() * 2
 					+ getZoomedFoldingSymbolHalfWidth();
 		}
 		return width;
 	}
 
+	@Override
 	protected int getMainViewHeightWithFoldingMark() {
 		int height = getHeight();
-		if (getNodeView().getModel().isFolded()) {
+		if (((NodeAdapter) getNodeView().getModel()).isFolded()) {
 			height += getZoomedFoldingSymbolHalfWidth();
 		}
 		return height;
 	}
 
+	@Override
 	public int getDeltaX() {
-		if (getNodeView().getModel().isFolded() && getNodeView().isLeft()) {
+		if (((NodeAdapter) getNodeView().getModel()).isFolded() && getNodeView().isLeft()) {
 			return super.getDeltaX() + getZoomedFoldingSymbolHalfWidth() * 3;
 		}
 		return super.getDeltaX();
@@ -86,17 +92,20 @@ class ForkMainView extends MainView {
 	 * 
 	 * @see freemind.view.mindmapview.NodeView#getStyle()
 	 */
+	@Override
 	String getStyle() {
-		return MindMapNode.STYLE_FORK;
+		return NodeStyle.FORK.getStyle();
 	}
 
 	/**
 	 * Returns the relative position of the Edge
 	 */
+	@Override
 	int getAlignment() {
 		return NodeView.ALIGN_BOTTOM;
 	}
 
+	@Override
 	Point getLeftPoint() {
 		int edgeWidth = getEdgeWidth();
 		Point in = new Point(0, getHeight() - edgeWidth / 2 - 1);
@@ -104,7 +113,7 @@ class ForkMainView extends MainView {
 	}
 
 	protected int getEdgeWidth() {
-		MindMapNode nodeModel = getNodeView().getModel();
+		NodeAdapter nodeModel = (NodeAdapter) getNodeView().getModel();
 		MindMapEdge edge = nodeModel.getEdge();
 		int edgeWidth = edge.getWidth();
 		if (edgeWidth == 0) {
@@ -124,11 +133,13 @@ class ForkMainView extends MainView {
 		return edgeWidth;
 	}
 
+	@Override
 	Point getCenterPoint() {
 		Point in = new Point(getWidth() / 2, getHeight() / 2);
 		return in;
 	}
 
+	@Override
 	Point getRightPoint() {
 		int edgeWidth = getEdgeWidth();
 		Point in = new Point(getWidth() - 1, getHeight() - edgeWidth / 2 - 1);

@@ -24,9 +24,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.extensions.UndoEventReceiver;
 import freemind.modes.MindIcon;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.hooks.PermanentMindMapNodeHookAdapter;
 import freemind.view.mindmapview.MultipleImage;
 
@@ -36,21 +37,22 @@ public class HierarchicalIcons extends PermanentMindMapNodeHookAdapter
 
 	private HashMap<MindMapNode, TreeSet<String>> nodeIconSets = new HashMap<>();
 
+	@Override
 	public void shutdownMapHook() {
 		// remove all icons:
 		MindMapNode root = getMindMapController().getRootNode();
-		removeIcons(root);
+		removeIcons((NodeAdapter) root);
 		super.shutdownMapHook();
 	}
 
 	/**
      */
-	private void removeIcons(MindMapNode node) {
+	private void removeIcons(NodeAdapter node) {
 		node.setStateIcon(getName(), null);
 		getMindMapController().nodeRefresh(node);
 		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
 			MindMapNode child = i.next();
-			removeIcons(child);
+			removeIcons((NodeAdapter) child);
 		}
 	}
 
@@ -62,7 +64,7 @@ public class HierarchicalIcons extends PermanentMindMapNodeHookAdapter
 
 	}
 
-	private void setStyle(MindMapNode node) {
+	private void setStyle(NodeAdapter node) {
 		// precondition: all children are contained in nodeIconSets
 
 		// gather all icons of my children and of me here:
@@ -125,16 +127,18 @@ public class HierarchicalIcons extends PermanentMindMapNodeHookAdapter
 	 * freemind.extensions.PermanentNodeHook#onAddChild(freemind.modes.MindMapNode
 	 * )
 	 */
+	@Override
 	public void onAddChildren(MindMapNode newChildNode) {
 		logger.finest("onAddChildren " + newChildNode);
 		super.onAddChild(newChildNode);
-		setStyleRecursive(newChildNode);
+		setStyleRecursive((NodeAdapter) newChildNode);
 	}
 
+	@Override
 	public void onRemoveChildren(MindMapNode removedChild, MindMapNode oldDad) {
 		logger.finest("onRemoveChildren " + removedChild);
 		super.onRemoveChildren(removedChild, oldDad);
-		setStyleRecursive(oldDad);
+		setStyleRecursive((NodeAdapter) oldDad);
 	}
 
 	/*
@@ -144,9 +148,10 @@ public class HierarchicalIcons extends PermanentMindMapNodeHookAdapter
 	 * freemind.extensions.PermanentNodeHook#onUpdateChildrenHook(freemind.modes
 	 * .MindMapNode)
 	 */
+	@Override
 	public void onUpdateChildrenHook(MindMapNode updatedNode) {
 		super.onUpdateChildrenHook(updatedNode);
-		setStyleRecursive(updatedNode);
+		setStyleRecursive((NodeAdapter) updatedNode);
 	}
 
 	/*
@@ -154,9 +159,10 @@ public class HierarchicalIcons extends PermanentMindMapNodeHookAdapter
 	 * 
 	 * @see freemind.extensions.PermanentNodeHook#onUpdateNodeHook()
 	 */
+	@Override
 	public void onUpdateNodeHook() {
 		super.onUpdateNodeHook();
-		setStyle(getNode());
+		setStyle((NodeAdapter) getNode());
 	}
 
 	/*
@@ -164,15 +170,16 @@ public class HierarchicalIcons extends PermanentMindMapNodeHookAdapter
 	 * 
 	 * @see freemind.extensions.NodeHook#invoke(freemind.modes.MindMapNode)
 	 */
+	@Override
 	public void invoke(MindMapNode node) {
 		super.invoke(node);
-		gatherLeavesAndSetStyle(node);
-		gatherLeavesAndSetParentsStyle(node);
+		gatherLeavesAndSetStyle((NodeAdapter) node);
+		gatherLeavesAndSetParentsStyle((NodeAdapter) node);
 	}
 
 	/**
      */
-	private void gatherLeavesAndSetStyle(MindMapNode node) {
+	private void gatherLeavesAndSetStyle(NodeAdapter node) {
 		if (node.getChildCount() == 0) {
 			// call setStyle for all leaves:
 			setStyle(node);
@@ -180,34 +187,34 @@ public class HierarchicalIcons extends PermanentMindMapNodeHookAdapter
 		}
 		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
 			MindMapNode child = i.next();
-			gatherLeavesAndSetStyle(child);
+			gatherLeavesAndSetStyle((NodeAdapter) child);
 		}
 	}
 
 	/**
      */
-	private void gatherLeavesAndSetParentsStyle(MindMapNode node) {
+	private void gatherLeavesAndSetParentsStyle(NodeAdapter node) {
 		if (node.getChildCount() == 0) {
 			// call setStyleRecursive for all parents:
 			if (node.getParentNode() != null) {
-				setStyleRecursive(node.getParentNode());
+				setStyleRecursive((NodeAdapter) node.getParentNode());
 			}
 			return;
 		}
 		for (Iterator<MindMapNode> i = node.childrenUnfolded(); i.hasNext();) {
 			MindMapNode child = i.next();
-			gatherLeavesAndSetParentsStyle(child);
+			gatherLeavesAndSetParentsStyle((NodeAdapter) child);
 		}
 	}
 
 	/**
      */
-	private void setStyleRecursive(MindMapNode node) {
+	private void setStyleRecursive(NodeAdapter node) {
 		// logger.finest("setStyle " + node);
 		setStyle(node);
 		// recurse:
 		if (node.getParentNode() != null) {
-			setStyleRecursive(node.getParentNode());
+			setStyleRecursive((NodeAdapter) node.getParentNode());
 		}
 	}
 

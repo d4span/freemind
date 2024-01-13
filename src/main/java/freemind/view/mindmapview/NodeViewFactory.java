@@ -26,8 +26,10 @@ import java.awt.LayoutManager;
 
 import javax.swing.JComponent;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.presentation.NodeStyle;
 import freemind.modes.EdgeAdapter;
+import freemind.modes.NodeAdapter;
 
 class NodeViewFactory {
 
@@ -42,9 +44,11 @@ class NodeViewFactory {
 
 	private static class ContentPaneLayout implements LayoutManager {
 
+		@Override
 		public void addLayoutComponent(String name, Component comp) {
 		}
 
+		@Override
 		public void layoutContainer(Container parent) {
 			final int componentCount = parent.getComponentCount();
 			final int width = parent.getWidth();
@@ -67,10 +71,12 @@ class NodeViewFactory {
 			}
 		}
 
+		@Override
 		public Dimension minimumLayoutSize(Container parent) {
 			return preferredLayoutSize(parent);
 		}
 
+		@Override
 		public Dimension preferredLayoutSize(Container parent) {
 			final Dimension prefSize = new Dimension(0, 0);
 			final int componentCount = parent.getComponentCount();
@@ -87,6 +93,7 @@ class NodeViewFactory {
 			return prefSize;
 		}
 
+		@Override
 		public void removeLayoutComponent(Component comp) {
 		}
 
@@ -112,18 +119,13 @@ class NodeViewFactory {
 
 	EdgeView getEdge(NodeView newView) {
 		final int edgeStyle = newView.getModel().getEdge().getStyleAsInt();
-		switch(edgeStyle) {
-		case EdgeAdapter.INT_EDGESTYLE_LINEAR:
-			return getLinearEdgeView();
-		case EdgeAdapter.INT_EDGESTYLE_BEZIER:
-			return getBezierEdgeView();
-		case EdgeAdapter.INT_EDGESTYLE_SHARP_LINEAR:
-			return getSharpLinearEdgeView();
-		case EdgeAdapter.INT_EDGESTYLE_SHARP_BEZIER:
-			return getSharpBezierEdgeView();
-		default:
-			return getLinearEdgeView();
-		}
+		return switch (edgeStyle) {
+            case EdgeAdapter.INT_EDGESTYLE_LINEAR -> getLinearEdgeView();
+            case EdgeAdapter.INT_EDGESTYLE_BEZIER -> getBezierEdgeView();
+            case EdgeAdapter.INT_EDGESTYLE_SHARP_LINEAR -> getSharpLinearEdgeView();
+            case EdgeAdapter.INT_EDGESTYLE_SHARP_BEZIER -> getSharpBezierEdgeView();
+            default -> getLinearEdgeView();
+        };
 	}
 
 	private EdgeView getSharpBezierEdgeView() {
@@ -185,9 +187,10 @@ class NodeViewFactory {
 		if (model.isRoot()) {
 			return new RootMainView();
 		}
-		if (model.getStyle().equals(MindMapNode.STYLE_FORK)) {
+		NodeAdapter nodeAdapter = (NodeAdapter) model;
+		if (NodeStyle.FORK.equals(nodeAdapter.getStyle())) {
 			return new ForkMainView();
-		} else if (model.getStyle().equals(MindMapNode.STYLE_BUBBLE)) {
+		} else if (NodeStyle.BUBBLE.equals(nodeAdapter.getStyle())) {
 			return new BubbleMainView();
 		} else {
 			System.err.println("Tried to create a NodeView of unknown Style.");

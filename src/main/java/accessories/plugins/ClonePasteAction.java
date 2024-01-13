@@ -34,8 +34,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.common.OptionalDontShowMeAgainDialog;
 import freemind.controller.MenuItemEnabledListener;
 import freemind.controller.actions.generated.instance.CompoundAction;
@@ -80,6 +80,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 	public ClonePasteAction() {
 	}
 
+	@Override
 	public void invoke(MindMapNode pNode) {
 		super.invoke(pNode);
 		Vector<MindMapNode> mindMapNodes = getMindMapNodes();
@@ -231,6 +232,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 			logger = controller.getFrame().getLogger(this.getClass().getName());
 		}
 
+		@Override
 		public void register() {
 			if (sCloneIcon == null) {
 				sCloneIcon = freemind.view.ImageFactory.getInstance().createUnscaledIcon(
@@ -244,11 +246,13 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 			controller.registerNodeSelectionListener(this, false);
 		}
 
+		@Override
 		public void deRegister() {
 			controller.deregisterNodeSelectionListener(this);
 			controller.getActionRegistry().deregisterFilter(this);
 		}
 
+		@Override
 		public boolean isEnabled(JMenuItem pItem, Action pAction) {
 			if (controller == null)
 				return false;
@@ -348,6 +352,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 			return v;
 		}
 
+		@Override
 		public ActionPair filterAction(ActionPair pair) {
 			// shortcut for no clones for speed up.
 			if (mCloneIdsMap.isEmpty()) {
@@ -361,15 +366,13 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 
 		private XmlAction cloneAction(XmlAction doAction) {
 			logger.fine("Found do action: " + doAction.getClass().getName());
-			if (doAction instanceof NodeAction) {
-				NodeAction nodeAction = (NodeAction) doAction;
+			if (doAction instanceof NodeAction nodeAction) {
 				MindMapNode node = controller.getNodeFromID(nodeAction
 						.getNode());
 				// check for clone or original?
 				doAction = cloneAction(nodeAction, node);
 			} else {
-				if (doAction instanceof CompoundAction) {
-					CompoundAction compoundAction = (CompoundAction) doAction;
+				if (doAction instanceof CompoundAction compoundAction) {
 					List<XmlAction> choiceList = compoundAction.getListChoiceList();
 					int index = 0;
 					for (XmlAction subAction : choiceList) {
@@ -403,8 +406,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 			NodeAction copiedNodeAction = (NodeAction) Tools
 					.deepCopy(nodeAction);
 			// special cases:
-			if (copiedNodeAction instanceof MoveNodesAction) {
-				MoveNodesAction moveAction = (MoveNodesAction) copiedNodeAction;
+			if (copiedNodeAction instanceof MoveNodesAction moveAction) {
 				for (int i = 0; i < moveAction.getListNodeListMemberList()
 						.size(); i++) {
 					NodeListMember member = moveAction.getNodeListMember(i);
@@ -412,8 +414,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 							member);
 				}
 			}
-			if (copiedNodeAction instanceof HookNodeAction) {
-				HookNodeAction hookAction = (HookNodeAction) copiedNodeAction;
+			if (copiedNodeAction instanceof HookNodeAction hookAction) {
 				for (int i = 0; i < hookAction.getListNodeListMemberList()
 						.size(); i++) {
 					NodeListMember member = hookAction.getNodeListMember(i);
@@ -421,8 +422,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 							member);
 				}
 			}
-			if (copiedNodeAction instanceof NewNodeAction) {
-				NewNodeAction newNodeAction = (NewNodeAction) copiedNodeAction;
+			if (copiedNodeAction instanceof NewNodeAction newNodeAction) {
 				String newId = mMap.getLinkRegistry().generateUniqueID(null);
 				newNodeAction.setNewId(newId);
 			}
@@ -484,8 +484,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 						// careful:
 						// clone only, if parents are clones:
 						startWithParent = true;
-					} else if (nodeAction instanceof PasteNodeAction) {
-						PasteNodeAction pna = (PasteNodeAction) nodeAction;
+					} else if (nodeAction instanceof PasteNodeAction pna) {
 						if (pna.getAsSibling()) {
 							// sibling means, that the paste goes below the
 							// clone.
@@ -496,8 +495,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 							// are
 							// subject to cloning.
 						}
-					} else if (nodeAction instanceof UndoPasteNodeAction) {
-						UndoPasteNodeAction pna = (UndoPasteNodeAction) nodeAction;
+					} else if (nodeAction instanceof UndoPasteNodeAction pna) {
 						if (pna.getAsSibling()) {
 							// sibling means, that the paste goes below the
 							// clone.
@@ -518,8 +516,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 					if (nodeAction instanceof NewNodeAction) {
 						// here, the action changes the children, thus, they are
 						// subject to cloning.
-					} else if (nodeAction instanceof PasteNodeAction) {
-						PasteNodeAction pna = (PasteNodeAction) nodeAction;
+					} else if (nodeAction instanceof PasteNodeAction pna) {
 						if (pna.getAsSibling()) {
 							// sibling means, that the paste goes below the
 							// clone.
@@ -530,8 +527,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 							// are
 							// subject to cloning.
 						}
-					} else if (nodeAction instanceof UndoPasteNodeAction) {
-						UndoPasteNodeAction pna = (UndoPasteNodeAction) nodeAction;
+					} else if (nodeAction instanceof UndoPasteNodeAction pna) {
 						if (pna.getAsSibling()) {
 							// sibling means, that the paste goes below the
 							// clone.
@@ -635,8 +631,8 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 		}
 
 		private void addNodePosition(Vector<Integer> indexVector, MindMapNode child) {
-			indexVector.add(Integer.valueOf(child.getParentNode().getChildPosition(
-					child)));
+			indexVector.add(child.getParentNode().getChildPosition(
+					child).get());
 		}
 
 		/**
@@ -667,6 +663,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 		/**
 		 * Is sent when a node is selected.
 		 */
+		@Override
 		public void onFocusNode(NodeView node) {
 			markShadowNode(node, true);
 		}
@@ -674,6 +671,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 		/**
 		 * Is sent when a node is deselected.
 		 */
+		@Override
 		public void onLostFocusNode(NodeView node) {
 			markShadowNode(node, false);
 		}
@@ -747,13 +745,16 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 		 * freemind.modes.ModeController.NodeSelectionListener#onSelectionChange
 		 * (freemind.modes.MindMapNode, boolean)
 		 */
+		@Override
 		public void onSelectionChange(NodeView pNode, boolean pIsSelected) {
 		}
 
+		@Override
 		public void onUpdateNodeHook(MindMapNode pNode) {
 
 		}
 
+		@Override
 		public void onSaveNode(MindMapNode pNode) {
 
 		}

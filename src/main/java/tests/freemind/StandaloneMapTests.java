@@ -28,7 +28,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.presentation.NodeStyle;
 import freemind.controller.actions.generated.instance.Pattern;
 import freemind.main.FreeMind;
 import freemind.main.Tools;
@@ -38,6 +39,7 @@ import freemind.modes.MapAdapter;
 import freemind.modes.MindIcon;
 import freemind.modes.MindMapArrowLink;
 import freemind.modes.MindMapLink;
+import freemind.modes.NodeAdapter;
 import freemind.modes.StylePatternFactory;
 import freemind.modes.attributes.Attribute;
 import freemind.modes.mindmapmode.MindMapMapModel;
@@ -51,13 +53,16 @@ public class StandaloneMapTests extends FreeMindTestBase {
 	/**
 	 * 
 	 */
-	private static final String INITIAL_MAP = "<map>" + "<node TEXT='ROOT'>"
-			+ "<node TEXT='FormatMe'>"
-			+ "<node TEXT='Child1'/>"
-			+ "<node TEXT='Child2'/>" 
-			+ "<node TEXT='Child3'/>" 
-			+ "</node>"
-			+ "</node>" + "</map>";
+	private static final String INITIAL_MAP = """
+    	<map>\
+    	<node TEXT='ROOT'>\
+    	<node TEXT='FormatMe'>\
+    	<node TEXT='Child1'/>\
+    	<node TEXT='Child2'/>\
+    	<node TEXT='Child3'/>\
+    	</node>\
+    	</node>\
+    	</map>""";
 
 	public void testStandaloneCreation() throws Exception {
 		ExtendedMapFeedbackImpl mapFeedback = new ExtendedMapFeedbackImpl();
@@ -97,12 +102,12 @@ public class StandaloneMapTests extends FreeMindTestBase {
 		final MindMapMapModel mMap = new MindMapMapModel(mapFeedback);
 		mapFeedback.setMap(mMap);
 		Tools.StringReaderCreator readerCreator = new Tools.StringReaderCreator(INITIAL_MAP);
-		MindMapNode root = mMap.loadTree(readerCreator,
+		NodeAdapter root = (NodeAdapter) mMap.loadTree(readerCreator,
 				MapAdapter.sDontAskInstance);
 		mMap.setRoot(root);
-		MindMapNode firstChild = (MindMapNode) root.getChildAt(0);
+		NodeAdapter firstChild = (NodeAdapter) root.getChildAt(0);
 		MindMapNode subChild1 = (MindMapNode) firstChild.getChildAt(0);
-		MindMapNode subChild2 = (MindMapNode) firstChild.getChildAt(1);
+		NodeAdapter subChild2 = (NodeAdapter) firstChild.getChildAt(1);
 		MindMapNode subChild3 = (MindMapNode) firstChild.getChildAt(2);
 		mapFeedback.setStrikethrough(root, true);
 		assertEquals(true, root.isStrikethrough());
@@ -192,8 +197,8 @@ public class StandaloneMapTests extends FreeMindTestBase {
 		assertEquals(20, root.getVGap());
 		assertEquals(30, firstChild.getHGap());
 		assertEquals(17, firstChild.getShiftY());
-		mapFeedback.setNodeStyle(firstChild, MindMapNode.STYLE_FORK);
-		assertEquals(MindMapNodeModel.STYLE_FORK, firstChild.getStyle());
+		mapFeedback.setNodeStyle(firstChild, NodeStyle.FORK.getStyle());
+		assertEquals(NodeStyle.FORK, firstChild.getStyle());
 		assertTrue(firstChild.hasStyle());
 		mapFeedback.setNodeStyle(firstChild, null);
 		assertFalse(firstChild.hasStyle());

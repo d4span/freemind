@@ -29,7 +29,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.NodeMotionListener.NodeMotionAdapter;
 import freemind.main.Tools;
 import freemind.modes.NodeAdapter;
@@ -54,6 +54,7 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 			logger = c.getFrame().getLogger(this.getClass().getName());
 	}
 
+	@Override
 	public void mouseMoved(MouseEvent e) {
 	}
 
@@ -63,6 +64,7 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 	private int originalShiftY;
 
 	/** Invoked when a mouse button is pressed on a component and then dragged. */
+	@Override
 	public void mouseDragged(MouseEvent e) {
 		logger.fine("Event: mouseDragged");
 		if ((e.getModifiersEx() & InputEvent.BUTTON1_DOWN_MASK) == (InputEvent.BUTTON1_DOWN_MASK)) {
@@ -70,7 +72,7 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 					.getSource();
 			final NodeView nodeView = getNodeView(e);
 			final MapView mapView = nodeView.getMap();
-			MindMapNode node = nodeView.getModel();
+			NodeAdapter node = (NodeAdapter) nodeView.getModel();
 			Point point = e.getPoint();
 			Tools.convertPointToAncestor(motionListenerView, point,
 					JScrollPane.class);
@@ -85,7 +87,7 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 					node.setShiftY(nodeShiftY);
 					node.setHGap(hGap);
 				} else {
-					MindMapNode parentNode = nodeView.getVisibleParentView()
+					NodeAdapter parentNode = (NodeAdapter) nodeView.getVisibleParentView()
 							.getModel();
 					parentNode
 							.setVGap(getVGap(dragNextPoint, dragStartingPoint));
@@ -130,7 +132,7 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 		return oldVGap;
 	}
 
-	private int getHGap(Point dragNextPoint, MindMapNode node,
+	private int getHGap(Point dragNextPoint, NodeAdapter node,
 			Point dragStartingPoint) {
 		int oldHGap = node.getHGap();
 		int hGapChange = (int) ((dragNextPoint.x - dragStartingPoint.x) / c
@@ -141,7 +143,7 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 		return oldHGap;
 	}
 
-	private int getNodeShiftY(Point dragNextPoint, MindMapNode pNode,
+	private int getNodeShiftY(Point dragNextPoint, NodeAdapter pNode,
 			Point dragStartingPoint) {
 		int shiftY = pNode.getShiftY();
 		int shiftYChange = (int) ((dragNextPoint.y - dragStartingPoint.y) / c
@@ -150,17 +152,18 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 		return shiftY;
 	}
 
+	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == 1 && e.getClickCount() == 2) {
 			if (e.getModifiersEx() == 0) {
 				NodeView nodeV = getNodeView(e);
-				MindMapNode node = nodeV.getModel();
+				NodeAdapter node = (NodeAdapter) nodeV.getModel();
 				c.moveNodePosition(node, node.getVGap(), NodeAdapter.HGAP, 0);
 				return;
 			}
 			if (e.getModifiersEx() == InputEvent.CTRL_DOWN_MASK) {
 				NodeView nodeV = getNodeView(e);
-				MindMapNode node = nodeV.getModel();
+				NodeAdapter node = (NodeAdapter) nodeV.getModel();
 				c.moveNodePosition(node, NodeAdapter.VGAP, node.getHGap(),
 						node.getShiftY());
 				return;
@@ -174,6 +177,7 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 		return ((NodeMotionListenerView) e.getSource()).getMovedView();
 	}
 
+	@Override
 	public void mouseEntered(MouseEvent e) {
 		logger.fine("Event: mouseEntered");
 		if (!JOptionPane.getFrameForComponent(e.getComponent()).isFocused())
@@ -184,6 +188,7 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 		}
 	}
 
+	@Override
 	public void mouseExited(MouseEvent e) {
 		logger.fine("Event: mouseExited");
 		if (!isActive()) {
@@ -196,6 +201,7 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 		setDragStartingPoint(null, null);
 	}
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
 		logger.fine("Event: mouseReleased");
 		NodeMotionListenerView v = (NodeMotionListenerView) e.getSource();
@@ -207,8 +213,8 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 		Point point = e.getPoint();
 		Tools.convertPointToAncestor(nodeV, point, JScrollPane.class);
 		// move node to end position.
-		MindMapNode node = nodeV.getModel();
-		MindMapNode parentNode = nodeV.getModel().getParentNode();
+		NodeAdapter node = (NodeAdapter) nodeV.getModel();
+		NodeAdapter parentNode = (NodeAdapter) nodeV.getModel().getParentNode();
 		final int parentVGap = parentNode.getVGap();
 		final int hgap = node.getHGap();
 		final int shiftY = node.getShiftY();
@@ -219,8 +225,8 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 
 	/**
      */
-	private void resetPositions(MindMapNode node) {
-		node.getParentNode().setVGap(originalParentVGap);
+	private void resetPositions(NodeAdapter node) {
+		((NodeAdapter) node.getParentNode()).setVGap(originalParentVGap);
 		node.setHGap(originalHGap);
 		node.setShiftY(originalShiftY);
 	}
@@ -229,10 +235,10 @@ public class MindMapNodeMotionListener extends NodeMotionAdapter {
 		return getDragStartingPoint() != null;
 	}
 
-	void setDragStartingPoint(Point point, MindMapNode node) {
+	void setDragStartingPoint(Point point, NodeAdapter node) {
 		dragStartingPoint = point;
 		if (point != null) {
-			originalParentVGap = node.getParentNode().getVGap();
+			originalParentVGap = ((NodeAdapter) node.getParentNode()).getVGap();
 			originalHGap = node.getHGap();
 			originalShiftY = node.getShiftY();
 		} else {

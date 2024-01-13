@@ -27,8 +27,8 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Properties;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.Pattern;
 import freemind.extensions.NodeHook;
 import freemind.modes.MindIcon;

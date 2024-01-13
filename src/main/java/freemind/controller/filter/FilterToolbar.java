@@ -41,14 +41,15 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.controller.FreeMindToolBar;
 import freemind.controller.filter.condition.Condition;
 import freemind.controller.filter.condition.NoFilteringCondition;
 import freemind.controller.filter.condition.SelectedViewCondition;
 import freemind.main.Resources;
+import freemind.modes.NodeAdapter;
 
 @SuppressWarnings("serial")
 class FilterToolbar extends FreeMindToolBar {
@@ -76,6 +77,7 @@ class FilterToolbar extends FreeMindToolBar {
 		public FilterChangeListener() {
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			resetFilter();
 			setMapFilter();
@@ -90,6 +92,7 @@ class FilterToolbar extends FreeMindToolBar {
 		 * java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent
 		 * )
 		 */
+		@Override
 		public void itemStateChanged(ItemEvent e) {
 			if (e.getStateChange() == ItemEvent.SELECTED)
 				filterChanged();
@@ -106,8 +109,9 @@ class FilterToolbar extends FreeMindToolBar {
 			}
 		}
 
+		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
-			if (evt.getPropertyName().equals("model")) {
+			if ("model".equals(evt.getPropertyName())) {
 				addStandardConditions();
 				filterChanged();
 			}
@@ -138,6 +142,7 @@ class FilterToolbar extends FreeMindToolBar {
 			return filterDialog;
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			Object selectedItem = getFilterConditionModel().getSelectedItem();
 			if (selectedItem != null) {
@@ -157,26 +162,27 @@ class FilterToolbar extends FreeMindToolBar {
 					"images/unfold.png")));
 		}
 
-		private void unfoldAncestors(MindMapNode parent) {
+		private void unfoldAncestors(NodeAdapter parent) {
 			for (Iterator<MindMapNode> i = parent.childrenUnfolded(); i.hasNext();) {
 				MindMapNode node = i.next();
 				if (showDescendants.isSelected()
 						|| node.getFilterInfo().isAncestor()) {
 					setFolded(node, false);
-					unfoldAncestors(node);
+					unfoldAncestors((NodeAdapter) node);
 				}
 			}
 		}
 
 		private void setFolded(MindMapNode node, boolean state) {
-			if (node.hasChildren() && (node.isFolded() != state)) {
+			if (node.hasChildren() && (((NodeAdapter) node).isFolded() != state)) {
 				c.getModeController().setFolded(node, state);
 			}
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (getSelectedCondition() != null) {
-				unfoldAncestors(c.getModel().getRootNode());
+				unfoldAncestors((NodeAdapter) c.getModel().getRootNode());
 			}
 		}
 	}
@@ -195,6 +201,7 @@ class FilterToolbar extends FreeMindToolBar {
 
 		activeFilter = null;
 		activeFilterConditionComboBox = new JComboBox<Condition>() {
+			@Override
 			public Dimension getMaximumSize() {
 				return getPreferredSize();
 			}

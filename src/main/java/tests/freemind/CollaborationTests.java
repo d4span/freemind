@@ -29,7 +29,7 @@ import java.io.StringWriter;
 import java.net.Socket;
 import java.util.Iterator;
 
-import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMap;
 import freemind.controller.actions.generated.instance.CollaborationGetOffers;
 import freemind.controller.actions.generated.instance.CollaborationHello;
 import freemind.controller.actions.generated.instance.CollaborationMapOffer;

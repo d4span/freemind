@@ -26,7 +26,7 @@ package freemind.controller.filter.condition;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.main.Resources;
 import freemind.main.XMLElement;

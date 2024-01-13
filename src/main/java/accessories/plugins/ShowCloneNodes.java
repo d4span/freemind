@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
 
@@ -39,7 +39,8 @@ public class ShowCloneNodes extends MindMapNodeHookAdapter{
 	/* (non-Javadoc)
 	 * @see freemind.extensions.NodeHookAdapter#invoke(freemind.modes.MindMapNode)
 	 */
-	public void invoke(MindMapNode pNode) {
+	@Override
+    public void invoke(MindMapNode pNode) {
 		super.invoke(pNode);
 		final Vector<MindMapNode> newSelecteds = new Vector<>();
 		final MindMapController mindMapController = getMindMapController();
@@ -49,12 +50,8 @@ public class ShowCloneNodes extends MindMapNodeHookAdapter{
 			newSelecteds.remove(node);
 		}
 		if (!newSelecteds.isEmpty()) {
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					mindMapController.select(
-							(MindMapNode) newSelecteds.get(0), newSelecteds);
-				}
-			});
+			EventQueue.invokeLater(() -> mindMapController.select(
+            		(MindMapNode) newSelecteds.get(0), newSelecteds));
 		}
 	}
 

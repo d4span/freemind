@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import freemind.modes.NodeAdapter;
 import freemind.view.mindmapview.NodeView;
 
 /**
@@ -46,9 +48,11 @@ public class CommonToggleChildrenFoldedAction extends AbstractAction {
 		logger = modeController.getFrame().getLogger(this.getClass().getName());
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		NodeView selected = modeController.getSelectedView();
-		modeController.toggleFolded.toggleFolded(selected.getModel()
+		NodeAdapter nodeAdapter = (NodeAdapter) selected.getModel();
+		modeController.toggleFolded.toggleFolded(nodeAdapter
 				.childrenUnfolded());
 		modeController.getView().selectAsTheOnlyOneSelected(selected);
 		modeController.getController().obtainFocusForSelected();

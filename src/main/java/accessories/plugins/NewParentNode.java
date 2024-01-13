@@ -28,8 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.Tools;
+import freemind.modes.NodeAdapter;
 import freemind.modes.mindmapmode.hooks.MindMapNodeHookAdapter;
 import freemind.view.mindmapview.MapView;
 
@@ -67,6 +68,7 @@ public class NewParentNode extends MindMapNodeHookAdapter {
 	 * @see freemind.extensions.NodeHook#invoke(freemind.modes.MindMapNode,
 	 * java.util.List)
 	 */
+	@Override
 	public void invoke(MindMapNode rootNode) {
 		final MapView mapView = getMindMapController().getView();
 		// we dont need node.
@@ -115,7 +117,7 @@ public class NewParentNode extends MindMapNodeHookAdapter {
 			return;
 		}
 
-		MindMapNode newNode = moveToNewParent(rootNode, selectedNode,
+		NodeAdapter newNode = (NodeAdapter) moveToNewParent(rootNode, (NodeAdapter) selectedNode,
 				selectedNodes);
 		if (newNode == null) {
 			return;
@@ -130,10 +132,10 @@ public class NewParentNode extends MindMapNodeHookAdapter {
 	}
 
 	private MindMapNode moveToNewParent(MindMapNode rootNode,
-			MindMapNode selectedNode, List<MindMapNode> selectedNodes) {
+			NodeAdapter selectedNode, List<MindMapNode> selectedNodes) {
 		// Create new node in the position of the selectedNode
 		MindMapNode selectedParent = selectedNode.getParentNode();
-		int childPosition = selectedParent.getChildPosition(selectedNode);
+		int childPosition = selectedParent.getChildPosition(selectedNode).get();
 		MindMapNode newNode = getMindMapController().addNewNode(selectedParent,
 				childPosition, selectedNode.isLeft());
 		return moveToOtherNode(rootNode, selectedNodes, selectedParent, newNode);

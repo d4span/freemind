@@ -26,7 +26,6 @@ package accessories.plugins;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
@@ -53,8 +52,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.common.TextTranslator;
 import freemind.common.XmlBindingTools;
 import freemind.controller.Controller.SplitComponentType;
@@ -66,6 +65,7 @@ import freemind.main.FreeMind;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.ModeController;
+import freemind.modes.NodeAdapter;
 import freemind.modes.ModeController.NodeLifetimeListener;
 import freemind.modes.ModeController.NodeSelectionListener;
 import freemind.modes.attributes.Attribute;
@@ -100,21 +100,21 @@ public class NodeAttributeTableRegistration implements HookRegistration,
 			}
 			if (pNode == mCurrentNode) {
 				if(!areModelAndNodeAttributesEqual()) {
-					setModelFromNode(pNode);
+					setModelFromNode((NodeAdapter) pNode);
 				}
 			}
 		}
 
 		@Override
 		public void onFocusNode(NodeView pNode) {
-			MindMapNode node = pNode.getModel();
+			NodeAdapter node = (NodeAdapter) pNode.getModel();
 			setModelFromNode(node);
 		}
 
 		/**
 		 * @param node
 		 */
-		private void setModelFromNode(MindMapNode node) {
+		private void setModelFromNode(NodeAdapter node) {
 			mAttributeTableModel.clear();
 			for (int position = 0; position < node.getAttributeTableLength(); position++) {
 				Attribute attribute = node.getAttribute(position);
@@ -146,7 +146,7 @@ public class NodeAttributeTableRegistration implements HookRegistration,
 					return;
 				}
 				// delete all attributes
-				while(pNode.getAttributeTableLength()>0) {
+				while(((NodeAdapter) pNode).getAttributeTableLength()>0) {
 					controller.removeAttribute(pNode, 0);
 				}
 				// write it from new.
@@ -165,11 +165,12 @@ public class NodeAttributeTableRegistration implements HookRegistration,
 		 */
 		public boolean areModelAndNodeAttributesEqual() {
 			boolean equal = false;
-			if(mCurrentNode.getAttributeTableLength() == mAttributeTableModel.mData.size()) {
+			NodeAdapter nodeAdapter = (NodeAdapter) mCurrentNode;
+			if(nodeAdapter.getAttributeTableLength() == mAttributeTableModel.mData.size()) {
 				int index = 0;
 				equal = true;
 				for (AttributeHolder holder : mAttributeTableModel.mData) {
-					Attribute attribute = mCurrentNode.getAttribute(index);
+					Attribute attribute = nodeAdapter.getAttribute(index);
 					if(Tools.safeEquals(holder.mKey, attribute.getName()) && Tools.safeEquals(holder.mValue, attribute.getValue())) {
 						// ok
 					} else {
@@ -268,14 +269,12 @@ public class NodeAttributeTableRegistration implements HookRegistration,
 		 * 
 		 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
 		 */
+		@Override
 		public Class getColumnClass(int arg0) {
-			switch (arg0) {
-			case KEY_COLUMN:
-			case VALUE_COLUMN:
-				return String.class;
-			default:
-				return Object.class;
-			}
+			return switch (arg0) {
+                case KEY_COLUMN, VALUE_COLUMN -> String.class;
+                default -> Object.class;
+            };
 		}
 
 		public AttributeHolder getAttributeHolder(int pIndex) {
@@ -287,6 +286,7 @@ public class NodeAttributeTableRegistration implements HookRegistration,
 		 * 
 		 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
 		 */
+		@Override
 		public String getColumnName(int pColumn) {
 			return mTextTranslator.getText(COLUMNS[pColumn]);
 		}
@@ -296,6 +296,7 @@ public class NodeAttributeTableRegistration implements HookRegistration,
 		 * 
 		 * @see javax.swing.table.TableModel#getRowCount()
 		 */
+		@Override
 		public int getRowCount() {
 			return mData.size();
 		}
@@ -305,6 +306,7 @@ public class NodeAttributeTableRegistration implements HookRegistration,
 		 * 
 		 * @see javax.swing.table.TableModel#getColumnCount()
 		 */
+		@Override
 		public int getColumnCount() {
 			return 2;
 		}
@@ -314,6 +316,7 @@ public class NodeAttributeTableRegistration implements HookRegistration,
 		 * 
 		 * @see javax.swing.table.TableModel#getValueAt(int, int)
 		 */
+		@Override
 		public Object getValueAt(int pRowIndex, int pColumnIndex) {
 			final AttributeHolder attr = getAttributeHolder(pRowIndex);
 			switch (pColumnIndex) {
@@ -402,12 +405,14 @@ public class NodeAttributeTableRegistration implements HookRegistration,
 	class JumpToMapAction extends AbstractAction {
 		private static final long serialVersionUID = -531070508254258791L;
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			logger.info("Jumping back to map!");
 			controller.getController().obtainFocusForSelected();
 		}
 	};
 
+	@Override
 	public void register() {
 		mAttributeViewerComponent = new JPanel();
 		mAttributeViewerComponent.setLayout(new BorderLayout());
@@ -451,24 +456,23 @@ public class NodeAttributeTableRegistration implements HookRegistration,
 		mPopupMenu = new JPopupMenu();
 		JMenuItem menuItem = new JMenuItem(controller.getText(DELETE_ROW_TEXT_ID));
 		mPopupMenu.add(menuItem);
-		menuItem.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				Component c = (Component) e.getSource();
-				JPopupMenu popup = (JPopupMenu) c.getParent();
-				JTable table = (JTable) popup.getInvoker();
-				mAttributeTableModel.removeAttributeHolder(table.convertRowIndexToModel(table.getSelectedRow()));
-			}
-		});
+		menuItem.addActionListener(e -> {
+        	Component c = (Component) e.getSource();
+        	JPopupMenu popup = (JPopupMenu) c.getParent();
+        	JTable table = (JTable) popup.getInvoker();
+        	mAttributeTableModel.removeAttributeHolder(table.convertRowIndexToModel(table.getSelectedRow()));
+        });
         mAttributeTable.addMouseListener( new MouseAdapter()
         {
-            public void mousePressed(MouseEvent e)
+            @Override
+			public void mousePressed(MouseEvent e)
             {
             	logger.fine("pressed");
             	showPopup(e);
             }
 
-            public void mouseReleased(MouseEvent e)
+            @Override
+			public void mouseReleased(MouseEvent e)
             {
             	logger.fine("released");
                 showPopup(e);
@@ -497,6 +501,7 @@ public class NodeAttributeTableRegistration implements HookRegistration,
 	
 	
 
+	@Override
 	public void deRegister() {
 		// store sortings:
 		AttributeTableProperties props = new AttributeTableProperties();
@@ -535,6 +540,7 @@ public class NodeAttributeTableRegistration implements HookRegistration,
 		return mSplitPaneVisible;
 	}
 
+	@Override
 	public boolean isSelected(JMenuItem pCheckItem, Action pAction) {
 		return getSplitPaneVisible();
 	}

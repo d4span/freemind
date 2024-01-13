@@ -22,7 +22,7 @@ package freemind.modes;
 
 import java.awt.Color;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.Controller;
 import freemind.main.FreeMind;
 import freemind.main.Tools;

@@ -28,7 +28,7 @@ import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 
-import ch.d4span.freemind.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMap;
 import freemind.common.TextTranslator;
 import freemind.main.Resources;
 import freemind.main.Tools.SingleDesEncrypter;

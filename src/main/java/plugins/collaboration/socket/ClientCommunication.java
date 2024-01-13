@@ -47,7 +47,6 @@ import javax.swing.WindowConstants;
 
 import plugins.collaboration.socket.SocketBasics.UnableToGetLockException;
 import freemind.common.OptionalDontShowMeAgainDialog;
-import freemind.common.TextTranslator;
 import freemind.controller.actions.generated.instance.CollaborationActionBase;
 import freemind.controller.actions.generated.instance.CollaborationGetOffers;
 import freemind.controller.actions.generated.instance.CollaborationGoodbye;
@@ -113,17 +112,16 @@ public class ClientCommunication extends CommunicationBase {
 	 * plugins.collaboration.socket.CommunicationBase#processCommand(freemind
 	 * .controller.actions.generated.instance.CollaborationActionBase)
 	 */
+	@Override
 	public void processCommand(CollaborationActionBase pCommand)
 			throws IOException {
-		if (pCommand instanceof CollaborationGoodbye) {
-			CollaborationGoodbye goodbye = (CollaborationGoodbye) pCommand;
+		if (pCommand instanceof CollaborationGoodbye goodbye) {
 			logger.info("Goodbye received from " + goodbye.getUserId());
 			terminateSocket();
 			return;
 		}
 		boolean commandHandled = false;
-		if (pCommand instanceof CollaborationUserInformation) {
-			CollaborationUserInformation userInfo = (CollaborationUserInformation) pCommand;
+		if (pCommand instanceof CollaborationUserInformation userInfo) {
 			mUserInfo = userInfo;
 			commandHandled = true;
 		}
@@ -140,13 +138,7 @@ public class ClientCommunication extends CommunicationBase {
 								serverVersion });
 				int showResult = new OptionalDontShowMeAgainDialog(getMindMapController()
 						.getFrame().getJFrame(), getMindMapController().getSelectedView(),
-						errorMessage, getController().getResourceString("confirmation"), new TextTranslator() {
-							
-							@Override
-							public String getText(String pKey) {
-								return pKey;
-							}
-						},
+						errorMessage, getController().getResourceString("confirmation"), pKey -> pKey,
 						new OptionalDontShowMeAgainDialog.StandardPropertyHandler(
 								getMindMapController().getController(),
 								FreeMind.RESOURCES_USE_COLLABORATION_SERVER_WITH_DIFFERENT_VERSION),
@@ -194,6 +186,7 @@ public class ClientCommunication extends CommunicationBase {
 				mapChooserDialog
 						.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 				mapChooserDialog.addWindowListener(new WindowAdapter() {
+					@Override
 					public void windowClosing(WindowEvent event) {
 						mapChooserDialog.dispose();
 						terminateSocketWithGoodbye();
@@ -300,8 +293,7 @@ public class ClientCommunication extends CommunicationBase {
 					getMindMapController().getText("socket_wrong_map"));
 			commandHandled = true;
 		}
-		if (pCommand instanceof CollaborationTransaction) {
-			CollaborationTransaction trans = (CollaborationTransaction) pCommand;
+		if (pCommand instanceof CollaborationTransaction trans) {
 			// check if it is from me!
 			boolean removeResult;
 			synchronized (mLockIds) {
@@ -351,6 +343,7 @@ public class ClientCommunication extends CommunicationBase {
 		setCurrentState(STATE_WAIT_FOR_OFFER);
 	}
 
+	@Override
 	public void terminateSocket() {
 		mReceivedGoodbye = true;
 		terminateSocketWithGoodbye();
@@ -444,7 +437,7 @@ public class ClientCommunication extends CommunicationBase {
 
 	protected void registerClientCommunicationAtHook() {
 		// tell him about this thread.
-		Collection<PermanentNodeHook> activatedHooks = getMindMapController().getRootNode().getActivatedHooks();
+		Collection<PermanentNodeHook> activatedHooks = ((NodeAdapter) getMindMapController().getRootNode()).getActivatedHooks();
 		for (PermanentNodeHook hook : activatedHooks) {
 			if (hook instanceof SocketConnectionHook) {
 				SocketConnectionHook connHook = null;

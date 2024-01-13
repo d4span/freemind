@@ -38,19 +38,27 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
-import javax.swing.event.EventListenerList;
-import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
-import ch.d4span.freemind.treemodel.MutableTreeNode;
-import ch.d4span.freemind.treemodel.TreeNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.treemodel.EventListenerList;
+import ch.d4span.freemind.domain.treemodel.MutableTreeNode;
+import ch.d4span.freemind.domain.treemodel.TreeModelListener;
+import ch.d4span.freemind.domain.treemodel.TreeNode;
+import ch.d4span.freemind.presentation.DrawableNode;
+import ch.d4span.freemind.presentation.Foldable;
+import ch.d4span.freemind.presentation.FormattedTextNode;
+import ch.d4span.freemind.presentation.NodeStyle;
+import ch.d4span.freemind.presentation.NodeWithAttributes;
+import ch.d4span.freemind.presentation.NodeWithStyle;
+import ch.d4span.freemind.usecases.NodeWithHooks;
 import freemind.controller.Controller;
 import freemind.controller.filter.Filter;
 import freemind.controller.filter.FilterInfo;
@@ -70,7 +78,7 @@ import freemind.preferences.FreemindPropertyListener;
  * This class represents a single Node of a Tree. It contains direct handles to
  * its parent and children and to its view.
  */
-public abstract class NodeAdapter implements MindMapNode {
+public abstract class NodeAdapter implements MindMapNode, DrawableNode, FormattedTextNode, NodeWithAttributes, NodeWithStyle, Foldable, NodeWithHooks {
 
 	final static int SHIFT = -2;// height of the vertical shift between node and
 								// its closest child
@@ -97,7 +105,7 @@ public abstract class NodeAdapter implements MindMapNode {
 	// smaller and looks better.
 	// (if the default is used, it is not stored) Look at mindmapmode for an
 	// example.
-	protected String style;
+	protected NodeStyle style;
 	/** stores the icons associated with this node. */
 	protected Vector<MindIcon> icons = null; // lazy, fc, 30.6.2005
 
@@ -158,17 +166,13 @@ public abstract class NodeAdapter implements MindMapNode {
 		// create creation time:
 		setHistoryInformation(new HistoryInformation());
 		if (sSaveIdPropertyChangeListener == null) {
-			sSaveIdPropertyChangeListener = new FreemindPropertyListener() {
-
-				public void propertyChanged(String propertyName,
-						String newValue, String oldValue) {
-					if (propertyName
-							.equals(FreeMindCommon.SAVE_ONLY_INTRISICALLY_NEEDED_IDS)) {
-						sSaveOnlyIntrinsicallyNeededIds = Boolean.valueOf(
-								newValue).booleanValue();
-					}
-				}
-			};
+			sSaveIdPropertyChangeListener = (propertyName, newValue, oldValue) -> {
+if (FreeMindCommon.SAVE_ONLY_INTRISICALLY_NEEDED_IDS
+            	.equals(propertyName)) {
+            sSaveOnlyIntrinsicallyNeededIds = Boolean.valueOf(
+            		newValue).booleanValue();
+}
+};
 			Controller
 					.addPropertyChangeListenerAndPropagate(sSaveIdPropertyChangeListener);
 		}
@@ -181,7 +185,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		this.map = pMap;
 	}
 
-	public String getText() {
+	@Override
+    public String getText() {
 		String string = "";
 		if (userObject != null) {
 			string = userObject.toString();
@@ -189,7 +194,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		return string;
 	}
 
-	public final void setText(String text) {
+	@Override
+    public final void setText(String text) {
 		if (text == null) {
 			userObject = null;
 			xmlText = null;
@@ -199,11 +205,13 @@ public abstract class NodeAdapter implements MindMapNode {
 		xmlText = HtmlTools.getInstance().toXhtml((String) userObject);
 	}
 
-	public final String getXmlText() {
+	@Override
+    public final String getXmlText() {
 		return xmlText;
 	}
 
-	public final void setXmlText(String pXmlText) {
+	@Override
+    public final void setXmlText(String pXmlText) {
 		this.xmlText = HtmlTools.makeValidXml(pXmlText);
 		userObject = HtmlTools.getInstance().toHtml(xmlText);
 	}
@@ -213,16 +221,19 @@ public abstract class NodeAdapter implements MindMapNode {
 	 * ************************************************************
 	 */
 
-	public final String getXmlNoteText() {
+	@Override
+    public final String getXmlNoteText() {
 		return xmlNoteText;
 	}
 
-	public final String getNoteText() {
+	@Override
+    public final String getNoteText() {
 		// logger.info("Note html: " + noteText);
 		return noteText;
 	}
 
-	public final void setXmlNoteText(String pXmlNoteText) {
+	@Override
+    public final void setXmlNoteText(String pXmlNoteText) {
 		if (pXmlNoteText == null) {
 			xmlNoteText = null;
 			noteText = null;
@@ -232,7 +243,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		noteText = HtmlTools.getInstance().toHtml(xmlNoteText);
 	}
 
-	public final void setNoteText(String pNoteText) {
+	@Override
+    public final void setNoteText(String pNoteText) {
 		if (pNoteText == null) {
 			xmlNoteText = null;
 			noteText = null;
@@ -242,16 +254,19 @@ public abstract class NodeAdapter implements MindMapNode {
 		this.xmlNoteText = HtmlTools.getInstance().toXhtml(noteText);
 	}
 
-	public String getPlainTextContent() {
+	@Override
+    public String getPlainTextContent() {
 		// Redefined in MindMapNodeModel.
 		return toString();
 	}
 
-	public String getLink() {
+	@Override
+    public String getLink() {
 		return link;
 	}
 
-	public String getShortText(ModeController controller) {
+	@Override
+    public String getShortText(ModeController controller) {
 		String adaptedText = getPlainTextContent();
 		// adaptedText = adaptedText.replaceAll("<html>", "");
 		if (adaptedText.length() > 40)
@@ -259,7 +274,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		return adaptedText;
 	}
 
-	public void setLink(String link) {
+	@Override
+    public void setLink(String link) {
 		if (link != null && link.startsWith("#")) {
 			getMap().getLinkRegistry().registerLocalHyperlinkId(
 					link.substring(1));
@@ -267,7 +283,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		this.link = link;
 	}
 
-	public FilterInfo getFilterInfo() {
+	@Override
+    public FilterInfo getFilterInfo() {
 		return filterInfo;
 	}
 
@@ -280,7 +297,8 @@ public abstract class NodeAdapter implements MindMapNode {
 	//
 
 	/** Creates the TreePath recursively */
-	public TreePath getPath() {
+	@Override
+    public TreePath getPath() {
 		Vector<NodeAdapter> pathVector = new Vector<>();
 		TreePath treePath;
 		this.addToPathVector(pathVector);
@@ -288,7 +306,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		return treePath;
 	}
 
-	public MindMapEdge getEdge() {
+	@Override
+    public MindMapEdge getEdge() {
 		return edge;
 	}
 
@@ -296,11 +315,13 @@ public abstract class NodeAdapter implements MindMapNode {
 		this.edge = edge;
 	}
 
-	public MindMapCloud getCloud() {
+	@Override
+    public MindMapCloud getCloud() {
 		return cloud;
 	}
 
-	public void setCloud(MindMapCloud cloud) {
+	@Override
+    public void setCloud(MindMapCloud cloud) {
 		// Take care to keep the calculated iterative levels consistent
 		if (cloud != null && this.cloud == null) {
 			changeChildCloudIterativeLevels(1);
@@ -325,50 +346,54 @@ public abstract class NodeAdapter implements MindMapNode {
 	}
 
 	
-	public String getBareStyle(){
-		return style;
+	@Override
+    public String getBareStyle(){
+		return style.getStyle();
 	}
 	
 	/** A Node-Style like MindMapNode.STYLE_FORK or MindMapNode.STYLE_BUBBLE */
-	public String getStyle() {
-		String returnedString = style; /* Style string returned */
+	@Override
+    public NodeStyle getStyle() {
+		var result = style;
 		if (style == null) {
 			if (this.isRoot()) {
-				returnedString = getMapFeedback().getProperty(
-						FreeMind.RESOURCES_ROOT_NODE_STYLE);
+				result = NodeStyle.valueOf(getMapFeedback().getProperty(
+						FreeMind.RESOURCES_ROOT_NODE_STYLE));
 			} else {
-				String stdstyle = getMapFeedback().getProperty(
-						FreeMind.RESOURCES_NODE_STYLE);
-				if (stdstyle.equals(MindMapNode.STYLE_AS_PARENT)) {
-					returnedString = getParentNode().getStyle();
+				var stdstyle = NodeStyle.valueOf(getMapFeedback().getProperty(
+						FreeMind.RESOURCES_NODE_STYLE));
+				if (NodeStyle.AS_PARENT == stdstyle) {
+					result = ((NodeAdapter) getParentNode()).getStyle();
 				} else {
-					returnedString = stdstyle;
+					result = stdstyle;
 				}
 			}
-		} else if (this.isRoot() && style.equals(MindMapNode.STYLE_AS_PARENT)) {
-			returnedString = getMapFeedback().getProperty(
-					FreeMind.RESOURCES_ROOT_NODE_STYLE);
-		} else if (style.equals(MindMapNode.STYLE_AS_PARENT)) {
-			returnedString = getParentNode().getStyle();
+		} else if (this.isRoot() && NodeStyle.AS_PARENT == style) {
+			result = NodeStyle.valueOf(getMapFeedback().getProperty(
+					FreeMind.RESOURCES_ROOT_NODE_STYLE));
+		} else if (NodeStyle.AS_PARENT == style) {
+			result = ((NodeAdapter) getParentNode()).getStyle();
 		}
 
 		// Handle the combined node style
-		if (returnedString.equals(MindMapNode.STYLE_COMBINED)) {
+		if (NodeStyle.COMBINED == result) {
 			if (this.isFolded()) {
-				return MindMapNode.STYLE_BUBBLE;
+				return NodeStyle.BUBBLE;
 			} else {
-				return MindMapNode.STYLE_FORK;
+				return NodeStyle.FORK;
 			}
 		}
-		return returnedString;
+		return result;
 	}
 
-	public boolean hasStyle() {
+	@Override
+    public boolean hasStyle() {
 		return style != null;
 	}
 
 	/** The Foreground/Font Color */
-	public Color getColor() {
+	@Override
+    public Color getColor() {
 		return color;
 	}
 
@@ -377,20 +402,24 @@ public abstract class NodeAdapter implements MindMapNode {
 	// implementing class.
 	// ///
 
-	public void setStyle(String style) {
+	@Override
+    public void setStyle(NodeStyle style) {
 		this.style = style;
 	}
 
-	public void setColor(Color color) {
+	@Override
+    public void setColor(Color color) {
 		this.color = color;
 	}
 
 	// fc, 24.2.2004: background color:
-	public Color getBackgroundColor() {
+	@Override
+    public Color getBackgroundColor() {
 		return backgroundColor;
 	};
 
-	public void setBackgroundColor(Color color) {
+	@Override
+    public void setBackgroundColor(Color color) {
 		this.backgroundColor = color;
 	};
 
@@ -453,33 +482,39 @@ public abstract class NodeAdapter implements MindMapNode {
 		this.underlined = underlined;
 	}
 
-	public void setFont(Font font) {
+	@Override
+    public void setFont(Font font) {
 		this.font = font;
 	}
 
-	public MindMapNode getParentNode() {
+	@Override
+    public MindMapNode getParentNode() {
 		return parent;
 	}
 
-	public void setFontSize(int fontSize) {
+	@Override
+    public void setFontSize(Integer fontSize) {
 		establishOwnFont();
 		setFont(getMapFeedback().getFontThroughMap(
 				font.deriveFont((float)fontSize)));
 	}
 
-	public Font getFont() {
+	@Override
+    public Font getFont() {
 		return font;
 	}
 
-	public String getFontSize() {
+	@Override
+	public Integer getFontSize() {
 		if (getFont() != null) {
-			return Integer.valueOf(getFont().getSize()).toString();
+			return Integer.valueOf(getFont().getSize());
 		} else {
-			return getMapFeedback().getProperty("defaultfontsize");
+			return Integer.parseInt(getMapFeedback().getProperty("defaultfontsize"));
 		}
 	}
 
-	public String getFontFamilyName() {
+	@Override
+    public String getFontFamilyName() {
 		if (getFont() != null) {
 			return getFont().getFamily();
 		} else {
@@ -487,19 +522,23 @@ public abstract class NodeAdapter implements MindMapNode {
 		}
 	}
 
-	public boolean isBold() {
+	@Override
+    public boolean isBold() {
 		return font != null ? font.isBold() : false;
 	}
 
-	public boolean isItalic() {
+	@Override
+    public boolean isItalic() {
 		return font != null ? font.isItalic() : false;
 	}
 
-	public boolean isUnderlined() { // not implemented
+	@Override
+    public boolean isUnderlined() { // not implemented
 		return underlined;
 	}
 
-	public boolean isStrikethrough() {
+	@Override
+    public boolean isStrikethrough() {
 		if (font != null) {
 			Map<TextAttribute, ?> attr = font.getAttributes();
 			if(attr.containsKey(TextAttribute.STRIKETHROUGH)){
@@ -509,22 +548,26 @@ public abstract class NodeAdapter implements MindMapNode {
 		return false;
 	}
 	
-	public boolean isFolded() {
+	@Override
+    public boolean isFolded() {
 		return folded;
 	}
 
 	// fc, 24.9.2003:
-	public List<MindIcon> getIcons() {
+	@Override
+    public List<MindIcon> getIcons() {
 		if (icons == null)
 			return Collections.emptyList();
 		return icons;
 	}
 
-	public MindMap getMap() {
+	@Override
+    public MindMap getMap() {
 		return map;
 	}
 
-	public void addIcon(MindIcon _icon, int position) {
+	@Override
+    public void addIcon(MindIcon _icon, int position) {
 		createIcons();
 		if (position == MindIcon.LAST) {
 			icons.add(_icon);
@@ -534,7 +577,8 @@ public abstract class NodeAdapter implements MindMapNode {
 	}
 
 	/** @return returns the number of remaining icons. */
-	public int removeIcon(int position) {
+	@Override
+    public int removeIcon(int position) {
 		createIcons();
 		if (position == MindIcon.LAST) {
 			position = icons.size() - 1;
@@ -570,27 +614,30 @@ public abstract class NodeAdapter implements MindMapNode {
 	 * @return true, if one of its parents is folded. If itself is folded,
 	 *         doesn't matter.
 	 */
-	public boolean hasFoldedParents() {
+	@Override
+    public boolean hasFoldedParents() {
 		if (isRoot())
 			return false;
-		if (getParentNode().isFolded()) {
+		if (((NodeAdapter) getParentNode()).isFolded()) {
 			return true;
 		}
-		return getParentNode().hasFoldedParents();
+		return ((NodeAdapter) getParentNode()).hasFoldedParents();
 	}
 
-	public void setFolded(boolean folded) {
+	@Override
+    public void setFolded(boolean folded) {
 		this.folded = folded;
 	}
 
-	public MindMapNode shallowCopy() {
+	@Override
+    public MindMapNode shallowCopy() {
 		try {
 			// get XML from me.
 			StringWriter writer = new StringWriter();
 			this.save(writer, this.getMap().getLinkRegistry(), true, false);
 			String result = writer.toString();
 			HashMap<String, NodeAdapter> IDToTarget = new HashMap<>();
-			MindMapNode copy = getMap().createNodeTreeFromXml(new StringReader(result), IDToTarget);
+			NodeAdapter copy = (NodeAdapter) getMap().createNodeTreeFromXml(new StringReader(result), IDToTarget);
 			copy.setFolded(false);
 			return copy;
 		} catch (Exception e) {
@@ -606,15 +653,18 @@ public abstract class NodeAdapter implements MindMapNode {
 	/**
 	 * @return
 	 */
-	public MapFeedback getMapFeedback() {
+	@Override
+    public MapFeedback getMapFeedback() {
 		return getMap().getMapFeedback();
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return getText();
 	}
 
-	public boolean isDescendantOf(MindMapNode pParentNode) {
+	@Override
+    public boolean isDescendantOf(MindMapNode pParentNode) {
 		if (this.isRoot())
 			return false;
 		else if (pParentNode == getParentNode())
@@ -623,32 +673,37 @@ public abstract class NodeAdapter implements MindMapNode {
 			return getParentNode().isDescendantOf(pParentNode);
 	}
 
-	public boolean isRoot() {
+	@Override
+    public boolean isRoot() {
 		return (parent == null);
 	}
 
-	public boolean isDescendantOfOrEqual(MindMapNode pParentNode) {
+	@Override
+    public boolean isDescendantOfOrEqual(MindMapNode pParentNode) {
 		if (this == pParentNode) {
 			return true;
 		}
 		return isDescendantOf(pParentNode);
 	}
 
-	public boolean hasChildren() {
+	@Override
+    public boolean hasChildren() {
 		return children != null && !children.isEmpty();
 	}
 
-	public int getChildPosition(MindMapNode childNode) {
+	@Override
+    public Optional<Integer> getChildPosition(MindMapNode childNode) {
 		int position = 0;
 		for (ListIterator<MindMapNode> i = children.listIterator(); i.hasNext(); ++position) {
 			if (i.next() == childNode) {
-				return position;
+				return Optional.of(position);
 			}
 		}
-		return -1;
+		return Optional.empty();
 	}
 
-	public ListIterator childrenUnfolded() {
+	@Override
+    public ListIterator childrenUnfolded() {
 		return children != null ? children.listIterator()
 				: Collections.EMPTY_LIST.listIterator();
 	}
@@ -658,7 +713,8 @@ public abstract class NodeAdapter implements MindMapNode {
 	 * 
 	 * @see freemind.modes.MindMapNode#sortedChildrenUnfolded()
 	 */
-	public ListIterator<MindMapNode> sortedChildrenUnfolded() {
+	@Override
+    public ListIterator<MindMapNode> sortedChildrenUnfolded() {
 		if (children == null)
 			return null;
 		LinkedList<MindMapNode> sorted = new LinkedList<>(children);
@@ -668,9 +724,10 @@ public abstract class NodeAdapter implements MindMapNode {
 		 */
 		Collections.sort(sorted, new Comparator<MindMapNode>() {
 
-			public int compare(MindMapNode pO1, MindMapNode pO2) {
-				return comp(((MindMapNode) pO2).isLeft(),
-						((MindMapNode) pO1).isLeft());
+			@Override
+            public int compare(MindMapNode pO1, MindMapNode pO2) {
+				return comp(((NodeAdapter) pO2).isLeft(),
+						((NodeAdapter) pO1).isLeft());
 			}
 
 			private int comp(boolean pLeft, boolean pLeft2) {
@@ -686,14 +743,16 @@ public abstract class NodeAdapter implements MindMapNode {
 		return sorted.listIterator();
 	}
 
-	public ListIterator<MindMapNode> childrenFolded() {
+	@Override
+    public ListIterator<MindMapNode> childrenFolded() {
 		if (isFolded()) {
 			return Collections.emptyListIterator();
 		}
 		return childrenUnfolded();
 	}
 
-	public List<MindMapNode> getChildren() {
+	@Override
+    public List<MindMapNode> getChildren() {
 		return Collections.unmodifiableList((children != null) ? children
 				: Collections.<MindMapNode>emptyList());
 	}
@@ -716,7 +775,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		return ALLOWSCHILDREN;
 	}
 
-	public TreeNode getChildAt(int childIndex) {
+	@Override
+    public TreeNode getChildAt(int childIndex) {
 		// fc, 11.12.2004: This is not understandable, that a child does not
 		// exist if the parent is folded.
 		// if (isFolded()) {
@@ -725,7 +785,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		return (TreeNode) children.get(childIndex);
 	}
 
-	public int getChildCount() {
+	@Override
+    public int getChildCount() {
 		return children == null ? 0 : children.size();
 	}
 
@@ -739,30 +800,35 @@ public abstract class NodeAdapter implements MindMapNode {
 	// // Daniel: ^ The name of this method is confusing. It does nto convey
 	// // the meaning, at least not to me.
 
-	public int getIndex(TreeNode node) {
+	@Override
+    public int getIndex(TreeNode node) {
 		return children.indexOf((MindMapNode) node); // uses equals()
 	}
 
-	public TreeNode getParent() {
+	@Override
+    public TreeNode getParent() {
 		return parent;
 	}
 
-	public boolean isLeaf() {
+	@Override
+    public boolean isLeaf() {
 		return getChildCount() == 0;
 	}
 
 	// fc, 16.12.2003 left-right bug:
-	public boolean isLeft() {
+	@Override
+    public boolean isLeft() {
 		if (getParent() != null && !getParentNode().isRoot()) {
-			return getParentNode().isLeft();
+			return ((NodeAdapter) getParentNode()).isLeft();
 		}
 		if (position == UNKNOWN_POSITION && !isRoot()) {
-			setLeft(getParentNode().isLeft());
+			setLeft(((NodeAdapter) getParentNode()).isLeft());
 		}
 		return position == LEFT_POSITION;
 	}
 
-	public void setLeft(boolean isLeft) {
+	@Override
+    public void setLeft(boolean isLeft) {
 		position = isLeft ? LEFT_POSITION : RIGHT_POSITION;
 		if (!isRoot()) {
 			for (int i = 0; i < getChildCount(); i++) {
@@ -772,13 +838,14 @@ public abstract class NodeAdapter implements MindMapNode {
 		}
 	}
 
-	public boolean isNewChildLeft() {
+	@Override
+    public boolean isNewChildLeft() {
 		if (!isRoot()) {
 			return isLeft();
 		}
 		int rightChildrenCount = 0;
 		for (int i = 0; i < getChildCount(); i++) {
-			if (!((MindMapNode) getChildAt(i)).isLeft())
+			if (!((NodeAdapter) getChildAt(i)).isLeft())
 				rightChildrenCount++;
 			if (rightChildrenCount > getChildCount() / 2) {
 				return true;
@@ -795,7 +862,8 @@ public abstract class NodeAdapter implements MindMapNode {
 	// Garbage Collection work (Nodes in removed Sub-Trees reference each
 	// other)?
 
-	public void insert(MutableTreeNode child, int index) {
+	@Override
+    public void insert(MutableTreeNode child, int index) {
 		logger.finest("Insert at " + index + " the node " + child);
 		final MindMapNode childNode = (MindMapNode) child;
 		if (index < 0) { // add to the end (used in xml load) (PN)
@@ -814,7 +882,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		remove(node);
 	}
 
-	public void remove(MutableTreeNode node) {
+	@Override
+    public void remove(MutableTreeNode node) {
 		if (node == this.preferredChild) { // mind preferred child :-) (PN)
 			int index = children.indexOf(node);
 			if (children.size() > index + 1) {
@@ -834,7 +903,7 @@ public abstract class NodeAdapter implements MindMapNode {
 			MindMapNode addedChild) {
 		// Tell any node hooks that the node is added:
 		if (node instanceof MindMapNode) {
-			for (PermanentNodeHook hook : ((MindMapNode) node).getActivatedHooks()) {
+			for (PermanentNodeHook hook : ((NodeAdapter) node).getActivatedHooks()) {
 				if (addedChild.getParentNode() == node) {
 					hook.onAddChild(addedChild);
 				}
@@ -851,7 +920,7 @@ public abstract class NodeAdapter implements MindMapNode {
 	 */
 	private void recursiveCallRemoveChildren(MindMapNode node,
 			MindMapNode removedChild, MindMapNode oldDad) {
-		for (PermanentNodeHook hook : node.getActivatedHooks()) {
+		for (PermanentNodeHook hook : ((NodeAdapter) node).getActivatedHooks()) {
 			if (removedChild.getParentNode() == node) {
 				hook.onRemoveChild(removedChild);
 			}
@@ -862,20 +931,18 @@ public abstract class NodeAdapter implements MindMapNode {
 					oldDad);
 	}
 
-	public void removeFromParent() {
+	@Override
+    public void removeFromParent() {
 		parent.remove(this);
 	}
 
-	public void setParent(MutableTreeNode newParent) {
+	@Override
+    public void setParent(MutableTreeNode newParent) {
 		parent = (MindMapNode) newParent;
 	}
 
 	public void setParent(MindMapNode newParent) {
 		parent = newParent;
-	}
-
-	public void setUserObject(Object object) {
-		setText((String) object);
 	}
 
 	// //////////////
@@ -890,7 +957,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		}
 	}
 
-	public int getNodeLevel() { // for cursor navigation within a level (PN)
+	@Override
+    public int getNodeLevel() { // for cursor navigation within a level (PN)
 		int level = 0;
 		MindMapNode parent;
 		for (parent = this; !parent.isRoot(); parent = parent.getParentNode()) {
@@ -906,7 +974,8 @@ public abstract class NodeAdapter implements MindMapNode {
 	 * 
 	 * @see freemind.modes.MindMapNode#addHook(freemind.modes.NodeHook)
 	 */
-	public PermanentNodeHook addHook(PermanentNodeHook hook) {
+	@Override
+    public PermanentNodeHook addHook(PermanentNodeHook hook) {
 		// add then
 		if (hook == null)
 			throw new IllegalArgumentException("Added null hook.");
@@ -915,7 +984,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		return hook;
 	}
 
-	public void invokeHook(NodeHook hook) {
+	@Override
+    public void invokeHook(NodeHook hook) {
 		// initialize:
 		hook.startupMapHook();
 		// the main invocation:
@@ -973,7 +1043,8 @@ public abstract class NodeAdapter implements MindMapNode {
 	 * 
 	 * @see freemind.modes.MindMapNode#getHooks()
 	 */
-	public List<PermanentNodeHook> getHooks() {
+	@Override
+    public List<PermanentNodeHook> getHooks() {
 		if (hooks == null)
 			return Collections.emptyList();
 		return Collections.unmodifiableList(hooks);
@@ -984,7 +1055,8 @@ public abstract class NodeAdapter implements MindMapNode {
 	 * 
 	 * @see freemind.modes.MindMapNode#getActivatedHooks()
 	 */
-	public Collection<PermanentNodeHook> getActivatedHooks() {
+	@Override
+    public Collection<PermanentNodeHook> getActivatedHooks() {
 		if (activatedHooks == null) {
 			return Collections.emptyList();
 		}
@@ -996,7 +1068,8 @@ public abstract class NodeAdapter implements MindMapNode {
 	 * 
 	 * @see freemind.modes.MindMapNode#removeHook(freemind.modes.NodeHook)
 	 */
-	public void removeHook(PermanentNodeHook hook) {
+	@Override
+    public void removeHook(PermanentNodeHook hook) {
 		// the order is crucial here: the shutdown method should be able to
 		// perform "nodeChanged"
 		// calls without having its own updateNodeHook method to be called
@@ -1017,7 +1090,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		logger.fine("Removed hook " + name + " at " + hook + ".");
 	}
 
-	public void removeAllHooks() {
+	@Override
+    public void removeAllHooks() {
 		int timeout = getHooks().size() * 2;
 		while (getHooks().size() > 0 && timeout-- > 0) {
 			PermanentNodeHook hook = (PermanentNodeHook) getHooks().get(0);
@@ -1031,7 +1105,8 @@ public abstract class NodeAdapter implements MindMapNode {
 
 	/**
 	 */
-	public SortedMap<String, String> getToolTip() {
+	@Override
+    public SortedMap<String, String> getToolTip() {
 		boolean toolTipChanged = false;
 		TreeMap<String, String> result = toolTip;
 		if (result == null)
@@ -1087,7 +1162,8 @@ public abstract class NodeAdapter implements MindMapNode {
 
 	/**
 	 */
-	public void setToolTip(String key, String string) {
+	@Override
+    public void setToolTip(String key, String string) {
 		createToolTip();
 		if (string == null) {
 			if (toolTip.containsKey(key)) {
@@ -1100,15 +1176,7 @@ public abstract class NodeAdapter implements MindMapNode {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see freemind.modes.MindMapNode#getNodeId()
-	 */
-	public String getObjectId(ModeController controller) {
-		return controller.getNodeID(this);
-	}
-
+	@Override
 	public XMLElement save(Writer writer, MindMapLinkRegistry registry,
 			boolean saveInvisible, boolean saveChildren) throws IOException {
 		// pre save event to save all contents of the node:
@@ -1325,10 +1393,12 @@ public abstract class NodeAdapter implements MindMapNode {
 		}
 	}
 
+	@Override
 	public int getShiftY() {
 		return shiftY;
 	}
 
+	@Override
 	public boolean hasExactlyOneVisibleChild() {
 		int count = 0;
 		for (ListIterator<MindMapNode> i = childrenUnfolded(); i.hasNext();) {
@@ -1340,6 +1410,7 @@ public abstract class NodeAdapter implements MindMapNode {
 		return count == 1;
 	}
 
+	@Override
 	public boolean hasVisibleChilds() {
 		for (ListIterator<MindMapNode> i = childrenUnfolded(); i.hasNext();) {
 			if (i.next().isVisible())
@@ -1348,6 +1419,7 @@ public abstract class NodeAdapter implements MindMapNode {
 		return false;
 	}
 
+	@Override
 	public int calcShiftY() {
 		try {
 			// return 0;
@@ -1362,6 +1434,7 @@ public abstract class NodeAdapter implements MindMapNode {
 	 * @param shiftY
 	 *            The shiftY to set.
 	 */
+	@Override
 	public void setShiftY(int shiftY) {
 		this.shiftY = shiftY;
 	}
@@ -1370,14 +1443,17 @@ public abstract class NodeAdapter implements MindMapNode {
      *
      */
 
+	@Override
 	public void setAdditionalInfo(String info) {
 	}
 
+	@Override
 	public String getAdditionalInfo() {
 		return null;
 	}
 
 	/** This method must be synchronized as the TreeMap isn't. */
+	@Override
 	public synchronized void setStateIcon(String key, ImageIcon icon) {
 		// logger.info("Set state of key:"+key+", icon "+icon);
 		createStateIcons();
@@ -1390,37 +1466,45 @@ public abstract class NodeAdapter implements MindMapNode {
 			stateIcons = null;
 	}
 
+	@Override
 	public Map<String,ImageIcon> getStateIcons() {
 		if (stateIcons == null)
 			return Collections.emptyMap();
 		return Collections.unmodifiableSortedMap(stateIcons);
 	}
 
+	@Override
 	public HistoryInformation getHistoryInformation() {
 		return historyInformation;
 	}
 
+	@Override
 	public void setHistoryInformation(HistoryInformation historyInformation) {
 		this.historyInformation = historyInformation;
 	}
 
+	@Override
 	public int getHGap() {
 		return hGap;
 	}
 
+	@Override
 	public void setHGap(int gap) {
 		// hGap = Math.max(HGAP, gap);
 		hGap = gap;
 	}
 
+	@Override
 	public int getVGap() {
 		return vGap;
 	}
 
+	@Override
 	public void setVGap(int gap) {
 		vGap = Math.max(gap, 0);
 	}
 
+	@Override
 	public boolean isVisible() {
 		Filter filter = getMap().getFilter();
 		return filter == null || filter.isVisible(this);
@@ -1428,14 +1512,17 @@ public abstract class NodeAdapter implements MindMapNode {
 
 	EventListenerList listenerList = new EventListenerList();
 
+	@Override
 	public void addTreeModelListener(TreeModelListener l) {
 		listenerList.add(TreeModelListener.class, l);
 	}
 
+	@Override
 	public void removeTreeModelListener(TreeModelListener l) {
 		listenerList.remove(TreeModelListener.class, l);
 	}
 
+	@Override
 	public EventListenerList getListeners() {
 		return listenerList;
 	}

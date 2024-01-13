@@ -57,8 +57,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 
-import ch.d4span.freemind.mindmap.MindMap;
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMap;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.common.NamedObject;
 import freemind.controller.Controller;
 import freemind.controller.filter.condition.Condition;
@@ -72,6 +72,7 @@ import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.FreeMindFileDialog;
 import freemind.modes.MindIcon;
+import freemind.modes.NodeAdapter;
 import freemind.modes.attributes.Attribute;
 
 /**
@@ -100,6 +101,7 @@ public class FilterComposerDialog extends JDialog {
 					.getResourceString("filter_add"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Condition newCond = null;
 			String value;
@@ -113,8 +115,7 @@ public class FilterComposerDialog extends JDialog {
 			boolean ignoreCase = caseInsensitive.isSelected();
 
 			Object selectedItem = attributes.getSelectedItem();
-			if (selectedItem instanceof NamedObject) {
-				NamedObject attribute = (NamedObject) selectedItem;
+			if (selectedItem instanceof NamedObject attribute) {
 				newCond = FilterController.getConditionFactory().createCondition(attribute,
 						simpleCond, value, ignoreCase);
 			} else {
@@ -127,7 +128,7 @@ public class FilterComposerDialog extends JDialog {
 				model.addElement(newCond);
 			if (values.isEditable()) {
 				Object item = values.getSelectedItem();
-				if (item != null && !item.equals("")) {
+				if (item != null && !"".equals(item)) {
 					values.removeItem(item);
 					values.insertItemAt(item, 0);
 					values.setSelectedIndex(0);
@@ -153,6 +154,7 @@ public class FilterComposerDialog extends JDialog {
 					.getResourceString("filter_delete"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			DefaultComboBoxModel<Condition> model = (DefaultComboBoxModel<Condition>) conditionList
 					.getModel();
@@ -185,6 +187,7 @@ public class FilterComposerDialog extends JDialog {
 					.getResourceString("filter_not"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			int min = conditionList.getMinSelectionIndex();
 			if (min >= 0) {
@@ -218,6 +221,7 @@ public class FilterComposerDialog extends JDialog {
 					.getResourceString("filter_and"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object[] selectedValues = conditionList.getSelectedValues();
 			if (selectedValues.length < 2)
@@ -245,6 +249,7 @@ public class FilterComposerDialog extends JDialog {
 					.getResourceString("filter_or"));
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object[] selectedValues = conditionList.getSelectedValues();
 			if (selectedValues.length < 2)
@@ -267,6 +272,7 @@ public class FilterComposerDialog extends JDialog {
 		 * javax.swing.event.ListSelectionListener#valueChanged(javax.swing.
 		 * event.ListSelectionEvent)
 		 */
+		@Override
 		public void valueChanged(ListSelectionEvent e) {
 
 			if (conditionList.getMinSelectionIndex() == -1) {
@@ -290,13 +296,16 @@ public class FilterComposerDialog extends JDialog {
 			}
 		}
 
+		@Override
 		public void intervalAdded(ListDataEvent e) {
 			conditionList.setSelectedIndex(e.getIndex0());
 		}
 
+		@Override
 		public void intervalRemoved(ListDataEvent e) {
 		}
 
+		@Override
 		public void contentsChanged(ListDataEvent e) {
 		}
 
@@ -304,20 +313,20 @@ public class FilterComposerDialog extends JDialog {
 
 	private class ConditionListMouseListener extends MouseAdapter {
 
+		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (e.getClickCount() == 2) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						if (selectCondition()) {
-							dispose();
-						}
-					}
-				});
+				EventQueue.invokeLater(() -> {
+                	if (selectCondition()) {
+                		dispose();
+                	}
+                });
 			}
 		}
 	}
 
 	private class CloseAction implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object source = e.getSource();
 			if (source == btnOK || source == btnApply)
@@ -332,13 +341,14 @@ public class FilterComposerDialog extends JDialog {
 	static private class MindMapFilterFileFilter extends FileFilter {
 		static FileFilter filter = new MindMapFilterFileFilter();
 
+		@Override
 		public boolean accept(File f) {
 			if (f.isDirectory())
 				return true;
 			String extension = Tools.getExtension(f.getName());
 			if (extension != null) {
-				if (extension
-						.equals(FilterController.FREEMIND_FILTER_EXTENSION_WITHOUT_DOT)) {
+				if (FilterController.FREEMIND_FILTER_EXTENSION_WITHOUT_DOT
+						.equals(extension)) {
 					return true;
 				} else {
 					return false;
@@ -347,6 +357,7 @@ public class FilterComposerDialog extends JDialog {
 			return false;
 		}
 
+		@Override
 		public String getDescription() {
 			return Resources.getInstance().getResourceString(
 					"mindmaps_filter_desc");
@@ -359,6 +370,7 @@ public class FilterComposerDialog extends JDialog {
 	}
 
 	private class SaveAction implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			FreeMindFileDialog chooser = getFileChooser();
 			chooser.setDialogTitle(Resources.getInstance().getResourceString(
@@ -390,6 +402,7 @@ public class FilterComposerDialog extends JDialog {
 	}
 
 	private class LoadAction implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			FreeMindFileDialog chooser = getFileChooser();
 			int returnVal = chooser.showOpenDialog(FilterComposerDialog.this);
@@ -415,6 +428,7 @@ public class FilterComposerDialog extends JDialog {
 	private static final int ICON_POSITION = 1;
 
 	private class SimpleConditionChangeListener implements ItemListener {
+		@Override
 		public void itemStateChanged(ItemEvent e) {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				boolean considerValue = true;
@@ -432,6 +446,7 @@ public class FilterComposerDialog extends JDialog {
 		 * javax.swing.event.ListSelectionListener#valueChanged(javax.swing.
 		 * event.ListSelectionEvent)
 		 */
+		@Override
 		public void itemStateChanged(ItemEvent e) {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				if (attributes.getSelectedIndex() == NODE_POSITION) {
@@ -464,7 +479,7 @@ public class FilterComposerDialog extends JDialog {
 					final String attributeName = attributes.getSelectedItem()
 							.toString();
 					SortedComboBoxModel attributesInMap = new SortedComboBoxModel();
-					addAttributeValuesRecursively(attributeName, mController.getMap().getRootNode(), attributesInMap);
+					addAttributeValuesRecursively(attributeName, (NodeAdapter) mController.getMap().getRootNode(), attributesInMap);
 					nodes.setExtensionList(attributesInMap);
 					values.setModel(nodes);
 					if (values.getSelectedItem() != null) {
@@ -679,24 +694,24 @@ public class FilterComposerDialog extends JDialog {
 		if(map != null) {
 			// gather attributes in the map:
 			SortedListModel attributesInMap = new SortedComboBoxModel();
-			addAttributeKeysRecursively(map.getRootNode(), attributesInMap);
+			addAttributeKeysRecursively((NodeAdapter) map.getRootNode(), attributesInMap);
 			filteredAttributeComboBoxModel.setExtensionList(attributesInMap);
 		} else {
 			filteredAttributeComboBoxModel.setExtensionList(null);
 		}
 	}
 
-	private void addAttributeKeysRecursively(MindMapNode pNode, SortedListModel pAttributesInMap) {
+	private void addAttributeKeysRecursively(NodeAdapter pNode, SortedListModel pAttributesInMap) {
 		for (String key : pNode.getAttributeKeyList()) {
 			pAttributesInMap.add(key);
 		}
 		for (Iterator it = pNode.getChildren().iterator(); it.hasNext();) {
 			MindMapNode child = (MindMapNode) it.next();
-			addAttributeKeysRecursively(child, pAttributesInMap);
+			addAttributeKeysRecursively((NodeAdapter) child, pAttributesInMap);
 		}
 	}
 
-	private void addAttributeValuesRecursively(String pKey, MindMapNode pNode, SortedListModel pAttributesInMap) {
+	private void addAttributeValuesRecursively(String pKey, NodeAdapter pNode, SortedListModel pAttributesInMap) {
 		for (Attribute attr : pNode.getAttributes()) {
 			if(Tools.safeEquals(attr.getName(), pKey)){
 				pAttributesInMap.add(attr.getValue());
@@ -704,7 +719,7 @@ public class FilterComposerDialog extends JDialog {
 		}
 		for (Iterator it = pNode.getChildren().iterator(); it.hasNext();) {
 			MindMapNode child = (MindMapNode) it.next();
-			addAttributeValuesRecursively(pKey, child, pAttributesInMap);
+			addAttributeValuesRecursively(pKey, (NodeAdapter) child, pAttributesInMap);
 		}
 	}
 	
@@ -760,6 +775,7 @@ public class FilterComposerDialog extends JDialog {
 
 	}
 
+	@Override
 	public void show() {
 		initInternalConditionModel();
 		super.show();

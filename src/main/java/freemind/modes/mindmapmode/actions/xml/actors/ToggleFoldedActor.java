@@ -22,7 +22,7 @@ package freemind.modes.mindmapmode.actions.xml.actors;
 
 import java.util.ListIterator;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.controller.actions.generated.instance.CompoundAction;
 import freemind.controller.actions.generated.instance.FoldAction;
 import freemind.controller.actions.generated.instance.XmlAction;
@@ -30,6 +30,7 @@ import freemind.main.FreeMind;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.modes.ExtendedMapFeedback;
+import freemind.modes.NodeAdapter;
 import freemind.modes.common.CommonToggleFoldedAction;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 
@@ -89,8 +90,8 @@ public class ToggleFoldedActor extends XmlActorAdapter {
 	private FoldAction createSingleFoldAction(boolean fold, MindMapNode node,
 			boolean undo) {
 		FoldAction foldAction = null;
-		if ((undo && (node.isFolded() == fold))
-				|| (!undo && (node.isFolded() != fold))) {
+		if ((undo && (((NodeAdapter) node).isFolded() == fold))
+				|| (!undo && (((NodeAdapter) node).isFolded() != fold))) {
 			if (node.hasChildren()
 					|| Tools.safeEquals(
 							getExMapFeedback().getProperty(
@@ -103,9 +104,9 @@ public class ToggleFoldedActor extends XmlActorAdapter {
 		return foldAction;
 	}
 
-	public void act(XmlAction action) {
-		if (action instanceof FoldAction) {
-			FoldAction foldAction = (FoldAction) action;
+	@Override
+    public void act(XmlAction action) {
+		if (action instanceof FoldAction foldAction) {
 			MindMapNode node = getNodeFromID(foldAction
 					.getNode());
 			boolean folded = foldAction.getFolded();
@@ -113,8 +114,8 @@ public class ToggleFoldedActor extends XmlActorAdapter {
 			if (node.isRoot() && folded) {
 				return;
 			}
-			if (node.isFolded() != folded) {
-				node.setFolded(folded);
+			if (((NodeAdapter) node).isFolded() != folded) {
+				((NodeAdapter) node).setFolded(folded);
 				getExMapFeedback().getMap().nodeStructureChanged(node);
 			}
 			if (Resources.getInstance().getBoolProperty(
@@ -124,7 +125,8 @@ public class ToggleFoldedActor extends XmlActorAdapter {
 		}
 	}
 
-	public Class<FoldAction> getDoActionClass() {
+	@Override
+    public Class<FoldAction> getDoActionClass() {
 		return FoldAction.class;
 	}
 

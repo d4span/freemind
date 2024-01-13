@@ -1,7 +1,8 @@
-package ch.d4span.freemind.treemodel;
+package ch.d4span.freemind.domain.treemodel;
 
 public class DefaultTreeModel<V> implements TreeModel<V> {
   private TreeNode<V> root;
+  
   protected EventListenerList listenerList;
 
   public DefaultTreeModel(TreeNode<V> root) {

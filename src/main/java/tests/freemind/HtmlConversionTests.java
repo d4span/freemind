@@ -30,7 +30,7 @@ import tests.freemind.findreplace.TestMindMapNode;
 
 import com.lightdev.app.shtm.SHTMLPanel;
 
-import ch.d4span.freemind.mindmap.MindMapNode;
+import ch.d4span.freemind.domain.mindmap.MindMapNode;
 import freemind.main.HtmlTools;
 import freemind.main.HtmlTools.NodeCreator;
 import freemind.main.Tools;
