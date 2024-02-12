@@ -159,7 +159,7 @@ public class StylePatternFactory {
 		}
 		if (nodeAdapter.getStyle() != null) {
 			PatternNodeStyle subPattern = new PatternNodeStyle();
-			subPattern.setValue(nodeAdapter.getStyle().getStyle());
+			subPattern.setValue(nodeAdapter.getStyle().style());
 			pattern.setPatternNodeStyle(subPattern);
 		}
 

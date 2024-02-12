@@ -93,7 +93,7 @@ public class CommonToggleFoldedAction extends AbstractAction {
 		boolean allNodeHaveSameFoldedStatus = true;
 		for (ListIterator<MindMapNode> it = iterator; it.hasNext();) {
 			MindMapNode node = it.next();
-			if (node.getChildCount() == 0) {
+			if (node.childCount() == 0) {
 				// no folding state change for unfoldable nodes.
 				continue;
 			}

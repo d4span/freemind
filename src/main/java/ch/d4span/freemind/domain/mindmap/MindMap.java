@@ -28,7 +28,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-import ch.d4span.freemind.domain.treemodel.TreeModel;
+import ch.d4span.freemind.domain.treemodel.MutableTreeModel;
 import ch.d4span.freemind.domain.treemodel.TreeNode;
 import freemind.controller.filter.Filter;
 import freemind.controller.filter.util.SortedListModel;
@@ -42,7 +42,7 @@ import freemind.modes.MapFeedback;
 import freemind.modes.MindMapLinkRegistry;
 import freemind.modes.NodeAdapter;
 
-public interface MindMap extends TreeModel {
+public interface MindMap extends MutableTreeModel {
 
 	MindMapNode getRootNode();
 

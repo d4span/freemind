@@ -136,7 +136,7 @@ class BubbleMainView extends MainView {
 	 */
 	@Override
 	String getStyle() {
-		return NodeStyle.BUBBLE.getStyle();
+		return NodeStyle.BUBBLE.style();
 	}
 
 	/**

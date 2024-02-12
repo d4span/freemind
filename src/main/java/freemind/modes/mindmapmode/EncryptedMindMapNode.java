@@ -208,9 +208,9 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
 	}
 
 	@Override
-	public int getChildCount() {
+	public int childCount() {
 		if (isAccessible()) {
-			return super.getChildCount();
+			return super.childCount();
 		}
 		return 0;
 	}

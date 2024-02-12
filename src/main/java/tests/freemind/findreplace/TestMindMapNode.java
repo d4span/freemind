@@ -265,12 +265,12 @@ public final class TestMindMapNode implements MindMapNode {
 	}
 
 	@Override
-    public TreeNode getChildAt(int childIndex) {
+    public TreeNode childAt(int childIndex) {
 		return children.get(childIndex);
 	}
 
 	@Override
-    public int getChildCount() {
+    public int childCount() {
 		return children.size();
 	}
 
@@ -280,7 +280,7 @@ public final class TestMindMapNode implements MindMapNode {
 	}
 
 	@Override
-    public int getIndex(TreeNode node) {
+    public int indexOf(TreeNode node) {
 		return 0;
 	}
 

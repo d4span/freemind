@@ -85,12 +85,12 @@ public class DeleteChildActor extends XmlActorAdapter {
 			if(view.getSelecteds().size() == 0) {
 				NodeView newSelectedView;
 				int childIndex = parent.getChildPosition(selectedNode).get();
-				if(parent.getChildCount() > childIndex+1) {
+				if(parent.childCount() > childIndex+1) {
 					// the next node
-					newSelectedView = view.getNodeView((MindMapNode) parent.getChildAt(childIndex+1));
+					newSelectedView = view.getNodeView((MindMapNode) parent.childAt(childIndex+1));
 				} else if(childIndex > 0) {
 					// the node before:
-					newSelectedView = view.getNodeView((MindMapNode) parent.getChildAt(childIndex-1));
+					newSelectedView = view.getNodeView((MindMapNode) parent.childAt(childIndex-1));
 				} else {
 					// no other node on same level. take the parent.
 					newSelectedView = view.getNodeView(parent);

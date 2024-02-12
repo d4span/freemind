@@ -44,7 +44,8 @@ public class ImportFolderStructureAction extends MindmapAction {
 			logger = controller.getFrame().getLogger(this.getClass().getName());
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	@Override
+    public void actionPerformed(ActionEvent e) {
 		FreeMindFileDialog chooser = controller.getFileChooser(null);
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setDialogTitle(controller
@@ -113,7 +114,7 @@ public class ImportFolderStructureAction extends MindmapAction {
 	private MindMapNode addNode(MindMapNode target, String nodeContent,
 			String link) {
 		MindMapNode node = controller.addNewNode(target,
-				target.getChildCount(), target.isNewChildLeft());
+				target.childCount(), target.isNewChildLeft());
 		controller.setNodeText(node, nodeContent);
 		controller.setLink(node, link);
 		return node;

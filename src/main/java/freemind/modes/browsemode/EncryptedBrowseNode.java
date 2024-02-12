@@ -29,7 +29,6 @@ import java.util.HashMap;
 import javax.swing.ImageIcon;
 
 import ch.d4span.freemind.domain.mindmap.MindMap;
-import freemind.common.TextTranslator;
 import freemind.main.Resources;
 import freemind.main.Tools.SingleDesEncrypter;
 import freemind.main.XMLParseException;
@@ -86,18 +85,15 @@ public class EncryptedBrowseNode extends BrowseNodeModel {
 				: encryptedIcon);
 	}
 
-	public void setFolded(boolean folded) {
+	@Override
+    public void setFolded(boolean folded) {
 		if (isDecrypted || folded) {
 			super.setFolded(folded);
 			return;
 		}
 		// get password:
 		final EnterPasswordDialog pwdDialog = new EnterPasswordDialog(null,
-				new TextTranslator() {
-					@Override
-					public String getText(String pKey) {
-						return mMapFeedback.getResourceString(pKey);
-					}}, false);
+				pKey -> mMapFeedback.getResourceString(pKey), false);
 		pwdDialog.setModal(true);
 		pwdDialog.setVisible(true);
 		if (pwdDialog.getResult() == EnterPasswordDialog.CANCEL) {
@@ -124,7 +120,7 @@ public class EncryptedBrowseNode extends BrowseNodeModel {
 				// now, the import is finished. We can inform others about
 				// the new nodes:
 				MindMap model = mMapFeedback.getMap();
-				model.insertNodeInto(node, this, this.getChildCount());
+				model.insertNodeInto(node, this, this.childCount());
 				mMapFeedback.invokeHooksRecursively(node, model);
 				super.setFolded(folded);
 				mMapFeedback.nodeChanged(this);
@@ -144,7 +140,8 @@ public class EncryptedBrowseNode extends BrowseNodeModel {
 	/**
 	 *
 	 */
-	public void setAdditionalInfo(String info) {
+	@Override
+    public void setAdditionalInfo(String info) {
 		encryptedContent = info;
 		isDecrypted = false;
 	}

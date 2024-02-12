@@ -53,7 +53,7 @@ public class NodeStyleActor extends XmlActorAdapter {
 			return;
 		}
 		for (int i = 0; i < NodeStyle.values().length; i++) {
-			String dstyle = NodeStyle.values()[i].getStyle();
+			String dstyle = NodeStyle.values()[i].style();
 			if(Tools.safeEquals(style, dstyle)) {
 				execute(getActionPair(node, style));
 				return;
@@ -66,7 +66,7 @@ public class NodeStyleActor extends XmlActorAdapter {
 		NodeStyleFormatAction styleAction = createNodeStyleFormatAction(
 				targetNode, style);
 		NodeStyleFormatAction undoStyleAction = createNodeStyleFormatAction(
-				targetNode, ((NodeAdapter) targetNode).getStyle().getStyle());
+				targetNode, ((NodeAdapter) targetNode).getStyle().style());
 		return new ActionPair(styleAction, undoStyleAction);
 	}
 

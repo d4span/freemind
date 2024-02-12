@@ -1,6 +1,10 @@
 package ch.d4span.freemind.domain.treemodel;
 
 public interface MutableTreeNode<V> extends TreeNode<V> {
+  default void nodeValue(V value) {
+    throw new UnsupportedOperationException("Not yet implemented");
+  }
+
   default void remove(MutableTreeNode<V> child) {
     throw new UnsupportedOperationException("Not yet implemented");
   }

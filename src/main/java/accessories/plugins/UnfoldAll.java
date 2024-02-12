@@ -164,7 +164,7 @@ public class UnfoldAll extends MindMapNodeHookAdapter {
 		boolean nodeHasChildWhichIsLeave = false;
 		for (Iterator<MindMapNode> i = ((NodeAdapter) node).childrenUnfolded(); i.hasNext();) {
 			MindMapNode child = i.next();
-			if (child.getChildCount() == 0) {
+			if (child.childCount() == 0) {
 				nodeHasChildWhichIsLeave = true;
 			}
 		}

@@ -150,7 +150,7 @@ public class FileNodeModel extends NodeAdapter {
 						final FileNodeModel fileNodeModel = new FileNodeModel(
 								childFile, getMap());
 						fileNodeModel.setLeft(isNewChildLeft());
-						insert(fileNodeModel, getChildCount());
+						insert(fileNodeModel, childCount());
 					}
 				}
 			}

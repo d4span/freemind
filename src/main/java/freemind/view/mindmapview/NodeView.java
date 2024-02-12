@@ -136,7 +136,7 @@ if (Tools.safeEquals(pPropertyName,
 		this.model = model;
 		this.mapView = map;
 		final TreeNode parentNode = model.getParent();
-		final int index = parentNode == null ? 0 : parentNode.getIndex(model);
+		final int index = parentNode == null ? 0 : parentNode.indexOf(model);
 
 		parent.add(this, index);
 
@@ -1014,7 +1014,7 @@ if (Tools.safeEquals(pPropertyName,
 
 	void updateStyle() {
 		if (mainView != null
-				&& (mainView.getStyle().equals(((NodeAdapter) model).getStyle().getStyle()) || model
+				&& (mainView.getStyle().equals(((NodeAdapter) model).getStyle().style()) || model
 						.isRoot())) {
 			return;
 		}
@@ -1283,7 +1283,7 @@ if (Tools.safeEquals(pPropertyName,
 
 		for (int i = 0; i < childIndices.length; i++) {
 			int index = childIndices[i];
-			insert((MindMapNode) getModel().getChildAt(index), index);
+			insert((MindMapNode) getModel().childAt(index), index);
 		}
 		revalidate();
 

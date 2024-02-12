@@ -105,7 +105,7 @@ public class NodeUpActor extends XmlActorAdapter {
 		MindMap model = getExMapFeedback().getMap();
 		int index = model.getIndexOfChild(parent, newChild);
 		int newIndex = index;
-		int maxIndex = parent.getChildCount();
+		int maxIndex = parent.childCount();
 		Vector<MindMapNode> sortedNodesIndices = getSortedSiblings(parent);
 		int newPositionInVector = sortedNodesIndices.indexOf(newChild)
 				+ direction;

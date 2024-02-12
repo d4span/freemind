@@ -140,7 +140,7 @@ public class MindMapMock implements MindMap {
 	}
 
 	@Override
-	public TreeNode getRoot() {
+	public TreeNode root() {
 		return null;
 	}
 

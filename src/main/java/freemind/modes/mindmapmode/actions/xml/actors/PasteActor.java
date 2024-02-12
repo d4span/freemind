@@ -194,13 +194,13 @@ public class PasteActor extends XmlActorAdapter {
 		public MindMapNode getNode() {
 			if (asSibling) {
 				MindMapNode parentNode = target.getParentNode();
-				return (MindMapNode) parentNode.getChildAt(parentNode
+				return (MindMapNode) parentNode.childAt(parentNode
 						.getChildPosition(target).get() - 1);
 			} else {
-				logger.finest("getChildCount = " + target.getChildCount()
+				logger.finest("getChildCount = " + target.childCount()
 						+ ", target = " + target);
 				return (MindMapNode) target
-						.getChildAt(target.getChildCount() - 1);
+						.childAt(target.childCount() - 1);
 			}
 		}
 
@@ -208,11 +208,11 @@ public class PasteActor extends XmlActorAdapter {
 			this.isLeft = isLeft;
 			MindMapNode parentNode = node.getParentNode();
 			int childPosition = parentNode.getChildPosition(node).get();
-			if (childPosition == parentNode.getChildCount() - 1) {
+			if (childPosition == parentNode.childCount() - 1) {
 				target = parentNode;
 				asSibling = false;
 			} else {
-				target = (MindMapNode) parentNode.getChildAt(childPosition + 1);
+				target = (MindMapNode) parentNode.childAt(childPosition + 1);
 				asSibling = true;
 			}
 		}
@@ -737,7 +737,7 @@ public class PasteActor extends XmlActorAdapter {
 	}
 
 	private void insertNodeInto(MindMapNode node, MindMapNode parent) {
-		getExMapFeedback().insertNodeInto(node, parent, parent.getChildCount());
+		getExMapFeedback().insertNodeInto(node, parent, parent.childCount());
 	}
 
 	private TransferableContent getTransferableContent(Transferable t,
@@ -861,7 +861,7 @@ public class PasteActor extends XmlActorAdapter {
 		MindMapNodeModel parent = new MindMapNodeModel(
 				getExMapFeedback().getMap());
 		pasteStringWithoutRedisplay(t, parent, false, false);
-		final int childCount = parent.getChildCount();
+		final int childCount = parent.childCount();
 		return childCount;
 	}
 
@@ -888,7 +888,7 @@ public class PasteActor extends XmlActorAdapter {
 				try {
 					MindMapNodeModel newNode = new MindMapNodeModel("",
 							getExMapFeedback().getMap());
-					pParent.insert(newNode, pParent.getChildCount());
+					pParent.insert(newNode, pParent.childCount());
 					newNode.setParent(pParent);
 					return newNode;
 				} catch (Exception e) {
@@ -906,7 +906,7 @@ public class PasteActor extends XmlActorAdapter {
 			public void setLink(String pLink, MindMapNode pNode) {
 			}});
 		handler.paste(t.getTransferData(handler.getDataFlavor()), parent, false, true, t);
-		final int childCount = parent.getChildCount();
+		final int childCount = parent.childCount();
 		return childCount;
 	}
 

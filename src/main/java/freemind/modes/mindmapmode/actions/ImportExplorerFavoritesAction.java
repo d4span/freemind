@@ -40,7 +40,8 @@ public class ImportExplorerFavoritesAction extends MindmapAction {
 		this.controller = controller;
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	@Override
+    public void actionPerformed(ActionEvent e) {
 		FreeMindFileDialog chooser = controller.getFileChooser(null);
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setDialogTitle(controller.getText("select_favorites_folder"));
@@ -88,7 +89,7 @@ public class ImportExplorerFavoritesAction extends MindmapAction {
 			// For each .url file: add it
 			for (int i = 0; i < list.length; i++) {
 				if (!list[i].isDirectory()
-						&& Tools.getExtension(list[i]).equals("url")) {
+						&& "url".equals(Tools.getExtension(list[i]))) {
 					favoritesFound = true;
 					try {
 						MindMapNode node = addNode(target,
@@ -120,7 +121,7 @@ public class ImportExplorerFavoritesAction extends MindmapAction {
      */
 	private MindMapNode addNode(MindMapNode target, String nodeContent) {
 		MindMapNode node = controller.addNewNode(target,
-				target.getChildCount(), target.isNewChildLeft());
+				target.childCount(), target.isNewChildLeft());
 		controller.setNodeText(node, nodeContent);
 		return node;
 	}
