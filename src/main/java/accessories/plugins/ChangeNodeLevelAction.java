@@ -123,13 +123,13 @@ public class ChangeNodeLevelAction extends MindMapNodeHookAdapter {
 			int parentPosition = grandParent.getChildPosition(selectedParent).get();
 			boolean isLeft = selectedParent.isLeft();
 			Transferable copy = getMindMapController().cut(selectedNodes);
-			if (parentPosition == grandParent.childCount() - 1) {
+			if (parentPosition == grandParent.getChildCount() - 1) {
 				getMindMapController().paste(copy, grandParent, false, isLeft);
 			} else {
 				getMindMapController().paste(
 						copy,
 						(MindMapNode) grandParent
-								.childAt(parentPosition + 1), true, isLeft);
+								.getChildAt(parentPosition + 1), true, isLeft);
 			}
 			select(selectedNodeId, selectedNodesId);
 
@@ -139,7 +139,7 @@ public class ChangeNodeLevelAction extends MindMapNodeHookAdapter {
 			NodeAdapter directSibling = null;
 			for (int i = ownPosition - 1; i >= 0; --i) {
 				NodeAdapter sibling = (NodeAdapter) selectedParent
-						.childAt(i);
+						.getChildAt(i);
 				if ((!selectedNodes.contains(sibling))
 						&& selectedNode.isLeft() == sibling.isLeft()) {
 					directSibling = sibling;
@@ -149,9 +149,9 @@ public class ChangeNodeLevelAction extends MindMapNodeHookAdapter {
 			if (directSibling == null) {
 				// start searching for a sibling after the selected block:
 				for (int i = ownPosition + 1; i < selectedParent
-						.childCount(); ++i) {
+						.getChildCount(); ++i) {
 					NodeAdapter sibling = (NodeAdapter) selectedParent
-							.childAt(i);
+							.getChildAt(i);
 					if ((!selectedNodes.contains(sibling))
 							&& selectedNode.isLeft() == sibling.isLeft()) {
 						directSibling = sibling;

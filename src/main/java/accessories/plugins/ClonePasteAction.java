@@ -612,7 +612,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 					continue;
 				for (int i = indexVector.size() - 1; i >= 0; --i) {
 					int index = ((Integer) indexVector.get(i)).intValue();
-					if (target.childCount() <= index) {
+					if (target.getChildCount() <= index) {
 						logger.warning("Index " + index
 								+ " in other tree not found from "
 								+ printNodeIds(targets) + " originating from "
@@ -621,7 +621,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 						// with crossed fingers.
 						continue CloneLoop;
 					}
-					target = (MindMapNode) target.childAt(index);
+					target = (MindMapNode) target.getChildAt(index);
 				}
 				// logger.fine("Found corresponding node " + printNodeId(target)
 				// + " on clone " + printNodeId(cloneNode));

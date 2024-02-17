@@ -128,7 +128,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 	private class AppendDateToChildAction extends AppendDateAbstractAction {
 		public AppendDateToChildAction() {
 			init(pNode -> getMindMapController().addNewNode(pNode,
-            		pNode.childCount(), ((NodeAdapter) pNode).isLeft()), "plugins/TimeManagement.xml_appendAsNewButton");
+            		pNode.getChildCount(), ((NodeAdapter) pNode).isLeft()), "plugins/TimeManagement.xml_appendAsNewButton");
 		}
 	}
 
@@ -140,7 +140,7 @@ public class TimeManagement extends MindMapHookAdapter implements
             		parent = pNode.getParentNode();
             	}
             	return getMindMapController().addNewNode(parent,
-            			parent.indexOf(pNode) + 1, ((NodeAdapter) parent).isLeft());
+            			parent.getIndex(pNode) + 1, ((NodeAdapter) parent).isLeft());
             }, "plugins/TimeManagement.xml_appendAsNewSiblingButton");
 		}
 	}

@@ -94,7 +94,7 @@ class ForkMainView extends MainView {
 	 */
 	@Override
 	String getStyle() {
-		return NodeStyle.FORK.style();
+		return NodeStyle.FORK.getStyle();
 	}
 
 	/**

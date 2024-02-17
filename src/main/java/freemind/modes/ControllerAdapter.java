@@ -1135,7 +1135,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	}
 
 	public MindMapNode getRootNode() {
-		return (MindMapNode) getMap().root();
+		return (MindMapNode) getMap().getRoot();
 	}
 
 	@Override

@@ -76,7 +76,7 @@ public class PasteAsPlainTextAction extends AbstractAction {
 				// paste.
 				NodeAdapter selected = (NodeAdapter) mMindMapController.getSelected();
 				MindMapNode newNode = mMindMapController.addNewNode(selected,
-						selected.childCount(), selected.isLeft());
+						selected.getChildCount(), selected.isLeft());
 				mMindMapController.setNodeText(newNode, plainText);
 			} catch (UnsupportedFlavorException e) {
 				freemind.main.Resources.getInstance().logException(e);

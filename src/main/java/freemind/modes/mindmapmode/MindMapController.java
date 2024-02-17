@@ -289,7 +289,7 @@ public class MindMapController extends ControllerAdapter implements
 					}
 					MindMapNode child = (MindMapNode) allDescendants
 							.firstElement();
-					amountOfChildren += child.childCount();
+					amountOfChildren += child.getChildCount();
 					allDescendants.addAll(child.getChildren());
 					allDescendants.remove(0);
 				}
@@ -297,7 +297,7 @@ public class MindMapController extends ControllerAdapter implements
 						"node_status_line",
 						new Object[] {
 								sel.getShortText(MindMapController.this),
-								Integer.valueOf(sel.childCount()),
+								Integer.valueOf(sel.getChildCount()),
 								amountOfChildren });
 			}
 			getFrame().out(nodeStatusLine);
@@ -560,8 +560,8 @@ public class MindMapController extends ControllerAdapter implements
 		edgeColor = new EdgeColorAction(this);
 		nodeColor = new NodeColorAction(this);
 		nodeColorBlend = new NodeColorBlendAction(this);
-		fork = new NodeStyleAction(this, NodeStyle.FORK.style());
-		bubble = new NodeStyleAction(this, NodeStyle.BUBBLE.style());
+		fork = new NodeStyleAction(this, NodeStyle.FORK.getStyle());
+		bubble = new NodeStyleAction(this, NodeStyle.BUBBLE.getStyle());
 		// this is an unknown icon and thus corrected by mindicon:
 		removeLastIconAction = new RemoveIconAction(this);
 		// this action handles the xml stuff: (undo etc.)
@@ -1371,7 +1371,7 @@ public class MindMapController extends ControllerAdapter implements
 			}
 			try {
 				File file = new File(getMindMapMapModel().getFile() + ".html");
-				saveHTML((MindMapNodeModel) getMindMapMapModel().root(),
+				saveHTML((MindMapNodeModel) getMindMapMapModel().getRoot(),
 						file);
 				loadURL(file.toString());
 			} catch (IOException ex) {
@@ -2348,7 +2348,7 @@ public class MindMapController extends ControllerAdapter implements
 	 * javax.swing.tree.MutableTreeNode)
 	 */
 	public void insertNodeInto(MindMapNode newChild, MindMapNode parent) {
-		insertNodeInto(newChild, parent, parent.childCount());
+		insertNodeInto(newChild, parent, parent.getChildCount());
 	}
 
 

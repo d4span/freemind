@@ -105,10 +105,10 @@ public class StandaloneMapTests extends FreeMindTestBase {
 		NodeAdapter root = (NodeAdapter) mMap.loadTree(readerCreator,
 				MapAdapter.sDontAskInstance);
 		mMap.setRoot(root);
-		NodeAdapter firstChild = (NodeAdapter) root.childAt(0);
-		MindMapNode subChild1 = (MindMapNode) firstChild.childAt(0);
-		NodeAdapter subChild2 = (NodeAdapter) firstChild.childAt(1);
-		MindMapNode subChild3 = (MindMapNode) firstChild.childAt(2);
+		NodeAdapter firstChild = (NodeAdapter) root.getChildAt(0);
+		MindMapNode subChild1 = (MindMapNode) firstChild.getChildAt(0);
+		NodeAdapter subChild2 = (NodeAdapter) firstChild.getChildAt(1);
+		MindMapNode subChild3 = (MindMapNode) firstChild.getChildAt(2);
 		mapFeedback.setStrikethrough(root, true);
 		assertEquals(true, root.isStrikethrough());
 		mapFeedback.setBold(root, true);
@@ -122,13 +122,13 @@ public class StandaloneMapTests extends FreeMindTestBase {
 		assertEquals(true, root.isStrikethrough());
 		mapFeedback.setStrikethrough(root, false);
 		assertEquals(false, root.isStrikethrough());
-		int amount = root.childCount();
+		int amount = root.getChildCount();
 		MindMapNode newNode = mapFeedback.addNewNode(root, 0,
 				true);
-		assertEquals(amount + 1, root.childCount());
+		assertEquals(amount + 1, root.getChildCount());
 		mapFeedback.deleteNode(newNode);
 		newNode = null;
-		assertEquals(amount, root.childCount());
+		assertEquals(amount, root.getChildCount());
 		try {
 			mapFeedback.deleteNode(root);
 			assertTrue("Must throw.", false);
@@ -136,7 +136,7 @@ public class StandaloneMapTests extends FreeMindTestBase {
 		}
 		mapFeedback.paste(new StringSelection("bla"), root, false,
 				true);
-		assertEquals(amount + 1, root.childCount());
+		assertEquals(amount + 1, root.getChildCount());
 		assertEquals(0, root.getIcons().size());
 		MindIcon icon = MindIcon.factory("attach");
 		mapFeedback.addIcon(root, icon);
@@ -197,7 +197,7 @@ public class StandaloneMapTests extends FreeMindTestBase {
 		assertEquals(20, root.getVGap());
 		assertEquals(30, firstChild.getHGap());
 		assertEquals(17, firstChild.getShiftY());
-		mapFeedback.setNodeStyle(firstChild, NodeStyle.FORK.style());
+		mapFeedback.setNodeStyle(firstChild, NodeStyle.FORK.getStyle());
 		assertEquals(NodeStyle.FORK, firstChild.getStyle());
 		assertTrue(firstChild.hasStyle());
 		mapFeedback.setNodeStyle(firstChild, null);
@@ -255,13 +255,13 @@ public class StandaloneMapTests extends FreeMindTestBase {
 //		mapFeedback.addHook(firstChild,
 //				Tools.getVectorWithSingleElement(firstChild),
 //				"accessories/plugins/BlinkingNodeHook.properties", null);
-		assertEquals(0, firstChild.indexOf(subChild1));
+		assertEquals(0, firstChild.getIndex(subChild1));
 		mapFeedback.moveNodes(subChild1, Tools.getVectorWithSingleElement(subChild1), 1);
-		assertEquals(1, firstChild.indexOf(subChild1));
+		assertEquals(1, firstChild.getIndex(subChild1));
 		mapFeedback.moveNodes(subChild1, Tools.getVectorWithSingleElement(subChild1), -1);
-		assertEquals(0, firstChild.indexOf(subChild1));
+		assertEquals(0, firstChild.getIndex(subChild1));
 		mapFeedback.moveNodes(subChild1, Tools.getVectorWithSingleElement(subChild1), -1);
-		assertEquals(2, firstChild.indexOf(subChild1));
+		assertEquals(2, firstChild.getIndex(subChild1));
 		mapFeedback.setFolded(firstChild, true);
 		assertTrue(firstChild.isFolded());
 		String link = "http://freemind.sf.net/";
@@ -283,9 +283,9 @@ public class StandaloneMapTests extends FreeMindTestBase {
 		assertEquals("0", root.getAttribute("0name"));
 		assertEquals(null, root.getAttribute("oname"));
 		// cut
-		assertEquals(3, firstChild.childCount());
+		assertEquals(3, firstChild.getChildCount());
 		mapFeedback.cut(Tools.getVectorWithSingleElement(subChild3));
-		assertEquals(2, firstChild.childCount());
+		assertEquals(2, firstChild.getChildCount());
 		subChild3=null;
 		// note
 		String htmlText = "<html><body>blaNOTE</body></html>";

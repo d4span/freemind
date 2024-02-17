@@ -42,7 +42,7 @@ import javax.swing.event.TreeModelListener;
 
 import ch.d4span.freemind.domain.mindmap.MindMap;
 import ch.d4span.freemind.domain.mindmap.MindMapNode;
-import ch.d4span.freemind.domain.treemodel.MutableDefaultTreeModel;
+import ch.d4span.freemind.domain.treemodel.DefaultTreeModel;
 import ch.d4span.freemind.domain.treemodel.TreeNode;
 import freemind.controller.filter.DefaultFilter;
 import freemind.controller.filter.Filter;
@@ -54,7 +54,7 @@ import freemind.main.Tools;
 import freemind.main.XMLParseException;
 
 @SuppressWarnings("serial")
-public abstract class MapAdapter extends MutableDefaultTreeModel implements MindMap {
+public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 	public static final String MAP_INITIAL_START = "<map version=\"";
 	public static final String FREEMIND_VERSION_UPDATER_XSLT = "freemind/modes/mindmapmode/freemind_version_updater.xslt";
 	/**
@@ -244,7 +244,7 @@ public abstract class MapAdapter extends MutableDefaultTreeModel implements Mind
 
 	@Override
     public MindMapNode getRootNode() {
-		return (MindMapNode) root();
+		return (MindMapNode) getRoot();
 	}
 
 	public void setRoot(MindMapNode root) {
@@ -284,7 +284,7 @@ public abstract class MapAdapter extends MutableDefaultTreeModel implements Mind
 				parent.setLeft(!left);
 			}
 			// and put it as a child
-			node.insert(parent, node.childCount());
+			node.insert(parent, node.getChildCount());
 		}
 		// and set root
 		setRoot(newRoot);

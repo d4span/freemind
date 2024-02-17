@@ -579,14 +579,14 @@ public class OptionPanel implements TextTranslator {
 		 */
 		controls.add(new NewTabProperty("Defaults"));
 		controls.add(new SeparatorProperty("default_styles"));
-		var styles = Arrays.stream(NodeStyle.values()).map(NodeStyle::style).toArray(String[]::new);
+		var styles = Arrays.stream(NodeStyle.values()).map(NodeStyle::getStyle).toArray(String[]::new);
 		controls.add(new ComboProperty("standardnodestyle.tooltip",
 				FreeMind.RESOURCES_NODE_STYLE, styles, this)); // as_parent
 
 		controls.add(new ComboProperty("standardrootnodestyle.tooltip",
 				FreeMind.RESOURCES_ROOT_NODE_STYLE, new String[] {
-						NodeStyle.FORK.style(), NodeStyle.BUBBLE.style(),
-						NodeStyle.COMBINED.style() }, this)); // fork
+						NodeStyle.FORK.getStyle(), NodeStyle.BUBBLE.getStyle(),
+						NodeStyle.COMBINED.getStyle() }, this)); // fork
 
 		controls.add(new NextLineProperty());
 		controls.add(new SeparatorProperty("default_colors"));

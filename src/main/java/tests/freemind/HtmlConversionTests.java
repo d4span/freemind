@@ -159,20 +159,11 @@ public class HtmlConversionTests extends FreeMindTestBase {
 	}
 
 	public void testBr() throws Exception {
-		String input = """
-        	<html>
-        	  <head>
-        	 \s\s\s
-        	  </head>
-        	  <body>
-        	    <p>
-        	      asdfasdf<br />asdfasdfdasf
-        	    </p>
-        	    <p>
-        	      asdasdfas
-        	    </p>
-        	  </body>
-        	</html>""";
+		String input = "<html>\n" + "  <head>\n" + "    \n" + "  </head>\n"
+				+ "  <body>\n" + "    <p>\n"
+				+ "      asdfasdf<br />asdfasdfdasf\n" + "    </p>\n"
+				+ "    <p>\n" + "      asdasdfas\n" + "    </p>\n"
+				+ "  </body>\n" + "</html>";
 		String result = HtmlTools.getInstance().toHtml(input);
 		assertFalse(" no > occurs  in " + result, result.matches("^.*&gt;.*$"));
 	}
@@ -345,213 +336,203 @@ public class HtmlConversionTests extends FreeMindTestBase {
 	}
 
 	static final String testHtml1 = "<ul><li>bla</li></ul>";
-	final static String testHtml2 = """
-    	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-    	<html>
-    	<head>
-    		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    		<title></title>
-    		<meta name="generator" content="LibreOffice 4.3.3.2 (Linux)"/>
-    		<meta name="author" content="Christian Foltin"/>
-    		<meta name="created" content="2014-11-28T21:27:45.329992028"/>
-    		<meta name="changedby" content="Christian Foltin"/>
-    		<meta name="changed" content="2014-11-28T21:28:10.435205408"/>
-    		<style type="text/css">
-    			@page { margin: 2cm }
-    			p { margin-bottom: 0.25cm; line-height: 120% }
-    		</style>
-    	</head>
-    	<body lang="de-DE" dir="ltr">
-    	<ul>
-    		<li/>
-    	<p style="margin-bottom: 0cm; line-height: 100%">Bla</p>
-    		<ul>
-    			<li/>
-    	<p style="margin-bottom: 0cm; line-height: 100%">blubber</p>
-    			<li/>
-    	<p style="margin-bottom: 0cm; line-height: 100%">zweite ebene</p>
-    			<ul>
-    				<li/>
-    	<p style="margin-bottom: 0cm; line-height: 100%">dritte
-    				ebene</p>
-    			</ul>
-    		</ul>
-    		<li/>
-    	<p style="margin-bottom: 0cm; line-height: 100%">1. ebene</p>
-    	</ul>
-    	</body>
-    	</html>""";
-	static final String testHtml3 = """
-    	<html>
-    	<head>
-    	<title>FreeMind Import</title>
-    	<link rel="important stylesheet" href="chrome://messagebody/skin/messageBody.css">
-    	</head>
-    	<body>
-    	<table border=0 cellspacing=0 cellpadding=0 width="100%" class="header-part1"><tr><td><b>Betreff: </b>FreeMind Import</td></tr><tr><td><b>Von: </b>xxxxxxxxx yyyyyyy &lt;xxxxxxx.yyyyy@abc.de&gt;</td></tr><tr><td><b>Datum: </b>28.11.14 08:55</td></tr></table><table border=0 cellspacing=0 cellpadding=0 width="100%" class="header-part2"><tr><td><b>An: </b>&quot;xxxxxxxxx.yyyyyy@def.de&quot; &lt;xxxxxx.yyyyy@def.de&gt;</td></tr></table><br>
-    	<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns:m="http://schemas.microsoft.com/office/2004/12/omml" xmlns="http://www.w3.org/TR/REC-html40">
-    	<head>
-    	<meta http-equiv="Content-Type" content="text/html; ">
-    	<meta name="Generator" content="Microsoft Word 14 (filtered medium)">
-    	<style><!--
-    	/* Font Definitions */
-    	@font-face
-    		{font-family:Wingdings;
-    		panose-1:5 0 0 0 0 0 0 0 0 0;}
-    	@font-face
-    		{font-family:Wingdings;
-    		panose-1:5 0 0 0 0 0 0 0 0 0;}
-    	@font-face
-    		{font-family:Calibri;
-    		panose-1:2 15 5 2 2 2 4 3 2 4;}
-    	/* Style Definitions */
-    	p.MsoNormal, li.MsoNormal, div.MsoNormal
-    		{margin:0cm;
-    		margin-bottom:.0001pt;
-    		font-size:11.0pt;
-    		font-family:"Calibri","sans-serif";
-    		mso-fareast-language:EN-US;}
-    	a:link, span.MsoHyperlink
-    		{mso-style-priority:99;
-    		color:blue;
-    		text-decoration:underline;}
-    	a:visited, span.MsoHyperlinkFollowed
-    		{mso-style-priority:99;
-    		color:purple;
-    		text-decoration:underline;}
-    	p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
-    		{mso-style-priority:34;
-    		margin-top:0cm;
-    		margin-right:0cm;
-    		margin-bottom:0cm;
-    		margin-left:36.0pt;
-    		margin-bottom:.0001pt;
-    		font-size:11.0pt;
-    		font-family:"Calibri","sans-serif";
-    		mso-fareast-language:EN-US;}
-    	span.E-MailFormatvorlage17
-    		{mso-style-type:personal-compose;
-    		font-family:"Arial","sans-serif";
-    		color:windowtext;}
-    	.MsoChpDefault
-    		{mso-style-type:export-only;
-    		font-family:"Calibri","sans-serif";
-    		mso-fareast-language:EN-US;}
-    	@page WordSection1
-    		{size:612.0pt 792.0pt;
-    		margin:72.0pt 72.0pt 72.0pt 72.0pt;}
-    	div.WordSection1
-    		{page:WordSection1;}
-    	/* List Definitions */
-    	@list l0
-    		{mso-list-id:1096172370;
-    		mso-list-type:hybrid;
-    		mso-list-template-ids:-104571736 2049105486 67567619 67567621 67567617 67567619 67567621 67567617 67567619 67567621;}
-    	@list l0:level1
-    		{mso-level-start-at:0;
-    		mso-level-number-format:bullet;
-    		mso-level-text:\\F0B7;
-    		mso-level-tab-stop:none;
-    		mso-level-number-position:left;
-    		text-indent:-18.0pt;
-    		font-family:Symbol;
-    		mso-fareast-font-family:Calibri;
-    		mso-bidi-font-family:"Times New Roman";}
-    	@list l0:level2
-    		{mso-level-number-format:bullet;
-    		mso-level-text:o;
-    		mso-level-tab-stop:none;
-    		mso-level-number-position:left;
-    		text-indent:-18.0pt;
-    		font-family:"Courier New";}
-    	@list l0:level3
-    		{mso-level-number-format:bullet;
-    		mso-level-text:\\F0A7;
-    		mso-level-tab-stop:none;
-    		mso-level-number-position:left;
-    		text-indent:-18.0pt;
-    		font-family:Wingdings;}
-    	@list l0:level4
-    		{mso-level-number-format:bullet;
-    		mso-level-text:\\F0B7;
-    		mso-level-tab-stop:none;
-    		mso-level-number-position:left;
-    		text-indent:-18.0pt;
-    		font-family:Symbol;}
-    	@list l0:level5
-    		{mso-level-number-format:bullet;
-    		mso-level-text:o;
-    		mso-level-tab-stop:none;
-    		mso-level-number-position:left;
-    		text-indent:-18.0pt;
-    		font-family:"Courier New";}
-    	@list l0:level6
-    		{mso-level-number-format:bullet;
-    		mso-level-text:\\F0A7;
-    		mso-level-tab-stop:none;
-    		mso-level-number-position:left;
-    		text-indent:-18.0pt;
-    		font-family:Wingdings;}
-    	@list l0:level7
-    		{mso-level-number-format:bullet;
-    		mso-level-text:\\F0B7;
-    		mso-level-tab-stop:none;
-    		mso-level-number-position:left;
-    		text-indent:-18.0pt;
-    		font-family:Symbol;}
-    	@list l0:level8
-    		{mso-level-number-format:bullet;
-    		mso-level-text:o;
-    		mso-level-tab-stop:none;
-    		mso-level-number-position:left;
-    		text-indent:-18.0pt;
-    		font-family:"Courier New";}
-    	@list l0:level9
-    		{mso-level-number-format:bullet;
-    		mso-level-text:\\F0A7;
-    		mso-level-tab-stop:none;
-    		mso-level-number-position:left;
-    		text-indent:-18.0pt;
-    		font-family:Wingdings;}
-    	ol
-    		{margin-bottom:0cm;}
-    	ul
-    		{margin-bottom:0cm;}
-    	--></style><!--[if gte mso 9]><xml>
-    	<o:shapedefaults v:ext="edit" spidmax="1026" />
-    	</xml><![endif]--><!--[if gte mso 9]><xml>
-    	<o:shapelayout v:ext="edit">
-    	<o:idmap v:ext="edit" data="1" />
-    	</o:shapelayout></xml><![endif]-->
-    	</head>
-    	<body lang="DE" link="blue" vlink="purple">
-    	<div class="WordSection1">
-    	<p class="MsoListParagraph" style="text-indent:-18.0pt;mso-list:l0 level1 lfo1"><![if !supportLists]><span style="font-family:Symbol"><span style="mso-list:Ignore">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    	</span></span></span><![endif]><span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">Bla<o:p></o:p></span></p>
-    	<p class="MsoListParagraph" style="margin-left:72.0pt;text-indent:-18.0pt;mso-list:l0 level2 lfo1">
-    	<![if !supportLists]><span style="font-family:&quot;Courier New&quot;"><span style="mso-list:Ignore">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
-    	</span></span></span><![endif]><span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">Unterpunkt<o:p></o:p></span></p>
-    	<p class="MsoListParagraph" style="margin-left:72.0pt;text-indent:-18.0pt;mso-list:l0 level2 lfo1">
-    	<![if !supportLists]><span style="font-family:&quot;Courier New&quot;"><span style="mso-list:Ignore">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
-    	</span></span></span><![endif]><span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">Zweiter Unterpunkt<o:p></o:p></span></p>
-    	<p class="MsoListParagraph" style="margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo1">
-    	<![if !supportLists]><span style="font-family:Wingdings"><span style="mso-list:Ignore">§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
-    	</span></span></span><![endif]><span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">Dritte Ebene<o:p></o:p></span></p>
-    	<p class="MsoListParagraph" style="text-indent:-18.0pt;mso-list:l0 level1 lfo1"><![if !supportLists]><span style="font-family:Symbol"><span style="mso-list:Ignore">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    	</span></span></span><![endif]><span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;">Hauptpunkt<o:p></o:p></span></p>
-    	<p class="MsoNormal"><span style="font-family:&quot;Arial&quot;,&quot;sans-serif&quot;"><o:p>&nbsp;</o:p></span></p>
-    	<p class="MsoNormal"><span lang="EN-US" style="mso-fareast-language:DE">Viele Grüße/Best regards<o:p></o:p></span></p>
-    	<p class="MsoNormal"><span lang="EN-US" style="mso-fareast-language:DE"><o:p>&nbsp;</o:p></span></p>
-    	<p class="MsoNormal"><span lang="EN-US" style="mso-fareast-language:DE">XXXX YYYYYYY<o:p></o:p></span></p>
-    	<p class="MsoNormal"><span style="mso-fareast-language:DE">(-007)<o:p></o:p></span></p>
-    	<p class="MsoNormal"><o:p>&nbsp;</o:p></p>
-    	</div>
-    	</body>
-    	</html>
-    	
-    	</body>
-    	</html>
-    	""";
+	final static String testHtml2 = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n"
+			+ "<html>\n"
+			+ "<head>\n"
+			+ "	<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\n"
+			+ "	<title></title>\n"
+			+ "	<meta name=\"generator\" content=\"LibreOffice 4.3.3.2 (Linux)\"/>\n"
+			+ "	<meta name=\"author\" content=\"Christian Foltin\"/>\n"
+			+ "	<meta name=\"created\" content=\"2014-11-28T21:27:45.329992028\"/>\n"
+			+ "	<meta name=\"changedby\" content=\"Christian Foltin\"/>\n"
+			+ "	<meta name=\"changed\" content=\"2014-11-28T21:28:10.435205408\"/>\n"
+			+ "	<style type=\"text/css\">\n"
+			+ "		@page { margin: 2cm }\n"
+			+ "		p { margin-bottom: 0.25cm; line-height: 120% }\n"
+			+ "	</style>\n"
+			+ "</head>\n"
+			+ "<body lang=\"de-DE\" dir=\"ltr\">\n"
+			+ "<ul>\n"
+			+ "	<li/>\n"
+			+ "<p style=\"margin-bottom: 0cm; line-height: 100%\">Bla</p>\n"
+			+ "	<ul>\n"
+			+ "		<li/>\n"
+			+ "<p style=\"margin-bottom: 0cm; line-height: 100%\">blubber</p>\n"
+			+ "		<li/>\n"
+			+ "<p style=\"margin-bottom: 0cm; line-height: 100%\">zweite ebene</p>\n"
+			+ "		<ul>\n"
+			+ "			<li/>\n"
+			+ "<p style=\"margin-bottom: 0cm; line-height: 100%\">dritte\n"
+			+ "			ebene</p>\n"
+			+ "		</ul>\n"
+			+ "	</ul>\n"
+			+ "	<li/>\n"
+			+ "<p style=\"margin-bottom: 0cm; line-height: 100%\">1. ebene</p>\n"
+			+ "</ul>\n" + "</body>\n" + "</html>";
+	static final String testHtml3 = "<html>\n"
+			+ "<head>\n"
+			+ "<title>FreeMind Import</title>\n"
+			+ "<link rel=\"important stylesheet\" href=\"chrome://messagebody/skin/messageBody.css\">\n"
+			+ "</head>\n"
+			+ "<body>\n"
+			+ "<table border=0 cellspacing=0 cellpadding=0 width=\"100%\" class=\"header-part1\"><tr><td><b>Betreff: </b>FreeMind Import</td></tr><tr><td><b>Von: </b>xxxxxxxxx yyyyyyy &lt;xxxxxxx.yyyyy@abc.de&gt;</td></tr><tr><td><b>Datum: </b>28.11.14 08:55</td></tr></table><table border=0 cellspacing=0 cellpadding=0 width=\"100%\" class=\"header-part2\"><tr><td><b>An: </b>&quot;xxxxxxxxx.yyyyyy@def.de&quot; &lt;xxxxxx.yyyyy@def.de&gt;</td></tr></table><br>\n"
+			+ "<html xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" xmlns:m=\"http://schemas.microsoft.com/office/2004/12/omml\" xmlns=\"http://www.w3.org/TR/REC-html40\">\n"
+			+ "<head>\n"
+			+ "<meta http-equiv=\"Content-Type\" content=\"text/html; \">\n"
+			+ "<meta name=\"Generator\" content=\"Microsoft Word 14 (filtered medium)\">\n"
+			+ "<style><!--\n"
+			+ "/* Font Definitions */\n"
+			+ "@font-face\n"
+			+ "	{font-family:Wingdings;\n"
+			+ "	panose-1:5 0 0 0 0 0 0 0 0 0;}\n"
+			+ "@font-face\n"
+			+ "	{font-family:Wingdings;\n"
+			+ "	panose-1:5 0 0 0 0 0 0 0 0 0;}\n"
+			+ "@font-face\n"
+			+ "	{font-family:Calibri;\n"
+			+ "	panose-1:2 15 5 2 2 2 4 3 2 4;}\n"
+			+ "/* Style Definitions */\n"
+			+ "p.MsoNormal, li.MsoNormal, div.MsoNormal\n"
+			+ "	{margin:0cm;\n"
+			+ "	margin-bottom:.0001pt;\n"
+			+ "	font-size:11.0pt;\n"
+			+ "	font-family:\"Calibri\",\"sans-serif\";\n"
+			+ "	mso-fareast-language:EN-US;}\n"
+			+ "a:link, span.MsoHyperlink\n"
+			+ "	{mso-style-priority:99;\n"
+			+ "	color:blue;\n"
+			+ "	text-decoration:underline;}\n"
+			+ "a:visited, span.MsoHyperlinkFollowed\n"
+			+ "	{mso-style-priority:99;\n"
+			+ "	color:purple;\n"
+			+ "	text-decoration:underline;}\n"
+			+ "p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph\n"
+			+ "	{mso-style-priority:34;\n"
+			+ "	margin-top:0cm;\n"
+			+ "	margin-right:0cm;\n"
+			+ "	margin-bottom:0cm;\n"
+			+ "	margin-left:36.0pt;\n"
+			+ "	margin-bottom:.0001pt;\n"
+			+ "	font-size:11.0pt;\n"
+			+ "	font-family:\"Calibri\",\"sans-serif\";\n"
+			+ "	mso-fareast-language:EN-US;}\n"
+			+ "span.E-MailFormatvorlage17\n"
+			+ "	{mso-style-type:personal-compose;\n"
+			+ "	font-family:\"Arial\",\"sans-serif\";\n"
+			+ "	color:windowtext;}\n"
+			+ ".MsoChpDefault\n"
+			+ "	{mso-style-type:export-only;\n"
+			+ "	font-family:\"Calibri\",\"sans-serif\";\n"
+			+ "	mso-fareast-language:EN-US;}\n"
+			+ "@page WordSection1\n"
+			+ "	{size:612.0pt 792.0pt;\n"
+			+ "	margin:72.0pt 72.0pt 72.0pt 72.0pt;}\n"
+			+ "div.WordSection1\n"
+			+ "	{page:WordSection1;}\n"
+			+ "/* List Definitions */\n"
+			+ "@list l0\n"
+			+ "	{mso-list-id:1096172370;\n"
+			+ "	mso-list-type:hybrid;\n"
+			+ "	mso-list-template-ids:-104571736 2049105486 67567619 67567621 67567617 67567619 67567621 67567617 67567619 67567621;}\n"
+			+ "@list l0:level1\n"
+			+ "	{mso-level-start-at:0;\n"
+			+ "	mso-level-number-format:bullet;\n"
+			+ "	mso-level-text:\\F0B7;\n"
+			+ "	mso-level-tab-stop:none;\n"
+			+ "	mso-level-number-position:left;\n"
+			+ "	text-indent:-18.0pt;\n"
+			+ "	font-family:Symbol;\n"
+			+ "	mso-fareast-font-family:Calibri;\n"
+			+ "	mso-bidi-font-family:\"Times New Roman\";}\n"
+			+ "@list l0:level2\n"
+			+ "	{mso-level-number-format:bullet;\n"
+			+ "	mso-level-text:o;\n"
+			+ "	mso-level-tab-stop:none;\n"
+			+ "	mso-level-number-position:left;\n"
+			+ "	text-indent:-18.0pt;\n"
+			+ "	font-family:\"Courier New\";}\n"
+			+ "@list l0:level3\n"
+			+ "	{mso-level-number-format:bullet;\n"
+			+ "	mso-level-text:\\F0A7;\n"
+			+ "	mso-level-tab-stop:none;\n"
+			+ "	mso-level-number-position:left;\n"
+			+ "	text-indent:-18.0pt;\n"
+			+ "	font-family:Wingdings;}\n"
+			+ "@list l0:level4\n"
+			+ "	{mso-level-number-format:bullet;\n"
+			+ "	mso-level-text:\\F0B7;\n"
+			+ "	mso-level-tab-stop:none;\n"
+			+ "	mso-level-number-position:left;\n"
+			+ "	text-indent:-18.0pt;\n"
+			+ "	font-family:Symbol;}\n"
+			+ "@list l0:level5\n"
+			+ "	{mso-level-number-format:bullet;\n"
+			+ "	mso-level-text:o;\n"
+			+ "	mso-level-tab-stop:none;\n"
+			+ "	mso-level-number-position:left;\n"
+			+ "	text-indent:-18.0pt;\n"
+			+ "	font-family:\"Courier New\";}\n"
+			+ "@list l0:level6\n"
+			+ "	{mso-level-number-format:bullet;\n"
+			+ "	mso-level-text:\\F0A7;\n"
+			+ "	mso-level-tab-stop:none;\n"
+			+ "	mso-level-number-position:left;\n"
+			+ "	text-indent:-18.0pt;\n"
+			+ "	font-family:Wingdings;}\n"
+			+ "@list l0:level7\n"
+			+ "	{mso-level-number-format:bullet;\n"
+			+ "	mso-level-text:\\F0B7;\n"
+			+ "	mso-level-tab-stop:none;\n"
+			+ "	mso-level-number-position:left;\n"
+			+ "	text-indent:-18.0pt;\n"
+			+ "	font-family:Symbol;}\n"
+			+ "@list l0:level8\n"
+			+ "	{mso-level-number-format:bullet;\n"
+			+ "	mso-level-text:o;\n"
+			+ "	mso-level-tab-stop:none;\n"
+			+ "	mso-level-number-position:left;\n"
+			+ "	text-indent:-18.0pt;\n"
+			+ "	font-family:\"Courier New\";}\n"
+			+ "@list l0:level9\n"
+			+ "	{mso-level-number-format:bullet;\n"
+			+ "	mso-level-text:\\F0A7;\n"
+			+ "	mso-level-tab-stop:none;\n"
+			+ "	mso-level-number-position:left;\n"
+			+ "	text-indent:-18.0pt;\n"
+			+ "	font-family:Wingdings;}\n"
+			+ "ol\n"
+			+ "	{margin-bottom:0cm;}\n"
+			+ "ul\n"
+			+ "	{margin-bottom:0cm;}\n"
+			+ "--></style><!--[if gte mso 9]><xml>\n"
+			+ "<o:shapedefaults v:ext=\"edit\" spidmax=\"1026\" />\n"
+			+ "</xml><![endif]--><!--[if gte mso 9]><xml>\n"
+			+ "<o:shapelayout v:ext=\"edit\">\n"
+			+ "<o:idmap v:ext=\"edit\" data=\"1\" />\n"
+			+ "</o:shapelayout></xml><![endif]-->\n"
+			+ "</head>\n"
+			+ "<body lang=\"DE\" link=\"blue\" vlink=\"purple\">\n"
+			+ "<div class=\"WordSection1\">\n"
+			+ "<p class=\"MsoListParagraph\" style=\"text-indent:-18.0pt;mso-list:l0 level1 lfo1\"><![if !supportLists]><span style=\"font-family:Symbol\"><span style=\"mso-list:Ignore\">·<span style=\"font:7.0pt &quot;Times New Roman&quot;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n"
+			+ "</span></span></span><![endif]><span style=\"font-family:&quot;Arial&quot;,&quot;sans-serif&quot;\">Bla<o:p></o:p></span></p>\n"
+			+ "<p class=\"MsoListParagraph\" style=\"margin-left:72.0pt;text-indent:-18.0pt;mso-list:l0 level2 lfo1\">\n"
+			+ "<![if !supportLists]><span style=\"font-family:&quot;Courier New&quot;\"><span style=\"mso-list:Ignore\">o<span style=\"font:7.0pt &quot;Times New Roman&quot;\">&nbsp;&nbsp;\n"
+			+ "</span></span></span><![endif]><span style=\"font-family:&quot;Arial&quot;,&quot;sans-serif&quot;\">Unterpunkt<o:p></o:p></span></p>\n"
+			+ "<p class=\"MsoListParagraph\" style=\"margin-left:72.0pt;text-indent:-18.0pt;mso-list:l0 level2 lfo1\">\n"
+			+ "<![if !supportLists]><span style=\"font-family:&quot;Courier New&quot;\"><span style=\"mso-list:Ignore\">o<span style=\"font:7.0pt &quot;Times New Roman&quot;\">&nbsp;&nbsp;\n"
+			+ "</span></span></span><![endif]><span style=\"font-family:&quot;Arial&quot;,&quot;sans-serif&quot;\">Zweiter Unterpunkt<o:p></o:p></span></p>\n"
+			+ "<p class=\"MsoListParagraph\" style=\"margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo1\">\n"
+			+ "<![if !supportLists]><span style=\"font-family:Wingdings\"><span style=\"mso-list:Ignore\">§<span style=\"font:7.0pt &quot;Times New Roman&quot;\">&nbsp;\n"
+			+ "</span></span></span><![endif]><span style=\"font-family:&quot;Arial&quot;,&quot;sans-serif&quot;\">Dritte Ebene<o:p></o:p></span></p>\n"
+			+ "<p class=\"MsoListParagraph\" style=\"text-indent:-18.0pt;mso-list:l0 level1 lfo1\"><![if !supportLists]><span style=\"font-family:Symbol\"><span style=\"mso-list:Ignore\">·<span style=\"font:7.0pt &quot;Times New Roman&quot;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n"
+			+ "</span></span></span><![endif]><span style=\"font-family:&quot;Arial&quot;,&quot;sans-serif&quot;\">Hauptpunkt<o:p></o:p></span></p>\n"
+			+ "<p class=\"MsoNormal\"><span style=\"font-family:&quot;Arial&quot;,&quot;sans-serif&quot;\"><o:p>&nbsp;</o:p></span></p>\n"
+			+ "<p class=\"MsoNormal\"><span lang=\"EN-US\" style=\"mso-fareast-language:DE\">Viele Grüße/Best regards<o:p></o:p></span></p>\n"
+			+ "<p class=\"MsoNormal\"><span lang=\"EN-US\" style=\"mso-fareast-language:DE\"><o:p>&nbsp;</o:p></span></p>\n"
+			+ "<p class=\"MsoNormal\"><span lang=\"EN-US\" style=\"mso-fareast-language:DE\">XXXX YYYYYYY<o:p></o:p></span></p>\n"
+			+ "<p class=\"MsoNormal\"><span style=\"mso-fareast-language:DE\">(-007)<o:p></o:p></span></p>\n"
+			+ "<p class=\"MsoNormal\"><o:p>&nbsp;</o:p></p>\n" + "</div>\n"
+			+ "</body>\n" + "</html>\n" + "\n" + "</body>\n" + "</html>\n";
 	public void testListDetection() throws Exception {
 		HtmlTools instance = HtmlTools.getInstance();
 		final IntHolder created= new IntHolder();
@@ -579,7 +560,7 @@ public class HtmlConversionTests extends FreeMindTestBase {
 				created.increase();
 				System.out.println("Create new node as child of: " + pParent.getText());
 				TestMindMapNode newNode = new TestMindMapNode();
-				pParent.insert(newNode, pParent.childCount());
+				pParent.insert(newNode, pParent.getChildCount());
 				newNode.setParent(pParent);
 				return newNode;
 			}
@@ -598,14 +579,14 @@ public class HtmlConversionTests extends FreeMindTestBase {
 		instance.insertHtmlIntoNodes(testHtml1, rootNode, creator);
 		
 		assertEquals(1, created.getValue());
-		assertEquals("Only one in the first level", 1, rootNode.childCount());
+		assertEquals("Only one in the first level", 1, rootNode.getChildCount());
 		created.setValue(0);
 		rootNode = new TestMindMapNode();
 		rootNode.setText("myRoot2");
 		instance.insertHtmlIntoNodes(testHtml2, rootNode, creator);
 		
 		assertEquals(5, created.getValue());
-		assertEquals("Only two in the first level", 2, rootNode.childCount());
+		assertEquals("Only two in the first level", 2, rootNode.getChildCount());
 
 		
 		created.setValue(0);
@@ -613,7 +594,7 @@ public class HtmlConversionTests extends FreeMindTestBase {
 		rootNode.setText("myRoot3");
 		instance.insertHtmlIntoNodes(testHtml3, rootNode, creator);
 		assertEquals(13, created.getValue());
-		assertEquals("first level nodes", 10, rootNode.childCount());
+		assertEquals("first level nodes", 10, rootNode.getChildCount());
 	}
 
 	public void testDetermineNodeAmount() throws Exception {

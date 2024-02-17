@@ -90,7 +90,7 @@ public class StylePattern {
 		NodeAdapter nodeAdapter = (NodeAdapter) node;
 		nodeColor = nodeAdapter.getColor();
 		nodeBackgroundColor = nodeAdapter.getBackgroundColor();
-		nodeStyle = nodeAdapter.getStyle().style();
+		nodeStyle = nodeAdapter.getStyle().getStyle();
 
 		nodeFontBold = Boolean.valueOf(nodeAdapter.isBold());
 		nodeFontItalic = Boolean.valueOf(nodeAdapter.isItalic());

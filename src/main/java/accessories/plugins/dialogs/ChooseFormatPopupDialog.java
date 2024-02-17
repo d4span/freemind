@@ -143,16 +143,14 @@ public class ChooseFormatPopupDialog extends JDialog implements TextTranslator,
 		this.setContentPane(contentPane);
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
-			@Override
-            public void windowClosing(WindowEvent we) {
+			public void windowClosing(WindowEvent we) {
 				cancelPressed();
 			}
 		});
 		addKeyListener(this);
 		Action action = new AbstractAction() {
 
-			@Override
-            public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				cancelPressed();
 			}
 		};
@@ -227,7 +225,7 @@ public class ChooseFormatPopupDialog extends JDialog implements TextTranslator,
 				MindMapNode root = mMap.loadTree(readerCreator,
 						MapAdapter.sDontAskInstance);
 				mMap.setRoot(root);
-				mDemoNode = (MindMapNode) root.childAt(0);
+				mDemoNode = (MindMapNode) root.getChildAt(0);
 			} catch (XMLParseException e) {
 				freemind.main.Resources.getInstance().logException(e);
 			} catch (IOException e) {
@@ -276,8 +274,7 @@ public class ChooseFormatPopupDialog extends JDialog implements TextTranslator,
 
 			jOKButton.setAction(new AbstractAction() {
 
-				@Override
-                public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(ActionEvent e) {
 					okPressed();
 				}
 
@@ -298,8 +295,7 @@ public class ChooseFormatPopupDialog extends JDialog implements TextTranslator,
 			jCancelButton = new JButton();
 			jCancelButton.setAction(new AbstractAction() {
 
-				@Override
-                public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(ActionEvent e) {
 					cancelPressed();
 				}
 			});
@@ -316,8 +312,7 @@ public class ChooseFormatPopupDialog extends JDialog implements TextTranslator,
 		return result;
 	}
 
-	@Override
-    public String getText(String pKey) {
+	public String getText(String pKey) {
 		return mController.getText(pKey);
 	}
 
@@ -334,8 +329,7 @@ public class ChooseFormatPopupDialog extends JDialog implements TextTranslator,
 	 * 
 	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
 	 */
-	@Override
-    public void keyPressed(KeyEvent keyEvent) {
+	public void keyPressed(KeyEvent keyEvent) {
 		System.out.println("key pressed: " + keyEvent);
 		switch (keyEvent.getKeyCode()) {
 		case KeyEvent.VK_ESCAPE:
@@ -350,8 +344,7 @@ public class ChooseFormatPopupDialog extends JDialog implements TextTranslator,
 	 * 
 	 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
 	 */
-	@Override
-    public void keyReleased(KeyEvent keyEvent) {
+	public void keyReleased(KeyEvent keyEvent) {
 		System.out.println("keyReleased: " + keyEvent);
 	}
 
@@ -360,8 +353,7 @@ public class ChooseFormatPopupDialog extends JDialog implements TextTranslator,
 	 * 
 	 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
 	 */
-	@Override
-    public void keyTyped(KeyEvent keyEvent) {
+	public void keyTyped(KeyEvent keyEvent) {
 		System.out.println("keyTyped: " + keyEvent);
 	}
 

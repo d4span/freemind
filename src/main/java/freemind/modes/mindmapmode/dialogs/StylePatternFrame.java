@@ -341,7 +341,7 @@ public class StylePatternFrame extends JPanel implements TextTranslator,
 		mSetNodeStyle = new ThreeCheckBoxProperty(SET_NODE_STYLE + ".tooltip",
 				SET_NODE_STYLE);
 		controls.add(mSetNodeStyle);
-		var styles = Arrays.stream(NodeStyle.values()).map(NodeStyle::style).toArray(String[]::new);
+		var styles = Arrays.stream(NodeStyle.values()).map(NodeStyle::getStyle).toArray(String[]::new);
 		mNodeStyle = new ComboProperty(NODE_STYLE + ".tooltip", NODE_STYLE,
 				styles, this);
 		controls.add(mNodeStyle);
@@ -474,7 +474,7 @@ public class StylePatternFrame extends JPanel implements TextTranslator,
 				mSetNodeBackgroundColor, mNodeBackgroundColor,
 				fmMain.getDefaultProperty(FreeMind.RESOURCES_BACKGROUND_COLOR));
 		setPatternControls(pattern.getPatternNodeStyle(), mSetNodeStyle,
-				mNodeStyle, NodeStyle.AS_PARENT.style());
+				mNodeStyle, NodeStyle.AS_PARENT.getStyle());
 		setPatternControls(pattern.getPatternNodeText(), mSetNodeText,
 				mNodeText, "");
 		setPatternControls(pattern.getPatternEdgeColor(), mSetEdgeColor,

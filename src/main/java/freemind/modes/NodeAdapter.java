@@ -348,7 +348,7 @@ if (FreeMindCommon.SAVE_ONLY_INTRISICALLY_NEEDED_IDS
 	
 	@Override
     public String getBareStyle(){
-		return style.style();
+		return style.getStyle();
 	}
 	
 	/** A Node-Style like MindMapNode.STYLE_FORK or MindMapNode.STYLE_BUBBLE */
@@ -776,7 +776,7 @@ if (FreeMindCommon.SAVE_ONLY_INTRISICALLY_NEEDED_IDS
 	}
 
 	@Override
-    public TreeNode childAt(int childIndex) {
+    public TreeNode getChildAt(int childIndex) {
 		// fc, 11.12.2004: This is not understandable, that a child does not
 		// exist if the parent is folded.
 		// if (isFolded()) {
@@ -786,7 +786,7 @@ if (FreeMindCommon.SAVE_ONLY_INTRISICALLY_NEEDED_IDS
 	}
 
 	@Override
-    public int childCount() {
+    public int getChildCount() {
 		return children == null ? 0 : children.size();
 	}
 
@@ -801,7 +801,7 @@ if (FreeMindCommon.SAVE_ONLY_INTRISICALLY_NEEDED_IDS
 	// // the meaning, at least not to me.
 
 	@Override
-    public int indexOf(TreeNode node) {
+    public int getIndex(TreeNode node) {
 		return children.indexOf((MindMapNode) node); // uses equals()
 	}
 
@@ -812,7 +812,7 @@ if (FreeMindCommon.SAVE_ONLY_INTRISICALLY_NEEDED_IDS
 
 	@Override
     public boolean isLeaf() {
-		return childCount() == 0;
+		return getChildCount() == 0;
 	}
 
 	// fc, 16.12.2003 left-right bug:
@@ -831,8 +831,8 @@ if (FreeMindCommon.SAVE_ONLY_INTRISICALLY_NEEDED_IDS
     public void setLeft(boolean isLeft) {
 		position = isLeft ? LEFT_POSITION : RIGHT_POSITION;
 		if (!isRoot()) {
-			for (int i = 0; i < childCount(); i++) {
-				final NodeAdapter child = (NodeAdapter) childAt(i);
+			for (int i = 0; i < getChildCount(); i++) {
+				final NodeAdapter child = (NodeAdapter) getChildAt(i);
 				child.position = position;
 			}
 		}
@@ -844,10 +844,10 @@ if (FreeMindCommon.SAVE_ONLY_INTRISICALLY_NEEDED_IDS
 			return isLeft();
 		}
 		int rightChildrenCount = 0;
-		for (int i = 0; i < childCount(); i++) {
-			if (!((NodeAdapter) childAt(i)).isLeft())
+		for (int i = 0; i < getChildCount(); i++) {
+			if (!((NodeAdapter) getChildAt(i)).isLeft())
 				rightChildrenCount++;
-			if (rightChildrenCount > childCount() / 2) {
+			if (rightChildrenCount > getChildCount() / 2) {
 				return true;
 			}
 		}
@@ -867,7 +867,7 @@ if (FreeMindCommon.SAVE_ONLY_INTRISICALLY_NEEDED_IDS
 		logger.finest("Insert at " + index + " the node " + child);
 		final MindMapNode childNode = (MindMapNode) child;
 		if (index < 0) { // add to the end (used in xml load) (PN)
-			index = childCount();
+			index = getChildCount();
 			children.add(index, childNode);
 		} else { // mind preferred child :-)
 			children.add(index, childNode);

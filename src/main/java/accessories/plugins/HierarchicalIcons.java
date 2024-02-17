@@ -180,7 +180,7 @@ public class HierarchicalIcons extends PermanentMindMapNodeHookAdapter
 	/**
      */
 	private void gatherLeavesAndSetStyle(NodeAdapter node) {
-		if (node.childCount() == 0) {
+		if (node.getChildCount() == 0) {
 			// call setStyle for all leaves:
 			setStyle(node);
 			return;
@@ -194,7 +194,7 @@ public class HierarchicalIcons extends PermanentMindMapNodeHookAdapter
 	/**
      */
 	private void gatherLeavesAndSetParentsStyle(NodeAdapter node) {
-		if (node.childCount() == 0) {
+		if (node.getChildCount() == 0) {
 			// call setStyleRecursive for all parents:
 			if (node.getParentNode() != null) {
 				setStyleRecursive((NodeAdapter) node.getParentNode());

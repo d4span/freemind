@@ -93,7 +93,7 @@ public class NewChildActor extends XmlActorAdapter {
 	public MindMapNode addNewNode(MindMapNode parent, int index,
 			boolean newNodeIsLeft) {
 		if (index == -1) {
-			index = parent.childCount();
+			index = parent.getChildCount();
 		}
 		// bug fix from Dimitri.
 		getLinkRegistry().registerLinkTarget(parent);
@@ -105,7 +105,7 @@ public class NewChildActor extends XmlActorAdapter {
 				.getDeleteNodeAction(newId);
 		getExMapFeedback().doTransaction(getExMapFeedback().getResourceString("new_child"),
 				new ActionPair(newNodeAction, deleteAction));
-		return (MindMapNode) parent.childAt(index);
+		return (MindMapNode) parent.getChildAt(index);
 	}
 
 	public NewNodeAction getAddNodeAction(MindMapNode parent, int index,

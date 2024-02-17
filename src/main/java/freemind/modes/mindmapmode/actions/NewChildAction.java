@@ -92,7 +92,7 @@ public class NewChildAction extends MindmapAction  {
 				getModeController().setFolded(targetNode, false);
 			}
 			int position = "last"
-					.equals(c.getProperty("placenewbranches")) ? targetNode.childCount() : 0;
+					.equals(c.getProperty("placenewbranches")) ? targetNode.getChildCount() : 0;
 			newNode = addNewNode(targetNode, position);
 			final NodeView nodeView = getModeController().getNodeView(newNode);
 			if (newNodeMode == MindMapController.NEW_CHILD) {

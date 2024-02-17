@@ -94,7 +94,7 @@ public class FileMapModel extends MapAdapter {
 
 	@Override
 	public String toString() {
-		return "File: " + root().toString();
+		return "File: " + getRoot().toString();
 	}
 
 	public void changeNode(MindMapNode node, String newText) {
