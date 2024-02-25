@@ -1,33 +1,23 @@
 package ch.d4span.freemind.domain.treemodel;
 
-public interface TreeModel<V> {
-  TreeNode<V> getRoot();
+public interface TreeModel<ID> {
+  TreeNode<ID> root();
 
-  default void removeNodeFromParent(TreeNode<V> node) {
+  TreeNode<ID>[] pathToRoot(TreeNode<ID> node);
+
+  default int indexOfChild(TreeNode<ID> parent, TreeNode<ID> node) {
     throw new UnsupportedOperationException("Not yet implemented");
   }
 
-  default void insertNodeInto(TreeNode<V> child, TreeNode<V> parent, int index) {
+  default TreeNode<ID> child(TreeNode<ID> parent, int index) {
     throw new UnsupportedOperationException("Not yet implemented");
   }
 
-  void nodeStructureChanged(TreeNode<V> node);
-
-  TreeNode<V>[] getPathToRoot(TreeNode<V> node);
-
-  default int getIndexOfChild(TreeNode<V> parent, TreeNode<V> node) {
+  default int childCount(TreeNode<ID> parent) {
     throw new UnsupportedOperationException("Not yet implemented");
   }
 
-  default TreeNode<V> getChild(TreeNode<V> parent, int index) {
-    throw new UnsupportedOperationException("Not yet implemented");
-  }
-
-  default int getChildCount(TreeNode<V> parent) {
-    throw new UnsupportedOperationException("Not yet implemented");
-  }
-
-  default boolean isLeaf(TreeNode<V> node) {
+  default boolean leaf(TreeNode<ID> node) {
     throw new UnsupportedOperationException("Not yet implemented");
   }
 }

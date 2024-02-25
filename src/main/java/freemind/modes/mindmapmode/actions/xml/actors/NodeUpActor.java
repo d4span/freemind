@@ -103,7 +103,7 @@ public class NodeUpActor extends XmlActorAdapter {
 	private int moveNodeTo(MindMapNode newChild, NodeAdapter parent,
 			int direction) {
 		MindMap model = getExMapFeedback().getMap();
-		int index = model.getIndexOfChild(parent, newChild);
+		int index = model.indexOfChild(parent, newChild);
 		int newIndex = index;
 		int maxIndex = parent.getChildCount();
 		Vector<MindMapNode> sortedNodesIndices = getSortedSiblings(parent);
@@ -117,7 +117,7 @@ public class NodeUpActor extends XmlActorAdapter {
 		}
 		MindMapNode destinationNode = (MindMapNode) sortedNodesIndices
 				.get(newPositionInVector);
-		newIndex = model.getIndexOfChild(parent, destinationNode);
+		newIndex = model.indexOfChild(parent, destinationNode);
 		getExMapFeedback().removeNodeFromParent(newChild);
 		getExMapFeedback().insertNodeInto(newChild, parent, newIndex);
 		getExMapFeedback().nodeChanged(newChild);

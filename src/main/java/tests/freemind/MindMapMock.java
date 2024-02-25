@@ -112,7 +112,7 @@ public class MindMapMock implements MindMap {
 	}
 
 	@Override
-	public TreeNode[] getPathToRoot(TreeNode node) {
+	public TreeNode[] pathToRoot(TreeNode node) {
 		return null;
 	}
 
@@ -140,27 +140,27 @@ public class MindMapMock implements MindMap {
 	}
 
 	@Override
-	public TreeNode getRoot() {
+	public TreeNode root() {
 		return null;
 	}
 
 	@Override
-	public TreeNode getChild(TreeNode parent, int index) {
+	public TreeNode child(TreeNode parent, int index) {
 		return null;
 	}
 
 	@Override
-	public int getChildCount(TreeNode parent) {
+	public int childCount(TreeNode parent) {
 		return 0;
 	}
 
 	@Override
-	public boolean isLeaf(TreeNode node) {
+	public boolean leaf(TreeNode node) {
 		return false;
 	}
 
 	@Override
-	public int getIndexOfChild(TreeNode parent, TreeNode child) {
+	public int indexOfChild(TreeNode parent, TreeNode child) {
 		return 0;
 	}
 

@@ -353,8 +353,8 @@ public abstract class MapFeedbackAdapter implements MapFeedback, ViewFeedback {
 		/* the < relation. */
 		@Override
 		public int compare(MindMapNode n1, MindMapNode n2) {
-			Object[] path1 = getMap().getPathToRoot(n1);
-			Object[] path2 = getMap().getPathToRoot(n2);
+			Object[] path1 = getMap().pathToRoot(n1);
+			Object[] path2 = getMap().pathToRoot(n2);
 			int depth = path1.length - path2.length;
 			if (depth > 0)
 				return -1;

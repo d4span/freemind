@@ -1,6 +1,6 @@
 package ch.d4span.freemind.domain.treemodel;
 
-public class DefaultTreeModel<V> implements TreeModel<V> {
+public class DefaultTreeModel<V> implements MutableTreeModel<V> {
   private TreeNode<V> root;
   
   protected EventListenerList listenerList;
@@ -14,7 +14,7 @@ public class DefaultTreeModel<V> implements TreeModel<V> {
   }
 
   @Override
-  public TreeNode<V> getRoot() {
+  public TreeNode<V> root() {
     return root;
   }
 
@@ -24,7 +24,7 @@ public class DefaultTreeModel<V> implements TreeModel<V> {
   }
 
   @Override
-  public TreeNode<V>[] getPathToRoot(TreeNode<V> node) {
+  public TreeNode<V>[] pathToRoot(TreeNode<V> node) {
     throw new UnsupportedOperationException("Not yet implemented");
   }
 }

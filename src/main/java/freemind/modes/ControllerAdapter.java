@@ -1135,7 +1135,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	}
 
 	public MindMapNode getRootNode() {
-		return (MindMapNode) getMap().getRoot();
+		return (MindMapNode) getMap().root();
 	}
 
 	@Override
@@ -1494,7 +1494,7 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 */
 	public void displayNode(MindMapNode node, ArrayList<MindMapNode> nodesUnfoldedByDisplay) {
 		// Unfold the path to the node
-		Object[] path = getMap().getPathToRoot(node);
+		Object[] path = getMap().pathToRoot(node);
 		// Iterate the path with the exception of the last node
 		for (int i = 0; i < path.length - 1; i++) {
 			MindMapNode nodeOnPath = (MindMapNode) path[i];

@@ -28,6 +28,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
+import ch.d4span.freemind.domain.treemodel.MutableTreeModel;
 import ch.d4span.freemind.domain.treemodel.TreeModel;
 import ch.d4span.freemind.domain.treemodel.TreeNode;
 import freemind.controller.filter.Filter;
@@ -42,7 +43,7 @@ import freemind.modes.MapFeedback;
 import freemind.modes.MindMapLinkRegistry;
 import freemind.modes.NodeAdapter;
 
-public interface MindMap extends TreeModel {
+public interface MindMap extends MutableTreeModel {
 
 	MindMapNode getRootNode();
 
@@ -101,7 +102,7 @@ public interface MindMap extends TreeModel {
 	String getRestorable();
 
 	@Override
-	TreeNode[] getPathToRoot(TreeNode node);
+	TreeNode[] pathToRoot(TreeNode node);
 
 	/**
 	 * @return returns the link registry associated with this mode, or null, if

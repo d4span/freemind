@@ -1371,7 +1371,7 @@ public class MindMapController extends ControllerAdapter implements
 			}
 			try {
 				File file = new File(getMindMapMapModel().getFile() + ".html");
-				saveHTML((MindMapNodeModel) getMindMapMapModel().getRoot(),
+				saveHTML((MindMapNodeModel) getMindMapMapModel().root(),
 						file);
 				loadURL(file.toString());
 			} catch (IOException ex) {

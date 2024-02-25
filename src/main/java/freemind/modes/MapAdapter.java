@@ -244,7 +244,7 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 
 	@Override
     public MindMapNode getRootNode() {
-		return (MindMapNode) getRoot();
+		return (MindMapNode) root();
 	}
 
 	public void setRoot(MindMapNode root) {
@@ -374,7 +374,7 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 	 */
 	void nodeChangedInternal(TreeNode node) {
 		if (node != null) {
-			fireTreeNodesChanged(this, getPathToRoot(node), null, null);
+			fireTreeNodesChanged(this, pathToRoot(node), null, null);
 		}
 	}
 
