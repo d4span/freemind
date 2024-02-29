@@ -1,6 +1,11 @@
 package ch.d4span.freemind.domain.treemodel;
 
 public interface TreeNode<V> {
+
+  default V value() {
+    throw new UnsupportedOperationException("Not yet implemented");
+  }
+
   int getChildCount();
 
   default boolean isLeaf() {
