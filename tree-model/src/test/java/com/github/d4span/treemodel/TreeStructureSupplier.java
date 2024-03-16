@@ -1,30 +1,28 @@
 package com.github.d4span.treemodel;
 
-import static java.util.stream.Stream.generate;
 import static org.instancio.Instancio.create;
 import static org.instancio.Instancio.ofList;
-import static org.instancio.quickcheck.api.artbitrary.Arbitrary.fromStream;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import org.instancio.quickcheck.api.artbitrary.Arbitrary;
 
-public record ArbitraryTreeStructureSupplier<N>(Class<N> nodeType, int maxSize)
-    implements Supplier<Arbitrary<Map<N, List<N>>>> {
+public record TreeStructureSupplier<N>(Class<Object> nodeType, int maxSize)
+    implements Supplier<Map<Object, List<Object>>> {
 
   @Override
-  public Arbitrary<Map<N, List<N>>> get() {
-    return fromStream(generate(() -> createTreeStructure(this.nodeType, this.maxSize)));
+  public Map<Object, List<Object>> get() {
+    return createTreeStructure(this.nodeType, this.maxSize);
   }
 
-  public static <N> Map<N, List<N>> createTreeStructure(Class<N> nodeType, int maxSize) {
+  public static <N> Map<Object, List<Object>> createTreeStructure(
+      Class<Object> nodeType, int maxSize) {
     var size = (create(Integer.class) % maxSize) + 1;
     return ofList(nodeType).size(size).create().stream()
         .reduce(
-            new HashMap<N, List<N>>(),
+            new HashMap<Object, List<Object>>(),
             (map, n) -> {
               var keys = map.keySet().stream().toList();
               if (!keys.isEmpty()) {
