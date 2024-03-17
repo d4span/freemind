@@ -1,7 +1,11 @@
 plugins {
     `java-library`
     `maven-publish`
+
     kotlin("jvm") version "1.9.23"
+    id("io.gitlab.arturbosch.detekt") version "1.23.5"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("com.adarshr.test-logger") version "4.0.0"
 }
 
 repositories {
@@ -31,13 +35,20 @@ dependencies {
     api(libs.org.codehaus.groovy.groovy.astbuilder)
     api(libs.org.freeplane.lightdev.simplyhtml)
     api(libs.org.hsqldb.hsqldb)
+
+    testImplementation("io.kotest:kotest-runner-junit5:5.8.1")
+    testImplementation("io.kotest:kotest-property:5.8.1")
 }
 
 group = "com.github.d4span"
 version = "0.0.1-SNAPSHOT"
 description = "freemind"
 
-java.sourceCompatibility = JavaVersion.VERSION_17
+java.sourceCompatibility = JavaVersion.VERSION_21
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+}
 
 publishing {
     publications.create<MavenPublication>("maven") {
