@@ -20,10 +20,6 @@ local.properties
 # Maven
 target/
 
-# Gradle
-.gradle
-/build/
-
 # External tool builders
 #.externalToolBuilders/
 
