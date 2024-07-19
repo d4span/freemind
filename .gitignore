@@ -15,7 +15,6 @@ local.properties
 # IDEs
 .vscode/
 .idea/
-*.iml
 
 # Maven
 target/
