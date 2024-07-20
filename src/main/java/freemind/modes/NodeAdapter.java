@@ -1473,7 +1473,7 @@ public abstract class NodeAdapter implements MindMapNode {
 	@Override
 	public Attribute getAttribute(int pPosition) {
 		checkAttributePosition(pPosition);
-		return new Attribute(getAttributeVector().get(pPosition));
+		return getAttributeVector().get(pPosition).toBuilder().build();
 	}
 
 	/**
