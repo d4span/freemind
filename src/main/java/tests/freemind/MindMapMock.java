@@ -29,9 +29,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
+import org.freemind.tree.TreeModelListener;
+import org.freemind.tree.TreeNode;
+import org.freemind.tree.TreePath;
 
 import freemind.controller.filter.Filter;
 import freemind.controller.filter.util.SortedListModel;

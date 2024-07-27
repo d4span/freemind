@@ -35,8 +35,6 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import freemind.controller.filter.FilterInfo;
@@ -53,6 +51,8 @@ import freemind.modes.MindMapLinkRegistry;
 import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
 import org.freemind.config.Attribute;
+import org.freemind.tree.MutableTreeNode;
+import org.freemind.tree.TreeNode;
 
 public final class TestMindMapNode implements MindMapNode {
 	private String text = "";

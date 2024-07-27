@@ -27,7 +27,8 @@ import java.util.ListIterator;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
-import javax.swing.tree.MutableTreeNode;
+
+import org.freemind.tree.MutableTreeNode;
 
 import freemind.main.HtmlTools;
 import freemind.main.Tools;

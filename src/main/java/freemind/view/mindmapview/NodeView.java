@@ -50,7 +50,8 @@ import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeNode;
+
+import org.freemind.tree.TreeNode;
 
 import freemind.controller.Controller;
 import freemind.main.FreeMind;

@@ -45,8 +45,6 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import freemind.controller.Controller;
@@ -62,6 +60,9 @@ import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
 import org.freemind.config.Attribute;
+import org.freemind.tree.MutableTreeNode;
+import org.freemind.tree.TreeNode;
+
 import freemind.preferences.FreemindPropertyListener;
 
 /**

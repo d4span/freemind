@@ -33,7 +33,6 @@ import java.util.SortedMap;
 import javax.swing.ImageIcon;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import freemind.controller.filter.FilterInfo;
@@ -41,6 +40,8 @@ import freemind.extensions.NodeHook;
 import freemind.extensions.PermanentNodeHook;
 import freemind.main.XMLElement;
 import org.freemind.config.Attribute;
+import org.freemind.tree.MutableTreeNode;
+
 import freemind.modes.mindmapmode.actions.MindMapActions;
 
 public interface MindMapNode extends MutableTreeNode {
