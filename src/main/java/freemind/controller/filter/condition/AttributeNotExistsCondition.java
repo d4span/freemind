@@ -27,7 +27,7 @@ import freemind.controller.Controller;
 import freemind.main.Resources;
 import freemind.main.XMLElement;
 import freemind.modes.MindMapNode;
-import freemind.modes.attributes.Attribute;
+import org.freemind.config.Attribute;
 
 /**
  * @author Dimitri Polivaev 12.07.2005

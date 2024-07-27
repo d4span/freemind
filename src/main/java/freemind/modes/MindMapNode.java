@@ -40,7 +40,7 @@ import freemind.controller.filter.FilterInfo;
 import freemind.extensions.NodeHook;
 import freemind.extensions.PermanentNodeHook;
 import freemind.main.XMLElement;
-import freemind.modes.attributes.Attribute;
+import org.freemind.config.Attribute;
 import freemind.modes.mindmapmode.actions.MindMapActions;
 
 public interface MindMapNode extends MutableTreeNode {

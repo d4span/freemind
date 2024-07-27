@@ -38,7 +38,7 @@ import java.util.Properties;
 import freemind.controller.actions.generated.instance.Pattern;
 import freemind.extensions.HookFactory;
 import freemind.main.XMLParseException;
-import freemind.modes.attributes.Attribute;
+import org.freemind.config.Attribute;
 import freemind.modes.mindmapmode.MindMapController.MindMapControllerPlugin;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 import freemind.modes.mindmapmode.actions.xml.ActionRegistry;

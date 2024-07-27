@@ -29,7 +29,7 @@ import freemind.extensions.PermanentNodeHook;
 import freemind.extensions.PermanentNodeHookSubstituteUnknown;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
-import freemind.modes.attributes.Attribute;
+import org.freemind.config.Attribute;
 
 public class XMLElementAdapter extends XMLElement {
 

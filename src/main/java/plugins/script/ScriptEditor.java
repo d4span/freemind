@@ -31,7 +31,7 @@ import plugins.script.ScriptingEngine.ErrorHandler;
 import freemind.controller.actions.generated.instance.ScriptEditorWindowConfigurationStorage;
 import freemind.main.Tools.BooleanHolder;
 import freemind.modes.MindMapNode;
-import freemind.modes.attributes.Attribute;
+import org.freemind.config.Attribute;
 import freemind.modes.mindmapmode.MindMapController;
 import freemind.modes.mindmapmode.hooks.MindMapHookAdapter;
 

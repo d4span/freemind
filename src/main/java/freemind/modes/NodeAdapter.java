@@ -61,7 +61,7 @@ import freemind.main.HtmlTools;
 import freemind.main.Resources;
 import freemind.main.Tools;
 import freemind.main.XMLElement;
-import freemind.modes.attributes.Attribute;
+import org.freemind.config.Attribute;
 import freemind.preferences.FreemindPropertyListener;
 
 /**

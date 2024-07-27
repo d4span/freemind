@@ -26,7 +26,7 @@ import freemind.controller.actions.generated.instance.XmlAction;
 import freemind.modes.ExtendedMapFeedback;
 import freemind.modes.MindMapNode;
 import freemind.modes.NodeAdapter;
-import freemind.modes.attributes.Attribute;
+import org.freemind.config.Attribute;
 import freemind.modes.mindmapmode.actions.xml.ActionPair;
 
 public class InsertAttributeActor extends XmlActorAdapter {

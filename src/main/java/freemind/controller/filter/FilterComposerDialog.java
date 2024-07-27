@@ -72,7 +72,7 @@ import freemind.modes.FreeMindFileDialog;
 import freemind.modes.MindIcon;
 import freemind.modes.MindMap;
 import freemind.modes.MindMapNode;
-import freemind.modes.attributes.Attribute;
+import org.freemind.config.Attribute;
 
 /**
  * @author dimitri

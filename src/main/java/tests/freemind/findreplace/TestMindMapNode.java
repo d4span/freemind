@@ -52,7 +52,7 @@ import freemind.modes.MindMapEdge;
 import freemind.modes.MindMapLinkRegistry;
 import freemind.modes.MindMapNode;
 import freemind.modes.ModeController;
-import freemind.modes.attributes.Attribute;
+import org.freemind.config.Attribute;
 
 public final class TestMindMapNode implements MindMapNode {
 	private String text = "";

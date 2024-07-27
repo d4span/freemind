@@ -21,11 +21,12 @@
  * Created on 18.06.2005
  * Copyright (C) 2005 Dimitri Polivaev
  */
-package freemind.modes.attributes;
+package org.freemind.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * @author Dimitri Polivaev 18.06.2005
@@ -33,6 +34,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder(toBuilder = true)
+@Accessors(fluent = false)
 public class Attribute {
   private String name;
   private String value;

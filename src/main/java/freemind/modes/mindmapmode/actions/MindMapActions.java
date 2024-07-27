@@ -34,7 +34,7 @@ import freemind.modes.MindMap;
 import freemind.modes.MindMapArrowLink;
 import freemind.modes.MindMapLink;
 import freemind.modes.MindMapNode;
-import freemind.modes.attributes.Attribute;
+import org.freemind.config.Attribute;
 
 /**
  * This is the central method interface of actions that can be undertaken on
