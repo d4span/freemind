@@ -1,19 +1,21 @@
 package org.freemind.tree;
 
-import java.util.Enumeration;
+import java.util.SequencedCollection;
 
-public interface TreeNode {
-    TreeNode getChildAt(int var1);
- 
-    int getChildCount();
- 
-    TreeNode getParent();
- 
-    int getIndex(TreeNode var1);
- 
-    boolean getAllowsChildren();
- 
-    boolean isLeaf();
- 
-    Enumeration<? extends TreeNode> children();
- }
+public interface TreeNode<T> {
+  TreeNode<T> getChildAt(int index);
+
+  int getChildCount();
+
+  TreeNode<T> getParent();
+
+  int getIndex(TreeNode<T> child);
+
+  boolean getAllowsChildren();
+
+  boolean isLeaf();
+
+  SequencedCollection<TreeNode<T>> children();
+
+  T getUserObject();
+}

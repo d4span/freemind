@@ -1,15 +1,15 @@
 package org.freemind.tree;
 
-public interface MutableTreeNode extends TreeNode {
-    void insert(MutableTreeNode var1, int var2);
+public interface MutableTreeNode<T> extends TreeNode<T> {
+    void insert(TreeNode<T> child, int index);
  
-    void remove(int var1);
+    void remove(int index);
  
-    void remove(MutableTreeNode var1);
+    void remove(TreeNode<T> child);
  
-    void setUserObject(Object var1);
+    void setUserObject(T value);
  
     void removeFromParent();
  
-    void setParent(MutableTreeNode var1);
+    void setParent(TreeNode<T> parent);
  }
