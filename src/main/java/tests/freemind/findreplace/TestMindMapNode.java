@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -56,16 +57,8 @@ import org.freemind.tree.TreeNode;
 
 public final class TestMindMapNode implements MindMapNode {
 	private String text = "";
-	private Vector<TestMindMapNode> children = new Vector<TestMindMapNode>();
+	private List<TreeNode<String>> children = new ArrayList<>();
 	private TestMindMapNode mNewParent;
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
 
 	public boolean hasFoldedParents() {
 		if(isRoot())
@@ -339,29 +332,38 @@ public final class TestMindMapNode implements MindMapNode {
 	public void removeTreeModelListener(TreeModelListener l) {
 	}
 
-	public void insert(MutableTreeNode child, int index) {
-		children.insertElementAt((TestMindMapNode) child, index);
+	@Override
+	public void insert(MutableTreeNode<String> child, int index) {
+		children.add(index, child);
 	}
 
 	public void remove(int index) {
 		children.remove(index);
 	}
 
-	public void remove(MutableTreeNode node) {
+	@Override
+	public void remove(MutableTreeNode<String> node) {
 		children.remove(node);
 	}
 
-	public void setUserObject(Object object) {
+	@Override
+	public void setValue(String object) {
+	}
+
+	@Override
+	public String getValue() {
+		return text;
 	}
 
 	public void removeFromParent() {
 	}
 
-	public void setParent(MutableTreeNode newParent) {
+	@Override
+	public void setParent(MutableTreeNode<String> newParent) {
 		mNewParent = (TestMindMapNode) newParent;
 	}
 
-	public TreeNode getChildAt(int childIndex) {
+	public TreeNode<String> getChildAt(int childIndex) {
 		return children.get(childIndex);
 	}
 
@@ -369,7 +371,8 @@ public final class TestMindMapNode implements MindMapNode {
 		return children.size();
 	}
 
-	public TreeNode getParent() {
+	@Override
+	public TreeNode<String> getParent() {
 		return mNewParent;
 	}
 
@@ -385,8 +388,8 @@ public final class TestMindMapNode implements MindMapNode {
 		return false;
 	}
 
-	public Enumeration children() {
-		return children.elements();
+	public List<TreeNode<String>> children() {
+		return List.copyOf(children);
 	}
 
 	public String getXmlText() {

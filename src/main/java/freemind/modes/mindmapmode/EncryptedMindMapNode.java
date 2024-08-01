@@ -306,7 +306,7 @@ public class EncryptedMindMapNode extends MindMapNodeModel {
 			if (!isAccessible()) {
 				throw new IOException(
 						"Should store contents of encrypted node "
-								+ this.getText()
+								+ this.getValue()
 								+ ", but it is not accessible.");
 			}
 			generateEncryptedContent();

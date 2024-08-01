@@ -112,9 +112,9 @@ public class MindMapMapModel extends MapAdapter {
 
 	public void changeNode(MindMapNode node, String newText) {
 		if (node.toString().startsWith("<html>")) {
-			node.setUserObject(HtmlTools.unescapeHTMLUnicodeEntity(newText));
+			node.setValue(HtmlTools.unescapeHTMLUnicodeEntity(newText));
 		} else {
-			node.setUserObject(newText);
+			node.setValue(newText);
 		}
 		nodeChanged(node);
 	}

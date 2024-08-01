@@ -106,7 +106,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 				DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 				String dateAsString = df.format(getCalendarDate());
 				getMindMapController().setNodeText(element,
-						element.getText() + " " + dateAsString);
+						element.getValue() + " " + dateAsString);
 				lastElement = element;
 				sel.add(element);
 			}

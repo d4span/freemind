@@ -53,7 +53,7 @@ import freemind.main.Tools;
 import freemind.main.XMLParseException;
 
 @SuppressWarnings("serial")
-public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
+public abstract class MapAdapter extends DefaultTreeModel<String> implements MindMap {
 	public static final String MAP_INITIAL_START = "<map version=\"";
 	public static final String FREEMIND_VERSION_UPDATER_XSLT = "freemind/modes/mindmapmode/freemind_version_updater.xslt";
 	/**
@@ -618,7 +618,7 @@ public abstract class MapAdapter extends DefaultTreeModel implements MindMap {
 			System.err.println(errorMessage);
 			freemind.main.Resources.getInstance().logException(ex);
 			NodeAdapter result = createNodeAdapter(this, null);
-			result.setText(errorMessage);
+			result.setValue(errorMessage);
 			return (MindMapNode) result;
 		} finally {
 			if (reader != null) {

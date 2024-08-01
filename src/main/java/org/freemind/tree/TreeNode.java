@@ -1,6 +1,6 @@
 package org.freemind.tree;
 
-import java.util.SequencedCollection;
+import java.util.List;
 
 public interface TreeNode<T> {
   TreeNode<T> getChildAt(int index);
@@ -15,7 +15,7 @@ public interface TreeNode<T> {
 
   boolean isLeaf();
 
-  SequencedCollection<TreeNode<T>> children();
+  List<TreeNode<T>> children();
 
-  T getUserObject();
+  T getValue();
 }

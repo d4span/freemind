@@ -655,7 +655,7 @@ class MindMapHTMLWriter {
 	}
 
 	boolean hasHtml(MindMapNodeModel model) {
-		return model.getText().startsWith("<html>");
+		return model.getValue().startsWith("<html>");
 	}
 
 	private String getProperty(String key) {

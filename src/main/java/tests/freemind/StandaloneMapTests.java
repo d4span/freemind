@@ -226,7 +226,7 @@ public class StandaloneMapTests extends FreeMindTestBase {
 		assertEquals(0, mapLinks.size());
 		String newText = "blabla";
 		mapFeedback.setNodeText(firstChild, newText);
-		assertEquals(newText, firstChild.getText());
+		assertEquals(newText, firstChild.getValue());
 		Color darkGray = Color.DARK_GRAY;
 		mapFeedback.setNodeBackgroundColor(firstChild, darkGray);
 		assertEquals(darkGray, firstChild.getBackgroundColor());

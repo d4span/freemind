@@ -28,6 +28,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -149,7 +150,7 @@ public abstract class NodeAdapter implements MindMapNode {
 
 	protected NodeAdapter(Object userObject, MindMap pMap) {
 		this.map = pMap;
-		setText((String) userObject);
+		setValue((String) userObject);
 		hooks = null; // lazy, fc, 30.6.2005.
 		activatedHooks = null; // lazy, fc, 30.6.2005
 		if (logger == null)
@@ -180,7 +181,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		this.map = pMap;
 	}
 
-	public String getText() {
+	@Override
+	public String getValue() {
 		String string = "";
 		if (userObject != null) {
 			string = userObject.toString();
@@ -188,7 +190,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		return string;
 	}
 
-	public final void setText(String text) {
+	@Override
+	public final void setValue(String text) {
 		if (text == null) {
 			userObject = null;
 			xmlText = null;
@@ -610,7 +613,7 @@ public abstract class NodeAdapter implements MindMapNode {
 	}
 
 	public String toString() {
-		return getText();
+		return getValue();
 	}
 
 	public boolean isDescendantOf(MindMapNode pParentNode) {
@@ -701,14 +704,8 @@ public abstract class NodeAdapter implements MindMapNode {
 	// Interface TreeNode
 	//
 
-	/**
-	 * AFAIK there is no way to get an enumeration out of a linked list. So this
-	 * exception must be thrown, or we can't implement TreeNode anymore (maybe
-	 * we shouldn't?)
-	 */
-	public Enumeration children() {
-		throw new UnsupportedOperationException(
-				"Use childrenFolded or childrenUnfolded instead");
+	public List<TreeNode<String>> children() {
+		return new ArrayList<>(children);
 	}
 
 	public boolean getAllowsChildren() {
@@ -742,7 +739,8 @@ public abstract class NodeAdapter implements MindMapNode {
 		return children.indexOf((MindMapNode) node); // uses equals()
 	}
 
-	public TreeNode getParent() {
+	@Override
+	public TreeNode<String> getParent() {
 		return parent;
 	}
 
@@ -794,7 +792,8 @@ public abstract class NodeAdapter implements MindMapNode {
 	// Garbage Collection work (Nodes in removed Sub-Trees reference each
 	// other)?
 
-	public void insert(MutableTreeNode child, int index) {
+	@Override
+	public void insert(MutableTreeNode<String> child, int index) {
 		logger.finest("Insert at " + index + " the node " + child);
 		final MindMapNode childNode = (MindMapNode) child;
 		if (index < 0) { // add to the end (used in xml load) (PN)
@@ -809,11 +808,12 @@ public abstract class NodeAdapter implements MindMapNode {
 	}
 
 	public void remove(int index) {
-		MutableTreeNode node = (MutableTreeNode) children.get(index);
+		var node = (MutableTreeNode) children.get(index);
 		remove(node);
 	}
 
-	public void remove(MutableTreeNode node) {
+	@Override
+	public void remove(MutableTreeNode<String> node) {
 		if (node == this.preferredChild) { // mind preferred child :-) (PN)
 			int index = children.indexOf(node);
 			if (children.size() > index + 1) {
@@ -865,16 +865,13 @@ public abstract class NodeAdapter implements MindMapNode {
 		parent.remove(this);
 	}
 
-	public void setParent(MutableTreeNode newParent) {
+	@Override
+	public void setParent(MutableTreeNode<String> newParent) {
 		parent = (MindMapNode) newParent;
 	}
 
 	public void setParent(MindMapNode newParent) {
 		parent = newParent;
-	}
-
-	public void setUserObject(Object object) {
-		setText((String) object);
 	}
 
 	// //////////////

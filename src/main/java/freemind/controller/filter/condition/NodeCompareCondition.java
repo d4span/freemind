@@ -46,7 +46,7 @@ class NodeCompareCondition extends CompareConditionAdapter {
 
 	public boolean checkNode(Controller c, MindMapNode node) {
 		try {
-			return succeed == (compareTo(node.getText()) == comparationResult);
+			return succeed == (compareTo(node.getValue()) == comparationResult);
 		} catch (NumberFormatException fne) {
 			return false;
 		}

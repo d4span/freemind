@@ -267,7 +267,7 @@ public class MindMapController extends ControllerAdapter implements
 				if (mIsInterrupted) {
 					return;
 				}
-				Matcher m = p.matcher(selectedNode.getText());
+				Matcher m = p.matcher(selectedNode.getValue());
 				while (m.find()) {
 					String number = m.group();
 					try {

@@ -73,8 +73,8 @@ public class NodeUpActor extends XmlActorAdapter {
 			for (MindMapNode node : selecteds) {
 				if (node.getParent() != parent) {
 					logger.warning("Not all selected nodes (here: "
-							+ node.getText() + ") have the same parent "
-							+ parent.getText() + ".");
+							+ node.getValue() + ") have the same parent "
+							+ parent.getValue() + ".");
 					return;
 				}
 				range.add(Integer.valueOf(sortedChildren.indexOf(node)));

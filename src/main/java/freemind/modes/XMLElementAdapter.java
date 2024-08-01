@@ -395,7 +395,7 @@ public class XMLElementAdapter extends XMLElement {
 			NodeAdapter node) {
 		if (name.equals(XML_NODE_TEXT)) {
 			logger.finest("Setting node text content to:" + sValue);
-			node.setUserObject(sValue);
+			node.setValue(sValue);
 		} else if (name.equals(XML_NODE_ENCRYPTED_CONTENT)) {
 			// we change the node implementation to EncryptedMindMapNode.
 			node = getMap().createEncryptedNode(sValue);

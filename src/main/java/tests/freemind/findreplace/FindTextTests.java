@@ -71,7 +71,7 @@ public class FindTextTests extends FreeMindTestBase {
 			public Object getValueAt(int rowIndex, int columnIndex) {
 				TestMindMapNode testMindMapNode = new TestMindMapNode();
 				testMindMapNode
-				.setText("<html><strong>test</strong></html>");
+				.setValue("<html><strong>test</strong></html>");
 				if (columnIndex == 0) {
 					return new TimeList.NodeHolder(testMindMapNode);
 				} else {
@@ -195,7 +195,7 @@ public class FindTextTests extends FreeMindTestBase {
 
 		public NodeHolder getNodeHolderAt(int i) {
 			TestMindMapNode testMindMapNode = new TestMindMapNode();
-			testMindMapNode.setText(input);
+			testMindMapNode.setValue(input);
 			return new TimeList.NodeHolder(testMindMapNode);
 		}
 

@@ -102,7 +102,7 @@ public class MindMapMock implements MindMap {
 
 	@Override
 	public void getFilteredXml(Writer fileout) throws IOException {
-		fileout.write(mapXmlString);
+		fileout.write(this.mapXmlString);
 		fileout.close();
 	}
 
@@ -140,22 +140,22 @@ public class MindMapMock implements MindMap {
 	}
 
 	@Override
-	public Object getRoot() {
+	public TreeNode<String> getRoot() {
 		return null;
 	}
 
 	@Override
-	public Object getChild(Object parent, int index) {
+	public TreeNode<String> getChild(TreeNode<String> parent, int index) {
 		return null;
 	}
 
 	@Override
-	public int getChildCount(Object parent) {
+	public int getChildCount(TreeNode<String> parent) {
 		return 0;
 	}
 
 	@Override
-	public boolean isLeaf(Object node) {
+	public boolean isLeaf(TreeNode<String> node) {
 		return false;
 	}
 
@@ -164,7 +164,7 @@ public class MindMapMock implements MindMap {
 	}
 
 	@Override
-	public int getIndexOfChild(Object parent, Object child) {
+	public int getIndexOfChild(TreeNode<String> parent, TreeNode<String> child) {
 		return 0;
 	}
 

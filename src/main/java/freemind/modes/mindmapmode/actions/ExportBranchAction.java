@@ -140,7 +140,7 @@ public class ExportBranchAction extends MindmapAction {
 			final MindMapNode newNode = mMindMapController.addNewNode(parent,
 					nodePosition, node.isLeft());
 			// TODO: Keep formatting of node.
-			mMindMapController.setNodeText(newNode, node.getText());
+			mMindMapController.setNodeText(newNode, node.getValue());
 
 			final String linkString = Tools.fileToRelativeUrlString(chosenFile, mMindMapController.getModel().getFile());
 			mMindMapController.setLink(newNode, linkString);

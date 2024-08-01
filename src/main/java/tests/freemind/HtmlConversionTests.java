@@ -86,7 +86,7 @@ public class HtmlConversionTests extends FreeMindTestBase {
 
 	public void testSetHtml() throws Exception {
 		MindMapNodeModel node = new MindMapNodeModel(new MindMapMock("</map>"));
-		node.setText("test");
+		node.setValue("test");
 		// wiped out: <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html
 		// PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"
 		// \"DTD/xhtml1-transitional.dtd\">\n
@@ -97,8 +97,8 @@ public class HtmlConversionTests extends FreeMindTestBase {
 									 */
 		node.setXmlText("test");
 
-		assertEquals("proper conversion", "test", node.getText());
-		node.setText("<html><br>");
+		assertEquals("proper conversion", "test", node.getValue());
+		node.setValue("<html><br>");
 		assertEquals(
 				"proper html conversion",
 				"<html>\n  <head>\n    \n  </head>\n  <body>\n    <br />\n  </body>\n</html>\n",
@@ -106,10 +106,10 @@ public class HtmlConversionTests extends FreeMindTestBase {
 		// must remove the '/' in <br/>.
 		node.setXmlText("<html><br/></html>");
 		assertEquals("proper html conversion", "<html><br></html>",
-				node.getText());
+				node.getValue());
 		node.setXmlText("<html><br /></html>");
 		assertEquals("proper html conversion", "<html><br ></html>",
-				node.getText());
+				node.getValue());
 
 	}
 
@@ -552,13 +552,13 @@ public class HtmlConversionTests extends FreeMindTestBase {
 
 		
 		MindMapNode rootNode = new TestMindMapNode();
-		rootNode.setText("myRoot");
+		rootNode.setValue("myRoot");
 		NodeCreator creator = new NodeCreator() {
 
 			@Override
 			public MindMapNode createChild(MindMapNode pParent) {
 				created.increase();
-				System.out.println("Create new node as child of: " + pParent.getText());
+				System.out.println("Create new node as child of: " + pParent.getValue());
 				TestMindMapNode newNode = new TestMindMapNode();
 				pParent.insert(newNode, pParent.getChildCount());
 				newNode.setParent(pParent);
@@ -568,7 +568,7 @@ public class HtmlConversionTests extends FreeMindTestBase {
 			@Override
 			public void setText(String pText, MindMapNode pNode) {
 				System.out.println("Text: " + pText);
-				pNode.setText(pText);
+				pNode.setValue(pText);
 			}
 
 			@Override
@@ -582,7 +582,7 @@ public class HtmlConversionTests extends FreeMindTestBase {
 		assertEquals("Only one in the first level", 1, rootNode.getChildCount());
 		created.setValue(0);
 		rootNode = new TestMindMapNode();
-		rootNode.setText("myRoot2");
+		rootNode.setValue("myRoot2");
 		instance.insertHtmlIntoNodes(testHtml2, rootNode, creator);
 		
 		assertEquals(5, created.getValue());
@@ -591,7 +591,7 @@ public class HtmlConversionTests extends FreeMindTestBase {
 		
 		created.setValue(0);
 		rootNode = new TestMindMapNode();
-		rootNode.setText("myRoot3");
+		rootNode.setValue("myRoot3");
 		instance.insertHtmlIntoNodes(testHtml3, rootNode, creator);
 		assertEquals(13, created.getValue());
 		assertEquals("first level nodes", 10, rootNode.getChildCount());

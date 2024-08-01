@@ -38,7 +38,7 @@ public class UsePlainTextAction extends NodeGeneralAction {
 							MindMapNodeModel selected) {
 						// modeController.getController().setProperty(
 						// "use_rich_text_in_new_long_nodes", "false");
-						String nodeText = selected.getText();
+						String nodeText = selected.getValue();
 						if (HtmlTools.isHtmlNode(nodeText)) {
 							modeController.setNodeText(selected,
 									HtmlTools.htmlToPlain(nodeText));

@@ -773,7 +773,7 @@ public class HtmlTools {
 							mCurrentNode = mCreator.createChild(mParentNode);
 						}
 //						System.out.println("TEXT+: " + text);
-						mCreator.setText(mCurrentNode.getText() + text, mCurrentNode);
+						mCreator.setText(mCurrentNode.getValue() + text, mCurrentNode);
 						if(mLink != null) {
 							mCreator.setLink(mLink, mCurrentNode);
 							mLink = null;
@@ -810,7 +810,7 @@ public class HtmlTools {
 									|| element.tagName().equals("br") || element
 									.tagName().equals("li"))) {
 								isNewline = true;
-								if (mCurrentNode == null || !mCurrentNode.getText().isEmpty()) {
+								if (mCurrentNode == null || !mCurrentNode.getValue().isEmpty()) {
 									// next sibling, same parent, only if already content present.
 									mCurrentNode = null;
 								}

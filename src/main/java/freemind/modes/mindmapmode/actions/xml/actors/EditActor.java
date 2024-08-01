@@ -53,7 +53,7 @@ public class EditActor extends XmlActorAdapter {
 		NodeAdapter node = this.getNodeFromID(editAction
 				.getNode());
 		if (!node.toString().equals(editAction.getText())) {
-			node.setUserObject(editAction.getText());
+			node.setValue(editAction.getText());
 			getExMapFeedback().nodeChanged(node);
 		}
 	}

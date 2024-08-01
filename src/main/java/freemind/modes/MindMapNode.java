@@ -44,7 +44,7 @@ import org.freemind.tree.MutableTreeNode;
 
 import freemind.modes.mindmapmode.actions.MindMapActions;
 
-public interface MindMapNode extends MutableTreeNode {
+public interface MindMapNode extends MutableTreeNode<String> {
 
 	public static final String STYLE_BUBBLE = "bubble";
 	public static final String STYLE_FORK = "fork";
@@ -52,17 +52,6 @@ public interface MindMapNode extends MutableTreeNode {
 	public static final String STYLE_AS_PARENT = "as_parent";
 	public static final String[] NODE_STYLES = new String[] { STYLE_FORK,
 			STYLE_BUBBLE, STYLE_AS_PARENT, STYLE_COMBINED };
-
-	/**
-	 * @return the text representation of the nodes content. HTML is represented
-	 *         as <html>....</html> see getXmlText
-	 */
-	String getText();
-
-	/**
-	 * Sets both text and xmlText.
-	 */
-	void setText(String text);
 
 	/**
 	 * @return the text representation of the nodes content as valid XML. HTML

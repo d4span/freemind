@@ -406,10 +406,10 @@ public class StylePatternFactory {
 		}
 		if (pattern.getPatternNodeText() != null) {
 			if (pattern.getPatternNodeText().getValue() != null) {
-				pNode.setText(pattern.getPatternNodeText().getValue());
+				pNode.setValue(pattern.getPatternNodeText().getValue());
 			} else {
 				// clear text:
-				pNode.setText("");
+				pNode.setValue("");
 			}
 		}
 		if (pattern.getPatternIcon() != null) {

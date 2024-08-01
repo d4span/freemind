@@ -332,7 +332,7 @@ public class PasteActor extends XmlActorAdapter {
 
 					@Override
 					public void setText(String pText, MindMapNode pNode) {
-						pNode.setText(pText);
+						pNode.setValue(pText);
 						getExMapFeedback().nodeChanged(pNode);
 					}
 
@@ -866,7 +866,7 @@ public class PasteActor extends XmlActorAdapter {
 		// create a new node for testing purposes.
 		MindMapNodeModel parent = new MindMapNodeModel(
 				getExMapFeedback().getMap());
-		parent.setText("ROOT");
+		parent.setValue("ROOT");
 		DirectHtmlFlavorHandler handler = new DirectHtmlFlavorHandler();
 		// creator, that only creates dummy nodes.
 		handler.setNodeCreator(new NodeCreator() {
@@ -887,7 +887,7 @@ public class PasteActor extends XmlActorAdapter {
 
 			@Override
 			public void setText(String pText, MindMapNode pNode) {
-				pNode.setText(pText);
+				pNode.setValue(pText);
 			}
 
 			@Override

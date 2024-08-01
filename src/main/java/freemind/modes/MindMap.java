@@ -36,7 +36,7 @@ import freemind.controller.filter.util.SortedListModel;
 import freemind.main.Tools;
 import freemind.main.XMLParseException;
 
-public interface MindMap extends TreeModel {
+public interface MindMap extends TreeModel<String> {
 
 	MindMapNode getRootNode();
 

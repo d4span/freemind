@@ -550,7 +550,7 @@ public class TimeList extends MindMapHookAdapter implements
 		int length = info.getLength();
 		for (int i = 0; i < length; i++) {
 			NodeHolder nodeHolder = info.getNodeHolderAt(i);
-			String text = nodeHolder.node.getText();
+			String text = nodeHolder.node.getValue();
 			String replaceResult = HtmlTools.getInstance().getReplaceResult(p,
 					replacement, text);
 			if (!Tools.safeEquals(text, replaceResult)) {
@@ -866,7 +866,7 @@ public class TimeList extends MindMapHookAdapter implements
 			if(row>= 0 && colIndex >= 0) {
 				if (colIndex == NODE_TEXT_COLUMN) {
 					MindMapNode mindMapNode = getMindMapNode(row);
-					return mindMapNode.getText();
+					return mindMapNode.getValue();
 				}
 				if (colIndex == NODE_NOTES_COLUMN) {
 					MindMapNode mindMapNode = getMindMapNode(row);
@@ -943,7 +943,7 @@ public class TimeList extends MindMapHookAdapter implements
 		}
 
 		public String getUntaggedNodeText() {
-			String nodeText = node.getText();
+			String nodeText = node.getValue();
 			// cache empty or dirty?:
 			if (untaggedNodeText == null
 					|| (originalNodeText != null && !originalNodeText
