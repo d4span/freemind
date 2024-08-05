@@ -102,7 +102,7 @@ public class NewChildActor extends XmlActorAdapter {
 				.getDeleteNodeAction(newId);
 		getExMapFeedback().doTransaction(getExMapFeedback().getResourceString("new_child"),
 				new ActionPair(newNodeAction, deleteAction));
-		return (MindMapNode) parent.getChildAt(index);
+		return (MindMapNode) parent.get(index);
 	}
 
 	public NewNodeAction getAddNodeAction(MindMapNode parent, int index,

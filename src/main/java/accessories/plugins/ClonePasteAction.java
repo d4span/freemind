@@ -625,7 +625,7 @@ public class ClonePasteAction extends MindMapNodeHookAdapter {
 						// with crossed fingers.
 						continue CloneLoop;
 					}
-					target = (MindMapNode) target.getChildAt(index);
+					target = (MindMapNode) target.get(index);
 				}
 				// logger.fine("Found corresponding node " + printNodeId(target)
 				// + " on clone " + printNodeId(cloneNode));

@@ -120,7 +120,7 @@ public class ImportExplorerFavoritesAction extends MindmapAction {
      */
 	private MindMapNode addNode(MindMapNode target, String nodeContent) {
 		MindMapNode node = controller.addNewNode(target,
-				target.getChildCount(), target.isNewChildLeft());
+                target.getChildCount(), target.isNewChildLeft());
 		controller.setNodeText(node, nodeContent);
 		return node;
 	}

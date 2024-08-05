@@ -1298,7 +1298,7 @@ public class NodeView extends JComponent implements TreeModelListener {
 
 		for (int i = 0; i < childIndices.length; i++) {
 			int index = childIndices[i];
-			insert((MindMapNode) getModel().getChildAt(index), index);
+			insert((MindMapNode) getModel().get(index), index);
 		}
 		revalidate();
 

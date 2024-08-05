@@ -53,7 +53,7 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
 
   @Override
   public TreeNode<T> getChild(TreeNode<T> parent, int index) {
-    return parent.getChildAt(index);
+    return parent.get(index);
   }
 
   @Override
@@ -131,7 +131,7 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
       Object[] newChildren = new Object[cCount];
 
       for (int counter = 0; counter < cCount; ++counter) {
-        newChildren[counter] = node.getChildAt(childIndices[counter]);
+        newChildren[counter] = node.get(childIndices[counter]);
       }
 
       this.fireTreeNodesInserted(this, this.getPathToRoot(node), childIndices, newChildren);
@@ -152,7 +152,7 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
           Object[] cChildren = new Object[cCount];
 
           for (int counter = 0; counter < cCount; ++counter) {
-            cChildren[counter] = node.getChildAt(childIndices[counter]);
+            cChildren[counter] = node.get(childIndices[counter]);
           }
 
           this.fireTreeNodesChanged(this, this.getPathToRoot(node), childIndices, cChildren);

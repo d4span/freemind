@@ -225,7 +225,7 @@ public class ChooseFormatPopupDialog extends JDialog implements TextTranslator,
 				MindMapNode root = mMap.loadTree(readerCreator,
 						MapAdapter.sDontAskInstance);
 				mMap.setRoot(root);
-				mDemoNode = (MindMapNode) root.getChildAt(0);
+				mDemoNode = (MindMapNode) root.get(0);
 			} catch (XMLParseException e) {
 				freemind.main.Resources.getInstance().logException(e);
 			} catch (IOException e) {

@@ -127,7 +127,7 @@ public class ChangeNodeLevelAction extends MindMapNodeHookAdapter {
 				getMindMapController().paste(
 						copy,
 						(MindMapNode) grandParent
-								.getChildAt(parentPosition + 1), true, isLeft);
+								.get(parentPosition + 1), true, isLeft);
 			}
 			select(selectedNodeId, selectedNodesId);
 
@@ -137,7 +137,7 @@ public class ChangeNodeLevelAction extends MindMapNodeHookAdapter {
 			MindMapNode directSibling = null;
 			for (int i = ownPosition - 1; i >= 0; --i) {
 				MindMapNode sibling = (MindMapNode) selectedParent
-						.getChildAt(i);
+						.get(i);
 				if ((!selectedNodes.contains(sibling))
 						&& selectedNode.isLeft() == sibling.isLeft()) {
 					directSibling = sibling;
@@ -146,10 +146,9 @@ public class ChangeNodeLevelAction extends MindMapNodeHookAdapter {
 			}
 			if (directSibling == null) {
 				// start searching for a sibling after the selected block:
-				for (int i = ownPosition + 1; i < selectedParent
-						.getChildCount(); ++i) {
+				for (int i = ownPosition + 1; i < selectedParent.getChildCount(); ++i) {
 					MindMapNode sibling = (MindMapNode) selectedParent
-							.getChildAt(i);
+							.get(i);
 					if ((!selectedNodes.contains(sibling))
 							&& selectedNode.isLeft() == sibling.isLeft()) {
 						directSibling = sibling;
