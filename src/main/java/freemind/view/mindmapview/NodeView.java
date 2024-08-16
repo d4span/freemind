@@ -142,7 +142,7 @@ public class NodeView extends JComponent implements TreeModelListener {
 		this.model = model;
 		this.mapView = map;
 		final TreeNode parentNode = model.getParent();
-		final int index = parentNode == null ? 0 : parentNode.getIndex(model);
+		final int index = parentNode == null ? 0 : parentNode.get(model);
 
 		parent.add(this, index);
 

@@ -250,13 +250,13 @@ public class StandaloneMapTests extends FreeMindTestBase {
 //		mapFeedback.addHook(firstChild,
 //				Tools.getVectorWithSingleElement(firstChild),
 //				"accessories/plugins/BlinkingNodeHook.properties", null);
-		assertEquals(0, firstChild.getIndex(subChild1));
+		assertEquals(0, firstChild.get(subChild1));
 		mapFeedback.moveNodes(subChild1, Tools.getVectorWithSingleElement(subChild1), 1);
-		assertEquals(1, firstChild.getIndex(subChild1));
+		assertEquals(1, firstChild.get(subChild1));
 		mapFeedback.moveNodes(subChild1, Tools.getVectorWithSingleElement(subChild1), -1);
-		assertEquals(0, firstChild.getIndex(subChild1));
+		assertEquals(0, firstChild.get(subChild1));
 		mapFeedback.moveNodes(subChild1, Tools.getVectorWithSingleElement(subChild1), -1);
-		assertEquals(2, firstChild.getIndex(subChild1));
+		assertEquals(2, firstChild.get(subChild1));
 		mapFeedback.setFolded(firstChild, true);
 		assertTrue(firstChild.isFolded());
 		String link = "http://freemind.sf.net/";
