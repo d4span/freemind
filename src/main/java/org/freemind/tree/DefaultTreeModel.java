@@ -48,7 +48,7 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
 
   @Override
   public int getIndexOfChild(TreeNode<T> parent, TreeNode<T> child) {
-    return parent != null && child != null ? ((TreeNode) parent).getIndex((TreeNode) child) : -1;
+    return parent != null && child != null ? ((TreeNode) parent).get((TreeNode) child) : -1;
   }
 
   @Override
@@ -94,7 +94,7 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
     } else {
       int[] childIndex = new int[1];
       Object[] removedArray = new Object[1];
-      childIndex[0] = parent.getIndex(node);
+      childIndex[0] = parent.get(node);
       parent.remove(childIndex[0]);
       removedArray[0] = node;
       this.nodesWereRemoved(parent, childIndex, removedArray);
@@ -105,7 +105,7 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
     if (this.listenerList != null && node != null) {
       TreeNode parent = node.getParent();
       if (parent != null) {
-        int anIndex = parent.getIndex(node);
+        int anIndex = parent.get(node);
         if (anIndex != -1) {
           int[] cIndexs = new int[] {anIndex};
           this.nodesChanged(parent, cIndexs);
