@@ -150,7 +150,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 						parent = pNode.getParentNode();
 					}
 					return getMindMapController().addNewNode(parent,
-							parent.get(pNode) + 1, parent.isLeft());
+							parent.getIndex(pNode) + 1, parent.isLeft());
 				}
 			}, "plugins/TimeManagement.xml_appendAsNewSiblingButton");
 		}
