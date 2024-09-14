@@ -192,13 +192,13 @@ public class PasteActor extends XmlActorAdapter {
 		public MindMapNode getNode() {
 			if (asSibling) {
 				MindMapNode parentNode = target.getParentNode();
-				return (MindMapNode) parentNode.getChildAt(parentNode
+				return (MindMapNode) parentNode.get(parentNode
 						.getChildPosition(target) - 1);
 			} else {
 				logger.finest("getChildCount = " + target.getChildCount()
 						+ ", target = " + target);
 				return (MindMapNode) target
-						.getChildAt(target.getChildCount() - 1);
+						.get(target.getChildCount() - 1);
 			}
 		}
 
@@ -210,7 +210,7 @@ public class PasteActor extends XmlActorAdapter {
 				target = parentNode;
 				asSibling = false;
 			} else {
-				target = (MindMapNode) parentNode.getChildAt(childPosition + 1);
+				target = (MindMapNode) parentNode.get(childPosition + 1);
 				asSibling = true;
 			}
 		}

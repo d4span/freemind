@@ -363,7 +363,7 @@ public final class TestMindMapNode implements MindMapNode {
 		mNewParent = (TestMindMapNode) newParent;
 	}
 
-	public TreeNode<String> getChildAt(int childIndex) {
+	public TreeNode<String> get(int childIndex) {
 		return children.get(childIndex);
 	}
 

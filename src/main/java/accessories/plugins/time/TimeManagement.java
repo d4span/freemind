@@ -134,7 +134,7 @@ public class TimeManagement extends MindMapHookAdapter implements
 
 				public MindMapNode getNode(MindMapNode pNode) {
 					return getMindMapController().addNewNode(pNode,
-							pNode.getChildCount(), pNode.isLeft());
+                            pNode.getChildCount(), pNode.isLeft());
 				}
 			}, "plugins/TimeManagement.xml_appendAsNewButton");
 		}
