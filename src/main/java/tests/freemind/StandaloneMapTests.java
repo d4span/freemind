@@ -100,10 +100,10 @@ public class StandaloneMapTests extends FreeMindTestBase {
 		MindMapNode root = mMap.loadTree(readerCreator,
 				MapAdapter.sDontAskInstance);
 		mMap.setRoot(root);
-		MindMapNode firstChild = (MindMapNode) root.get(0);
-		MindMapNode subChild1 = (MindMapNode) firstChild.get(0);
-		MindMapNode subChild2 = (MindMapNode) firstChild.get(1);
-		MindMapNode subChild3 = (MindMapNode) firstChild.get(2);
+		MindMapNode firstChild = (MindMapNode) root.getChildAt(0);
+		MindMapNode subChild1 = (MindMapNode) firstChild.getChildAt(0);
+		MindMapNode subChild2 = (MindMapNode) firstChild.getChildAt(1);
+		MindMapNode subChild3 = (MindMapNode) firstChild.getChildAt(2);
 		mapFeedback.setStrikethrough(root, true);
 		assertEquals(true, root.isStrikethrough());
 		mapFeedback.setBold(root, true);
