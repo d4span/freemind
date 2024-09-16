@@ -712,7 +712,7 @@ public abstract class NodeAdapter implements MindMapNode {
 		return ALLOWSCHILDREN;
 	}
 
-	public TreeNode get(int childIndex) {
+	public TreeNode getChildAt(int childIndex) {
 		// fc, 11.12.2004: This is not understandable, that a child does not
 		// exist if the parent is folded.
 		// if (isFolded()) {
@@ -763,7 +763,7 @@ public abstract class NodeAdapter implements MindMapNode {
 		position = isLeft ? LEFT_POSITION : RIGHT_POSITION;
 		if (!isRoot()) {
 			for (int i = 0; i < getChildCount(); i++) {
-				final NodeAdapter child = (NodeAdapter) get(i);
+				final NodeAdapter child = (NodeAdapter) getChildAt(i);
 				child.position = position;
 			}
 		}
@@ -775,7 +775,7 @@ public abstract class NodeAdapter implements MindMapNode {
 		}
 		int rightChildrenCount = 0;
 		for (int i = 0; i < getChildCount(); i++) {
-			if (!((MindMapNode) get(i)).isLeft())
+			if (!((MindMapNode) getChildAt(i)).isLeft())
 				rightChildrenCount++;
 			if (rightChildrenCount > getChildCount() / 2) {
 				return true;
