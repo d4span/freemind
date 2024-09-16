@@ -1,20 +1,19 @@
 package org.freemind.tree
 
 interface TreeNode<T> {
-  val value: T
+    fun get(index: Int): TreeNode<T>?
 
-  val parent: TreeNode<T>?
+    val childCount: Int
 
-  val childCount: Int
+    val parent: TreeNode<T>?
 
-  val allowsChildren: Boolean
+    fun getIndex(child: TreeNode<T>): Int
 
-  val isLeaf: Boolean
-    get() = this.childCount == 0
+    val allowsChildren: Boolean
 
-  operator fun get(index: Int): TreeNode<T>?
+    val isLeaf: Boolean
 
-  operator fun get(child: TreeNode<T>): Int
+    val children: java.util.List<out TreeNode<T>?>
 
-  val children: java.util.List<out TreeNode<T>?>
+    val value: T
 }

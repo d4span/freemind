@@ -15,16 +15,9 @@ local.properties
 # IDEs
 .vscode/
 .idea/
-.zed/
 
 # Maven
 target/
-
-# Gradle
-build/
-.gradle/
-gradle
-gradlew*
 
 # External tool builders
 #.externalToolBuilders/
