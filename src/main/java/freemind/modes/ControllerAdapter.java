@@ -1420,12 +1420,12 @@ public abstract class ControllerAdapter extends MapFeedbackAdapter implements Mo
 	 * Display a node in the display (used by find and the goto action by arrow
 	 * link actions).
 	 */
-	public void displayNode(MindMapNode node, ArrayList<MindMapNode> nodesUnfoldedByDisplay) {
+	public void displayNode(MindMapNode node, List<MindMapNode> nodesUnfoldedByDisplay) {
 		// Unfold the path to the node
-		Object[] path = getMap().getPathToRoot(node);
+		var path = getMap().getPathToRoot(node);
 		// Iterate the path with the exception of the last node
-		for (int i = 0; i < path.length - 1; i++) {
-			MindMapNode nodeOnPath = (MindMapNode) path[i];
+		for (int i = 0; i < path.size() - 1; i++) {
+			MindMapNode nodeOnPath = (MindMapNode) path.get(i);
 			// System.out.println(nodeOnPath);
 			if (nodeOnPath.isFolded()) {
 				if (nodesUnfoldedByDisplay != null)

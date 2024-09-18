@@ -94,7 +94,7 @@ public interface MindMap extends TreeModel<String> {
 	 */
 	String getRestorable();
 
-	TreeNode[] getPathToRoot(TreeNode node);
+	List<TreeNode<String>> getPathToRoot(TreeNode<String> node);
 
 	/**
 	 * @return returns the link registry associated with this mode, or null, if
@@ -122,7 +122,7 @@ public interface MindMap extends TreeModel<String> {
      */
 	void setFilter(Filter inactiveFilter);
 
-	void nodeStructureChanged(TreeNode node);
+	void nodeStructureChanged(TreeNode<String> node);
 
 	/**
 	 * Use this method to make the map dirty/clean.

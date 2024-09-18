@@ -403,10 +403,10 @@ public class FindAction extends FreemindAction {
 	 */
 	public void displayNode(MindMapNode node, ArrayList<MindMapNode> nodesUnfoldedByDisplay) {
 		// Unfold the path to the node
-		Object[] path = controller.getMap().getPathToRoot(node);
+		var path = controller.getMap().getPathToRoot(node);
 		// Iterate the path with the exception of the last node
-		for (int i = 0; i < path.length - 1; i++) {
-			MindMapNode nodeOnPath = (MindMapNode) path[i];
+		for (var pathElement: path) {
+			MindMapNode nodeOnPath =  (MindMapNode) pathElement;
 			// System.out.println(nodeOnPath);
 			if (nodeOnPath.isFolded()) {
 				if (nodesUnfoldedByDisplay != null)

@@ -1,11 +1,15 @@
 package org.freemind.tree;
 
+import static java.util.Collections.emptyList;
+
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 import java.util.Vector;
 
 public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
@@ -31,11 +35,11 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
     return this.asksAllowsChildren;
   }
 
-  public void setRoot(TreeNode root) {
-    Object oldRoot = this.root;
+  public void setRoot(TreeNode<T> root) {
+    var oldRoot = this.root;
     this.root = root;
     if (root == null && oldRoot != null) {
-      this.fireTreeStructureChanged(this, (TreePath) null);
+      this.fireTreeStructureChanged(this, (TreePath<T>) null);
     } else {
       this.nodeStructureChanged(root);
     }
@@ -48,7 +52,7 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
 
   @Override
   public int getIndexOfChild(TreeNode<T> parent, TreeNode<T> child) {
-    return parent != null && child != null ? ((TreeNode) parent).getIndex((TreeNode) child) : -1;
+    return parent != null && child != null ? parent.getIndex(child) : -1;
   }
 
   @Override
@@ -75,35 +79,35 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
   }
 
   @Override
-  public void valueForPathChanged(TreePath path, Object newValue) {
-    MutableTreeNode aNode = (MutableTreeNode) path.getLastPathComponent();
+  public void valueForPathChanged(TreePath<T> path, T newValue) {
+    var aNode = (MutableTreeNode<T>) path.getLastPathComponent();
     aNode.setValue(newValue);
     this.nodeChanged(aNode);
   }
 
-  public void insertNodeInto(MutableTreeNode newChild, MutableTreeNode parent, int index) {
+  public void insertNodeInto(MutableTreeNode<T> newChild, MutableTreeNode<T> parent, int index) {
     parent.insert(newChild, index);
     int[] newIndexs = new int[] {index};
     this.nodesWereInserted(parent, newIndexs);
   }
 
-  public void removeNodeFromParent(MutableTreeNode node) {
-    MutableTreeNode parent = (MutableTreeNode) node.getParent();
+  public void removeNodeFromParent(MutableTreeNode<T> node) {
+    var parent = (MutableTreeNode<T>) node.getParent();
     if (parent == null) {
       throw new IllegalArgumentException("node does not have a parent.");
     } else {
       int[] childIndex = new int[1];
-      Object[] removedArray = new Object[1];
+      List<TreeNode<T>> removedArray = new ArrayList<>(1);
       childIndex[0] = parent.getIndex(node);
       parent.remove(childIndex[0]);
-      removedArray[0] = node;
+      removedArray.add(0, node);
       this.nodesWereRemoved(parent, childIndex, removedArray);
     }
   }
 
-  public void nodeChanged(TreeNode node) {
+  public void nodeChanged(TreeNode<T> node) {
     if (this.listenerList != null && node != null) {
-      TreeNode parent = node.getParent();
+      var parent = node.getParent();
       if (parent != null) {
         int anIndex = parent.getIndex(node);
         if (anIndex != -1) {
@@ -116,80 +120,84 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
     }
   }
 
-  public void reload(TreeNode node) {
+  public void reload(TreeNode<T> node) {
     if (node != null) {
-      this.fireTreeStructureChanged(this, this.getPathToRoot(node), (int[]) null, (Object[]) null);
+      this.fireTreeStructureChanged(
+          this, this.getPathToRoot(node), (int[]) null, (List<TreeNode<T>>) null);
     }
   }
 
-  public void nodesWereInserted(TreeNode node, int[] childIndices) {
+  public void nodesWereInserted(TreeNode<T> node, int[] childIndices) {
     if (this.listenerList != null
         && node != null
         && childIndices != null
         && childIndices.length > 0) {
       int cCount = childIndices.length;
-      Object[] newChildren = new Object[cCount];
+      List<TreeNode<T>> newChildren = new ArrayList<>(cCount);
 
       for (int counter = 0; counter < cCount; ++counter) {
-        newChildren[counter] = node.getChildAt(childIndices[counter]);
+        newChildren.add(counter, node.getChildAt(childIndices[counter]));
       }
 
       this.fireTreeNodesInserted(this, this.getPathToRoot(node), childIndices, newChildren);
     }
   }
 
-  public void nodesWereRemoved(TreeNode node, int[] childIndices, Object[] removedChildren) {
+  public void nodesWereRemoved(
+      TreeNode<T> node, int[] childIndices, List<TreeNode<T>> removedChildren) {
     if (node != null && childIndices != null) {
       this.fireTreeNodesRemoved(this, this.getPathToRoot(node), childIndices, removedChildren);
     }
   }
 
-  public void nodesChanged(TreeNode node, int[] childIndices) {
+  public void nodesChanged(TreeNode<T> node, int[] childIndices) {
     if (node != null) {
       if (childIndices != null) {
         int cCount = childIndices.length;
         if (cCount > 0) {
-          Object[] cChildren = new Object[cCount];
+          List<TreeNode<T>> cChildren = new ArrayList<>(cCount);
 
           for (int counter = 0; counter < cCount; ++counter) {
-            cChildren[counter] = node.getChildAt(childIndices[counter]);
+            cChildren.add(counter, node.getChildAt(childIndices[counter]));
           }
 
           this.fireTreeNodesChanged(this, this.getPathToRoot(node), childIndices, cChildren);
         }
       } else if (node == this.getRoot()) {
-        this.fireTreeNodesChanged(this, this.getPathToRoot(node), (int[]) null, (Object[]) null);
+        this.fireTreeNodesChanged(
+            this, this.getPathToRoot(node), (int[]) null, (List<TreeNode<T>>) null);
       }
     }
   }
 
-  public void nodeStructureChanged(TreeNode node) {
+  public void nodeStructureChanged(TreeNode<T> node) {
     if (node != null) {
-      this.fireTreeStructureChanged(this, this.getPathToRoot(node), (int[]) null, (Object[]) null);
+      this.fireTreeStructureChanged(
+          this, this.getPathToRoot(node), (int[]) null, (List<TreeNode<T>>) null);
     }
   }
 
-  public TreeNode[] getPathToRoot(TreeNode aNode) {
+  public List<TreeNode<T>> getPathToRoot(TreeNode<T> aNode) {
     return this.getPathToRoot(aNode, 0);
   }
 
-  protected TreeNode[] getPathToRoot(TreeNode aNode, int depth) {
-    TreeNode[] retNodes;
+  protected List<TreeNode<T>> getPathToRoot(TreeNode<T> aNode, int depth) {
+    List<TreeNode<T>> retNodes;
     if (aNode == null) {
       if (depth == 0) {
-        return null;
+        return emptyList();
       }
 
-      retNodes = new TreeNode[depth];
+      retNodes = new ArrayList<>(depth);
     } else {
       ++depth;
       if (aNode == this.root) {
-        retNodes = new TreeNode[depth];
+        retNodes = new ArrayList<>(depth);
       } else {
         retNodes = this.getPathToRoot(aNode.getParent(), depth);
       }
 
-      retNodes[retNodes.length - depth] = aNode;
+      retNodes.add(retNodes.size() - depth, aNode);
     }
 
     return retNodes;
@@ -210,14 +218,14 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
   }
 
   protected void fireTreeNodesChanged(
-      Object source, Object[] path, int[] childIndices, Object[] children) {
+      TreeModel<T> source, List<TreeNode<T>> path, int[] childIndices, List<TreeNode<T>> children) {
     Object[] listeners = this.listenerList.getListenerList();
-    TreeModelEvent e = null;
+    TreeModelEvent<T> e = null;
 
     for (int i = listeners.length - 2; i >= 0; i -= 2) {
       if (listeners[i] == TreeModelListener.class) {
         if (e == null) {
-          e = new TreeModelEvent(source, path, childIndices, children);
+          e = new TreeModelEvent<>(source, path, childIndices, children);
         }
 
         ((TreeModelListener) listeners[i + 1]).treeNodesChanged(e);
@@ -226,14 +234,14 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
   }
 
   protected void fireTreeNodesInserted(
-      Object source, Object[] path, int[] childIndices, Object[] children) {
+      TreeModel<T> source, List<TreeNode<T>> path, int[] childIndices, List<TreeNode<T>> children) {
     Object[] listeners = this.listenerList.getListenerList();
-    TreeModelEvent e = null;
+    TreeModelEvent<T> e = null;
 
     for (int i = listeners.length - 2; i >= 0; i -= 2) {
       if (listeners[i] == TreeModelListener.class) {
         if (e == null) {
-          e = new TreeModelEvent(source, path, childIndices, children);
+          e = new TreeModelEvent<>(source, path, childIndices, children);
         }
 
         ((TreeModelListener) listeners[i + 1]).treeNodesInserted(e);
@@ -242,14 +250,14 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
   }
 
   protected void fireTreeNodesRemoved(
-      Object source, Object[] path, int[] childIndices, Object[] children) {
+      TreeModel<T> source, List<TreeNode<T>> path, int[] childIndices, List<TreeNode<T>> children) {
     Object[] listeners = this.listenerList.getListenerList();
-    TreeModelEvent e = null;
+    TreeModelEvent<T> e = null;
 
     for (int i = listeners.length - 2; i >= 0; i -= 2) {
       if (listeners[i] == TreeModelListener.class) {
         if (e == null) {
-          e = new TreeModelEvent(source, path, childIndices, children);
+          e = new TreeModelEvent<>(source, path, childIndices, children);
         }
 
         ((TreeModelListener) listeners[i + 1]).treeNodesRemoved(e);
@@ -258,14 +266,14 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
   }
 
   protected void fireTreeStructureChanged(
-      Object source, Object[] path, int[] childIndices, Object[] children) {
+      TreeModel<T> source, List<TreeNode<T>> path, int[] childIndices, List<TreeNode<T>> children) {
     Object[] listeners = this.listenerList.getListenerList();
-    TreeModelEvent e = null;
+    TreeModelEvent<T> e = null;
 
     for (int i = listeners.length - 2; i >= 0; i -= 2) {
       if (listeners[i] == TreeModelListener.class) {
         if (e == null) {
-          e = new TreeModelEvent(source, path, childIndices, children);
+          e = new TreeModelEvent<>(source, path, childIndices, children);
         }
 
         ((TreeModelListener) listeners[i + 1]).treeStructureChanged(e);
@@ -273,14 +281,14 @@ public class DefaultTreeModel<T> implements Serializable, TreeModel<T> {
     }
   }
 
-  private void fireTreeStructureChanged(Object source, TreePath path) {
+  private void fireTreeStructureChanged(TreeModel<T> source, TreePath<T> path) {
     Object[] listeners = this.listenerList.getListenerList();
-    TreeModelEvent e = null;
+    TreeModelEvent<T> e = null;
 
     for (int i = listeners.length - 2; i >= 0; i -= 2) {
       if (listeners[i] == TreeModelListener.class) {
         if (e == null) {
-          e = new TreeModelEvent(source, path);
+          e = new TreeModelEvent<>(source, path);
         }
 
         ((TreeModelListener) listeners[i + 1]).treeStructureChanged(e);

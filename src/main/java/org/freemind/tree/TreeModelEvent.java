@@ -1,77 +1,74 @@
 package org.freemind.tree;
 
-public class TreeModelEvent {
-  protected TreePath path;
-  protected int[] childIndices;
-  protected Object[] children;
-  private Object source;
+import java.util.Arrays;
+import java.util.List;
 
-  public TreeModelEvent(Object source, Object[] path, int[] childIndices, Object[] children) {
-    this(source, path == null ? null : new TreePath(path), childIndices, children);
+public class TreeModelEvent<T> {
+  protected TreePath<T> path;
+  protected int[] childIndices;
+  protected List<TreeNode<T>> children;
+  private TreeModel<T> source;
+
+  public TreeModelEvent(
+      TreeModel<T> source, List<TreeNode<T>> path, int[] childIndices, List<TreeNode<T>> children) {
+    this(source, path == null ? null : new TreePath<>(path), childIndices, children);
   }
 
-  public TreeModelEvent(Object source, TreePath path, int[] childIndices, Object[] children) {
+  public TreeModelEvent(
+      TreeModel<T> source, TreePath<T> path, int[] childIndices, List<TreeNode<T>> children) {
     this.source = source;
     this.path = path;
     this.childIndices = childIndices;
     this.children = children;
   }
 
-  public TreeModelEvent(Object source, Object[] path) {
-    this(source, path == null ? null : new TreePath(path));
+  public TreeModelEvent(TreeModel<T> source, List<TreeNode<T>> path) {
+    this(source, path == null ? null : new TreePath<>(path));
   }
 
-  public TreeModelEvent(Object source, TreePath path) {
+  public TreeModelEvent(TreeModel<T> source, TreePath<T> path) {
     this.source = source;
     this.path = path;
     this.childIndices = new int[0];
   }
 
-  public TreePath getTreePath() {
+  public TreePath<?> getTreePath() {
     return this.path;
   }
 
-  public Object[] getPath() {
+  public List<TreeNode<T>> getPath() {
     return this.path != null ? this.path.getPath() : null;
   }
 
-  public Object[] getChildren() {
+  public List<TreeNode<T>> getChildren() {
     if (this.children != null) {
-      int cCount = this.children.length;
-      Object[] retChildren = new Object[cCount];
-      System.arraycopy(this.children, 0, retChildren, 0, cCount);
-      return retChildren;
+      return List.copyOf(this.children);
     } else {
-      return null;
+      return List.of();
     }
   }
 
   public int[] getChildIndices() {
     if (this.childIndices != null) {
-      int cCount = this.childIndices.length;
-      int[] retArray = new int[cCount];
-      System.arraycopy(this.childIndices, 0, retArray, 0, cCount);
-      return retArray;
+      return Arrays.copyOf(this.childIndices, this.childIndices.length);
     } else {
-      return null;
+      return new int[0];
     }
   }
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    String var10001 = this.getClass().getName();
+    var sb = new StringBuilder();
+    var var10001 = this.getClass().getName();
     sb.append(var10001 + " " + this.hashCode());
     if (this.path != null) {
       sb.append(" path " + String.valueOf(this.path));
     }
 
-    int counter;
     if (this.childIndices != null) {
       sb.append(" indices [ ");
 
-      for (counter = 0; counter < this.childIndices.length; ++counter) {
-        int var3 = this.childIndices[counter];
+      for (var var3 : this.childIndices) {
         sb.append("" + var3 + " ");
       }
 
@@ -81,8 +78,7 @@ public class TreeModelEvent {
     if (this.children != null) {
       sb.append(" children [ ");
 
-      for (counter = 0; counter < this.children.length; ++counter) {
-        Object var4 = this.children[counter];
+      for (var var4 : this.children) {
         sb.append(String.valueOf(var4) + " ");
       }
 

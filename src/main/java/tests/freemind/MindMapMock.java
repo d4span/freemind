@@ -20,6 +20,8 @@
 
 package tests.freemind;
 
+import static java.util.Collections.emptyList;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -112,8 +114,8 @@ public class MindMapMock implements MindMap {
 	}
 
 	@Override
-	public TreeNode[] getPathToRoot(TreeNode node) {
-		return null;
+	public List<TreeNode<String>> getPathToRoot(TreeNode<String> node) {
+		return emptyList();
 	}
 
 	@Override
@@ -160,7 +162,7 @@ public class MindMapMock implements MindMap {
 	}
 
 	@Override
-	public void valueForPathChanged(TreePath path, Object newValue) {
+	public void valueForPathChanged(TreePath<String> path, String newValue) {
 	}
 
 	@Override

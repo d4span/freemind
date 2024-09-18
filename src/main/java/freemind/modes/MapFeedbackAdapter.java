@@ -105,8 +105,8 @@ public abstract class MapFeedbackAdapter implements MapFeedback, ViewFeedback {
 	 */
 	@Override
 	public void nodeChanged(MindMapNode pNode) {
-		if(getMap() != null) {
-			getMap().setSaved(false);
+		if(this.getMap() != null) {
+			this.getMap().setSaved(false);
 		}
 	}
 
@@ -189,10 +189,10 @@ public abstract class MapFeedbackAdapter implements MapFeedback, ViewFeedback {
 
 	@Override
 	public Font getFontThroughMap(Font font) {
-		if (!fontMap.containsKey(font.toString())) {
-			fontMap.put(font.toString(), font);
+		if (!this.fontMap.containsKey(font.toString())) {
+			this.fontMap.put(font.toString(), font);
 		}
-		return (Font) fontMap.get(font.toString());
+		return (Font) this.fontMap.get(font.toString());
 	}
 
 	/*
@@ -204,7 +204,7 @@ public abstract class MapFeedbackAdapter implements MapFeedback, ViewFeedback {
 	@Override
 	public NodeHook createNodeHook(String pLoadName, MindMapNode pNode) {
 		PermanentNodeHookSubstituteUnknown hook = new PermanentNodeHookSubstituteUnknown(pLoadName);
-		hook.setMap(getMap());
+		hook.setMap(this.getMap());
 		pNode.addHook(hook);
 		return hook;
 	}
@@ -220,11 +220,11 @@ public abstract class MapFeedbackAdapter implements MapFeedback, ViewFeedback {
 	public void invokeHooksRecursively(MindMapNode pNode, MindMap pModel) {
 		for (Iterator i = pNode.childrenUnfolded(); i.hasNext();) {
 			NodeAdapter child = (NodeAdapter) i.next();
-			invokeHooksRecursively(child, getMap());
+			this.invokeHooksRecursively(child, this.getMap());
 		}
 		for (PermanentNodeHook hook : pNode.getHooks()) {
 			hook.setController(this);
-			hook.setMap(getMap());
+			hook.setMap(this.getMap());
 			pNode.invokeHook(hook);
 		}
 
@@ -349,10 +349,11 @@ public abstract class MapFeedbackAdapter implements MapFeedback, ViewFeedback {
 		}
 
 		/* the < relation. */
+		@Override
 		public int compare(MindMapNode n1, MindMapNode n2) {
-			Object[] path1 = getMap().getPathToRoot(n1);
-			Object[] path2 = getMap().getPathToRoot(n2);
-			int depth = path1.length - path2.length;
+			var path1 = MapFeedbackAdapter.this.getMap().getPathToRoot(n1);
+			var path2 = MapFeedbackAdapter.this.getMap().getPathToRoot(n2);
+			int depth = path1.size() - path2.size();
 			if (depth > 0)
 				return -1;
 			if (depth < 0)
@@ -364,6 +365,7 @@ public abstract class MapFeedbackAdapter implements MapFeedback, ViewFeedback {
 		}
 	}
 
+	@Override
 	public void sortNodesByDepth(List<MindMapNode> inPlaceList) {
 		Collections.sort(inPlaceList, new NodesDepthComparator());
 		logger.finest("Sort result: " + inPlaceList);
