@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.instancio.Instancio;
-import org.instancio.junit.InstancioExtension;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import lombok.experimental.UtilityClass;
+import org.instancio.Instancio;
 
 @UtilityClass
 public class DefaultTreeModelGenerators {
@@ -26,9 +23,7 @@ public class DefaultTreeModelGenerators {
             (map, t) -> {
               if (!map.isEmpty()) {
                 var parent = Instancio.gen().oneOf(map.keySet()).get();
-                var children = map.get(parent);
-                children.add(t);
-                map.put(parent, children);
+                map.get(parent).add(t);
               }
 
               map.put(t, new ArrayList<>());

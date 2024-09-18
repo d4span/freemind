@@ -1,22 +1,19 @@
 package org.freemind.tree;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class TreePath<T> implements Serializable {
+public class TreePath<T> {
   private TreePath<T> parentPath;
   private TreeNode<T> lastPathComponent;
 
   public TreePath(List<TreeNode<T>> path) {
     if (path != null && !path.isEmpty()) {
-      this.lastPathComponent = path.getLast();
-      if (this.lastPathComponent == null) {
-        throw new IllegalArgumentException("Last path component must be non-null");
-      } else {
-        if (path.size() > 1) {
-          this.parentPath = new TreePath<>(path, path.size() - 1);
-        }
+      Objects.requireNonNull(path.getLast());
+
+      if (path.size() > 1) {
+        this.parentPath = new TreePath<>(path, path.size() - 1);
       }
     } else {
       throw new IllegalArgumentException("path in TreePath must be non null and not empty.");
@@ -24,31 +21,24 @@ public class TreePath<T> implements Serializable {
   }
 
   public TreePath(TreeNode<T> lastPathComponent) {
-    if (lastPathComponent == null) {
-      throw new IllegalArgumentException("path in TreePath must be non null.");
-    } else {
-      this.lastPathComponent = lastPathComponent;
-      this.parentPath = null;
-    }
+    Objects.requireNonNull(lastPathComponent);
+
+    this.lastPathComponent = lastPathComponent;
+    this.parentPath = null;
   }
 
   protected TreePath(TreePath<T> parent, TreeNode<T> lastPathComponent) {
-    if (lastPathComponent == null) {
-      throw new IllegalArgumentException("path in TreePath must be non null.");
-    } else {
-      this.parentPath = parent;
-      this.lastPathComponent = lastPathComponent;
-    }
+    Objects.requireNonNull(parent);
+
+    this.parentPath = parent;
+    this.lastPathComponent = lastPathComponent;
   }
 
   protected TreePath(List<TreeNode<T>> path, int length) {
-    this.lastPathComponent = path.getLast();
-    if (this.lastPathComponent == null) {
-      throw new IllegalArgumentException("Path elements must be non-null");
-    } else {
-      if (length > 1) {
-        this.parentPath = new TreePath<>(path, length - 1);
-      }
+    Objects.requireNonNull(path.getLast());
+
+    if (length > 1) {
+      this.parentPath = new TreePath<>(path, length - 1);
     }
   }
 
@@ -143,11 +133,9 @@ public class TreePath<T> implements Serializable {
   }
 
   public TreePath<T> pathByAddingChild(TreeNode<T> child) {
-    if (child == null) {
-      throw new NullPointerException("Null child not allowed");
-    } else {
-      return new TreePath(this, child);
-    }
+    Objects.requireNonNull(child);
+
+    return new TreePath<>(this, child);
   }
 
   public TreePath<T> getParentPath() {

@@ -356,7 +356,7 @@ public abstract class MapAdapter extends DefaultTreeModel<String> implements Min
 	 */
 	void nodeChangedInternal(TreeNode node) {
 		if (node != null) {
-			fireTreeNodesChanged(this, getPathToRoot(node), null, null);
+			fireTreeNodesChanged(getPathToRoot(node), null, null);
 		}
 	}
 

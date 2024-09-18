@@ -7,32 +7,28 @@ public class TreeModelEvent<T> {
   protected TreePath<T> path;
   protected int[] childIndices;
   protected List<TreeNode<T>> children;
-  private TreeModel<T> source;
 
   public TreeModelEvent(
-      TreeModel<T> source, List<TreeNode<T>> path, int[] childIndices, List<TreeNode<T>> children) {
-    this(source, path == null ? null : new TreePath<>(path), childIndices, children);
+      List<TreeNode<T>> path, int[] childIndices, List<TreeNode<T>> children) {
+    this(path == null ? null : new TreePath<>(path), childIndices, children);
   }
 
-  public TreeModelEvent(
-      TreeModel<T> source, TreePath<T> path, int[] childIndices, List<TreeNode<T>> children) {
-    this.source = source;
+  public TreeModelEvent(TreePath<T> path, int[] childIndices, List<TreeNode<T>> children) {
     this.path = path;
     this.childIndices = childIndices;
     this.children = children;
   }
 
-  public TreeModelEvent(TreeModel<T> source, List<TreeNode<T>> path) {
-    this(source, path == null ? null : new TreePath<>(path));
+  public TreeModelEvent(List<TreeNode<T>> path) {
+    this(path == null ? null : new TreePath<>(path));
   }
 
-  public TreeModelEvent(TreeModel<T> source, TreePath<T> path) {
-    this.source = source;
+  public TreeModelEvent(TreePath<T> path) {
     this.path = path;
     this.childIndices = new int[0];
   }
 
-  public TreePath<?> getTreePath() {
+  public TreePath<T> getTreePath() {
     return this.path;
   }
 
@@ -62,7 +58,7 @@ public class TreeModelEvent<T> {
     var var10001 = this.getClass().getName();
     sb.append(var10001 + " " + this.hashCode());
     if (this.path != null) {
-      sb.append(" path " + String.valueOf(this.path));
+      sb.append(" path " + this.path);
     }
 
     if (this.childIndices != null) {
