@@ -26,7 +26,7 @@ local.properties
 
 ### Eclipse Patch ###
 # Eclipse Core
-#.project
+.project
 
 # JDT-specific (Eclipse Java Development Tools)
 #.classpath
@@ -34,6 +34,7 @@ local.properties
 ### Java ###
 # Compiled class file
 *.class
+target/
 
 # Log file
 *.log
@@ -50,4 +51,8 @@ hs_err_pid*
 freemind/version.properties
 
 # file is generated:
-freemind/lib/bindings.jar
+# freemind/lib/bindings.jar — tracked to support freemind/pom.xml with-local-libs profile
+
+.github/prompts
+.github/skills
+.opencode

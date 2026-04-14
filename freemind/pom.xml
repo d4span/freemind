@@ -1,0 +1,196 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.sourceforge.freemind</groupId>
+    <artifactId>freemind</artifactId>
+    <version>1.1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+
+    <profiles>
+        <!-- Profile to use the local freemind/lib jars as system dependencies
+             for environments where the jars are present in the repository. -->
+        <profile>
+            <id>with-local-libs</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <!-- Use system-scoped dependencies that reference the project's lib directory.
+                 This is less ideal than installing into the local repo, but it ensures
+                 dependency resolution can find the jars during the same build without
+                 requiring a prior manual install step. -->
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>3.4.0</version>
+                        <executions>
+                            <execution>
+                                <id>add-extra-sources</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <!-- Include accessories sources so classes under
+                                             accessories/plugins are available to compilation. -->
+                                        <source>${project.basedir}/accessories</source>
+                                        <!-- Some main classes reference test helpers (e.g. FreeMindMainMock).
+                                             Add a small test-helpers source root containing only the
+                                             minimal helper classes to avoid compiling the full test
+                                             suite during main compilation. -->
+                                        <source>${project.basedir}/src/test-helpers</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+
+            <dependencies>
+                <!-- Core third-party jars used by Ant build -->
+                <dependency>
+                    <groupId>local</groupId>
+                    <artifactId>jortho</artifactId>
+                    <version>local</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/lib/jortho.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>local</groupId>
+                    <artifactId>jgoodies-forms</artifactId>
+                    <version>1.8.0</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/lib/jgoodies-forms-1.8.0.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>local</groupId>
+                    <artifactId>jgoodies-common</artifactId>
+                    <version>1.8.1</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/lib/jgoodies-common-1.8.1.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>local</groupId>
+                    <artifactId>jibx-run</artifactId>
+                    <version>local</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/lib/jibx/jibx-run.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>local</groupId>
+                    <artifactId>xpp3</artifactId>
+                    <version>local</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/lib/jibx/xpp3.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>local</groupId>
+                    <artifactId>bindings</artifactId>
+                    <version>local</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/lib/bindings.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>local</groupId>
+                    <artifactId>jsoup</artifactId>
+                    <version>1.10.3</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/lib/jsoup-1.10.3.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>local</groupId>
+                    <artifactId>simplyhtml</artifactId>
+                    <version>local</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/lib/SimplyHTML/SimplyHTML.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>local</groupId>
+                    <artifactId>gnu-regexp</artifactId>
+                    <version>1.1.4</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/lib/SimplyHTML/gnu-regexp-1.1.4.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>local</groupId>
+                    <artifactId>groovy-all</artifactId>
+                    <version>local</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/plugins/script/groovy-all.jar</systemPath>
+                </dependency>
+                <!-- junit is not needed during main compilation because only a
+                     small set of test helpers (not the full test suite) is added
+                     to sources via src/test-helpers. -->
+                <!-- Add other local jars referenced by the Ant build as needed -->
+            </dependencies>
+        </profile>
+    </profiles>
+
+    <build>
+        <!-- Keep existing source layout by pointing sourceDirectory to the freemind/ directory -->
+        <sourceDirectory>${project.basedir}/freemind</sourceDirectory>
+
+        <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.10.1</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <!-- Do not override the classpath; let Maven supply dependencies.
+                             The with-local-libs profile installs local jars into the
+                             local repo so they appear on the compile classpath. -->
+                        <fork>true</fork>
+                    </configuration>
+                </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>freemind.main.FreeMindStarter</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <!-- Run the existing Ant 'gen' target during generate-sources so
+                 JiBX bindings are generated exactly as the Ant build does. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>run-jibx-gen</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- Run the Ant 'gen' target in the module directory -->
+                                <ant antfile="${project.basedir}/build.xml" dir="${project.basedir}" target="gen"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
